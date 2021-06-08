@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.SysMenuDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.SysMenu" id="SysMenuMap">
+        <result property="menuId" column="menu_id" jdbcType="INTEGER"/>
+        <result property="menuName" column="menu_name" jdbcType="VARCHAR"/>
+        <result property="menuPathname" column="menu_pathname" jdbcType="VARCHAR"/>
+        <result property="menuPath" column="menu_path" jdbcType="VARCHAR"/>
+        <result property="menuIcon" column="menu_icon" jdbcType="VARCHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+        <result property="orderNum" column="order_num" jdbcType="INTEGER"/>
+        <result property="menuType" column="menu_type" jdbcType="VARCHAR"/>
+        <result property="visible" column="visible" jdbcType="INTEGER"/>
+        <result property="component" column="component" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="findListById" resultMap="SysMenuMap">
+        SELECT d.* FROM sys_user a
+        LEFT JOIN sys_user_roles b ON a.user_id=b.user_id
+        LEFT JOIN sys_roles_menu c ON b.roles_id=c.sys_roles_id
+        LEFT JOIN sys_menu d ON c.sys_menu_id=d.menu_id
+				WHERE a.user_id=#{userid}
+    </select>
+</mapper>
+

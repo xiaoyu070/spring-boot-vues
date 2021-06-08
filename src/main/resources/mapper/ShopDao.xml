@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.ShopDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.Shop" id="ShopsMap">
+        <result property="spId" column="sp_id" jdbcType="INTEGER"/>
+        <result property="spShopId" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spBarCode" column="sp_bar_code" jdbcType="VARCHAR"/>
+        <result property="spTypeId" column="sp_type_id" jdbcType="INTEGER"/>
+        <result property="spState" column="sp_state" jdbcType="INTEGER"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
+        <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
+        <result property="spManufacturer" column="sp_Manufacturer" jdbcType="VARCHAR"/>
+        <result property="spBeizhu" column="sp_beizhu" jdbcType="VARCHAR"/>
+        <result property="spTime" column="sp_time" jdbcType="TIMESTAMP"/>
+        <result property="shImg" column="sh_img" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap type="com.trkj.projects.vo.Shopandstock" id="ShopandstockVo">
+        <result property="spShopId" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
+        <result property="spManufacturer" column="sp_Manufacturer" jdbcType="VARCHAR"/>
+        <result property="spBeizhu" column="sp_beizhu" jdbcType="VARCHAR"/>
+        <result property="number" column="sk_number" javaType="INTEGER"/>
+        <result property="spBarCode" column="sp_bar_code" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap type="com.trkj.projects.mybatis.entity.Shops" id="ShopMap">
+        <result property="spId" column="sp_id" jdbcType="INTEGER"/>
+        <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spBarCode" column="sp_bar_code" jdbcType="VARCHAR"/>
+        <result property="spTypeId" column="sp_type_id" jdbcType="INTEGER"/>
+        <result property="spState" column="sp_state" jdbcType="INTEGER"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
+        <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
+        <result property="spManufacturer" column="sp_Manufacturer" jdbcType="VARCHAR"/>
+        <result property="spBeizhu" column="sp_beizhu" jdbcType="VARCHAR"/>
+        <result property="spTime" column="sp_time" jdbcType="TIMESTAMP"/>
+        <result property="shImg" column="sh_img" jdbcType="VARCHAR"/>
+        <association property="shopType" javaType="com.trkj.projects.mybatis.entity.ShopType">
+            <id property="spTypeId" column="sp_type_id" jdbcType="INTEGER"/>
+            <result property="spTypeName" column="sp_type_name" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
+    <!--根据id查询单个-->
+<!--    <select id="queryById" resultMap="ShopsMap">-->
+<!--        select-->
+<!--          sp_id, sp_shopid, sp_name, sp_bar_code, sp_type_id, sp_state, sp_Company, sp_Specifications, sp_color, sp_jprice, sp_Preset_price, sp_Manufacturer, sp_beizhu, sp_time, sh_img-->
+<!--        from projects.shop-->
+<!--        where sp_id = #{spId}-->
+<!--    </select>-->
+
+    <!--根据name查询单个-->
+    <select id="queryByName" resultMap="ShopsMap">
+        select
+          sp_id, sp_shopid, sp_name, sp_bar_code, sp_type_id, sp_state, sp_Company, sp_Specifications, sp_color, sp_jprice, sp_Preset_price, sp_Manufacturer, sp_beizhu, sp_time, sh_img
+        from projects.shop
+        where sp_name = #{name}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ShopsMap">
+        select
+          sp_id, sp_shopid, sp_name, sp_bar_code, sp_type_id, sp_state, sp_Company, sp_Specifications, sp_color, sp_jprice, sp_Preset_price, sp_Manufacturer, sp_beizhu, sp_time, sh_img
+        from projects.shop
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="ShopsMap">
+        select
+        sp_id, sp_shopid, sp_name, sp_bar_code, sp_type_id, sp_state, sp_Company, sp_Specifications, sp_color,
+        sp_jprice, sp_Preset_price, sp_Manufacturer, sp_beizhu, sp_time, sh_img
+        from projects.shop
+        <where>
+            <if test="spId != null">
+                and sp_id = #{spId}
+            </if>
+            <if test="spShopId != null">
+                and sp_shopid = #{spShopId}
+            </if>
+            <if test="spName != null and spName != ''">
+                and sp_name = #{spName}
+            </if>
+            <if test="spBarCode != null and spBarCode != ''">
+                and sp_bar_code = #{spBarCode}
+            </if>
+            <if test="spTypeId != null">
+                and sp_type_id = #{spTypeId}
+            </if>
+            <if test="spState != null">
+                and sp_state = #{spState}
+            </if>
+            <if test="spCompany != null and spCompany != ''">
+                and sp_Company = #{spCompany}
+            </if>
+            <if test="spSpecifications != null and spSpecifications != ''">
+                and sp_Specifications = #{spSpecifications}
+            </if>
+            <if test="spColor != null and spColor != ''">
+                and sp_color = #{spColor}
+            </if>
+            <if test="spJprice != null">
+                and sp_jprice = #{spJprice}
+            </if>
+            <if test="spPresetPrice != null">
+                and sp_Preset_price = #{spPresetPrice}
+            </if>
+            <if test="spManufacturer != null and spManufacturer != ''">
+                and sp_Manufacturer = #{spManufacturer}
+            </if>
+            <if test="spBeizhu != null and spBeizhu != ''">
+                and sp_beizhu = #{spBeizhu}
+            </if>
+            <if test="spTime != null">
+                and sp_time = #{spTime}
+            </if>
+            <if test="shImg != null and shImg != ''">
+                and sh_img = #{shImg}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="spId" useGeneratedKeys="true">
+        insert into projects.shop(sp_shopid, sp_name, sp_bar_code, sp_type_id, sp_state, sp_Company, sp_Specifications, sp_color, sp_jprice, sp_Preset_price, sp_Manufacturer, sp_beizhu, sp_time, sh_img)
+        values (#{spShopId}, #{spName}, #{spBarCode}, #{spTypeId}, #{spState}, #{spCompany}, #{spSpecifications}, #{spColor}, #{spJprice}, #{spPresetPrice}, #{spManufacturer}, #{spBeizhu}, #{spTime}, #{shImg})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="spId" useGeneratedKeys="true">
+        insert into projects.shop(sp_shopid, sp_name, sp_bar_code, sp_type_id, sp_state, sp_Company, sp_Specifications,
+        sp_color, sp_jprice, sp_Preset_price, sp_Manufacturer, sp_beizhu, sp_time, sh_img)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.spShopId}, #{entity.spName}, #{entity.spBarCode}, #{entity.spTypeId}, #{entity.spState},
+            #{entity.spCompany}, #{entity.spSpecifications}, #{entity.spColor}, #{entity.spJprice},
+            #{entity.spPresetPrice}, #{entity.spManufacturer}, #{entity.spBeizhu}, #{entity.spTime}, #{entity.shImg})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="spId" useGeneratedKeys="true">
+        insert into projects.shop(sp_shopid, sp_name, sp_bar_code, sp_type_id, sp_state, sp_Company, sp_Specifications,
+        sp_color, sp_jprice, sp_Preset_price, sp_Manufacturer, sp_beizhu, sp_time, sh_img)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.spShopId}, #{entity.spName}, #{entity.spBarCode}, #{entity.spTypeId}, #{entity.spState},
+            #{entity.spCompany}, #{entity.spSpecifications}, #{entity.spColor}, #{entity.spJprice},
+            #{entity.spPresetPrice}, #{entity.spManufacturer}, #{entity.spBeizhu}, #{entity.spTime}, #{entity.shImg})
+        </foreach>
+        on duplicate key update
+        sp_shopid = values(sp_shopid) , sp_name = values(sp_name) , sp_bar_code = values(sp_bar_code) , sp_type_id =
+        values(sp_type_id) , sp_state = values(sp_state) , sp_Company = values(sp_Company) , sp_Specifications =
+        values(sp_Specifications) , sp_color = values(sp_color) , sp_jprice = values(sp_jprice) , sp_Preset_price =
+        values(sp_Preset_price) , sp_Manufacturer = values(sp_Manufacturer) , sp_beizhu = values(sp_beizhu) , sp_time =
+        values(sp_time) , sh_img = values(sh_img)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.shop
+        <set>
+            <if test="spShopId != null">
+                sp_shopid = #{spShopId},
+            </if>
+            <if test="spName != null and spName != ''">
+                sp_name = #{spName},
+            </if>
+            <if test="spBarCode != null and spBarCode != ''">
+                sp_bar_code = #{spBarCode},
+            </if>
+            <if test="spTypeId != null">
+                sp_type_id = #{spTypeId},
+            </if>
+            <if test="spState != null">
+                sp_state = #{spState},
+            </if>
+            <if test="spCompany != null and spCompany != ''">
+                sp_Company = #{spCompany},
+            </if>
+            <if test="spSpecifications != null and spSpecifications != ''">
+                sp_Specifications = #{spSpecifications},
+            </if>
+            <if test="spColor != null and spColor != ''">
+                sp_color = #{spColor},
+            </if>
+            <if test="spJprice != null">
+                sp_jprice = #{spJprice},
+            </if>
+            <if test="spPresetPrice != null">
+                sp_Preset_price = #{spPresetPrice},
+            </if>
+            <if test="spManufacturer != null and spManufacturer != ''">
+                sp_Manufacturer = #{spManufacturer},
+            </if>
+            <if test="spBeizhu != null and spBeizhu != ''">
+                sp_beizhu = #{spBeizhu},
+            </if>
+            <if test="spTime != null">
+                sp_time = #{spTime},
+            </if>
+            <if test="shImg != null and shImg != ''">
+                sh_img = #{shImg},
+            </if>
+        </set>
+        where sp_id = #{spId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.shop where sp_id = #{spId}
+    </delete>
+
+    <!-- 查询所有商品 -->
+    <select id="queryshopanstock" resultMap="ShopandstockVo">
+        SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,sk.`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code` FROM shop s
+        LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid
+            <where>
+                <if test="value != 0">
+                    tp.sp_type_id = #{value}
+                </if>
+            </where>
+    </select>
+
+    <!-- 模糊查询 -->
+    <select id="likeselect" resultMap="ShopandstockVo">
+        SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,sk.`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code` FROM shop s
+        LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid WHERE s.sp_name LIKE CONCAT('%',#{test},'%') OR s.sp_shopid like CONCAT('%',#{test},'%')
+    </select>
+    
+    <!-- 只显示当前供货商提供的商品 -->
+    <select id="showsupplier" resultMap="ShopandstockVo">
+        SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,sk.`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code` FROM shop s
+        LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid
+        LEFT JOIN supplier sp ON sp.supplierid=s.s_id WHERE sp.supplierid = #{test} AND s.sp_state = 0
+    </select>
+
+
+
+<!--  楷楷的  -->
+    <select id="queryById" resultMap="ShopMap">
+        select
+          s.sp_id, s.sp_shopid, s.sp_name, s.sp_bar_code, s.sp_type_id, s.sp_state, s.sp_Company, s.sp_Specifications, s.sp_color, s.sp_Preset_price, s.sp_jprice, s.sp_Manufacturer, s.sp_beizhu, s.sp_time, s.sh_img
+          ,y.sp_type_id,y.sp_type_name
+        from projects.shop s,projects.shop_type y
+        where s.sp_type_id=y.sp_type_id
+        and s.sp_id = #{spid}
+    </select>
+    <!--可利用分页插件查询指定行数据-->
+    <select id="queryAllByPage" resultMap="ShopMap">
+        select
+         s.sp_id, s.sp_shopid, s.sp_name, s.sp_bar_code, s.sp_type_id, s.sp_state, s.sp_Company, s.sp_Specifications, s.sp_color, s.sp_Preset_price, s.sp_jprice, s.sp_Manufacturer, s.sp_beizhu, s.sp_time, s.sh_img
+          ,y.sp_type_id,y.sp_type_name
+        from projects.shop_type y
+        INNER JOIN projects.shop s
+        on s.sp_type_id=y.sp_type_id
+    </select>
+    <!--新增所有列-->
+    <insert id="insertShop" keyProperty="spId" useGeneratedKeys="true">
+        insert into projects.shop(sp_shopid, sp_name, sp_bar_code, sp_type_id,sp_state, sp_Company, sp_Specifications, sp_color, sp_Preset_price, sp_jprice, sp_Manufacturer, sp_beizhu, sp_time, sh_img)
+        values (#{spShopid}, #{spName}, #{spBarCode}, #{spTypeId}, #{spState}, #{spCompany}, #{spSpecifications}, #{spColor}, #{spPresetPrice}, #{spJprice}, #{spManufacturer}, #{spBeizhu}, #{spTime}, #{shImg})
+    </insert>
+
+    <update id="updateshop">
+        update projects.shop
+        <set>
+            <if test="spShopid != null">
+                sp_shopid = #{spShopid},
+            </if>
+            <if test="spName != null and spName != ''">
+                sp_name = #{spName},
+            </if>
+            <if test="spBarCode != null and spBarCode != ''">
+                sp_bar_code = #{spBarCode},
+            </if>
+            <if test="spTypeId != null">
+                sp_type_id = #{spTypeId},
+            </if>
+            <if test="spState != null">
+                sp_state = #{spState},
+            </if>
+            <if test="spCompany != null and spCompany != ''">
+                sp_Company = #{spCompany},
+            </if>
+            <if test="spSpecifications != null and spSpecifications != ''">
+                sp_Specifications = #{spSpecifications},
+            </if>
+            <if test="spColor != null and spColor != ''">
+                sp_color = #{spColor},
+            </if>
+
+            <if test="spPresetPrice != null">
+                sp_Preset_price = #{spPresetPrice},
+            </if>
+            <if test="spJprice != null">
+                sp_jprice = #{spJprice},
+            </if>
+            <if test="spManufacturer != null and spManufacturer != ''">
+                sp_Manufacturer = #{spManufacturer},
+            </if>
+            <if test="spBeizhu != null and spBeizhu != ''">
+                sp_beizhu = #{spBeizhu},
+            </if>
+            <if test="spTime != null">
+                sp_time = #{spTime},
+            </if>
+            <if test="shImg != null and shImg != ''">
+                sh_img = #{shImg},
+            </if>
+        </set>
+        where sp_id = #{spId}
+    </update>
+
+    <select id="queryAllByType" resultMap="ShopMap">
+        select
+        s.sp_id, s.sp_shopid, s.sp_name, s.sp_bar_code, s.sp_type_id, s.sp_state, s.sp_Company, s.sp_Specifications, s.sp_color, s.sp_Preset_price, s.sp_jprice, s.sp_Manufacturer, s.sp_beizhu, s.sp_time, s.sh_img
+        ,y.sp_type_id,y.sp_type_name
+        from projects.shop_type y
+        INNER JOIN projects.shop s
+        on s.sp_type_id=y.sp_type_id
+
+        <where>
+            <if test="shoptypename != null and shoptypename != '所有类别' ">
+                and sp_type_name = #{shoptypename}
+            </if>
+            <if test="shopstatic == 1 or shopstatic ==0">
+                and sp_state = #{shopstatic}
+            </if>
+            <if test="shopname != null and shopname != ''">
+                and sp_name like concat('%',#{shopname},'%')
+                or sp_bar_code like concat('%',#{shopname},'%')
+                or sp_shopid like concat('%',#{shopname},'%')
+            </if>
+        </where>
+    </select>
+    <select id="queryAllByStatic" resultMap="ShopMap">
+        select
+        s.sp_id, s.sp_shopid, s.sp_name, s.sp_bar_code, s.sp_type_id, s.sp_state, s.sp_Company, s.sp_Specifications, s.sp_color, s.sp_Preset_price, s.sp_jprice, s.sp_Manufacturer, s.sp_beizhu, s.sp_time, s.sh_img
+        ,y.sp_type_id,y.sp_type_name
+        from projects.shop_type y
+        INNER JOIN projects.shop s
+        on s.sp_type_id=y.sp_type_id
+        <where>
+            <if test="shopstatic == 0 or shopstatic == 1 ">
+                and sp_state = #{shopstatic}
+            </if>
+            <if test="shoptypename != null and shoptypename != '' and shoptypename != '所有类别' ">
+                and sp_type_name = #{shoptypename}
+            </if>
+            <if test="shopname != null and shoptypename != '' and shopname != ''">
+                and sp_name like concat('%',#{shopname},'%')
+                and sp_bar_code like concat('%',#{shopname},'%')
+                or sp_shopid like concat('%',#{shopname},'%')
+            </if>
+        </where>
+    </select>
+    <select id="queryCount" resultType="integer">
+        select
+        count(*)
+        from projects.shop
+
+    </select>
+    <select id="queryBytypelike" resultMap="ShopMap">
+        select
+        s.sp_id, s.sp_shopid, s.sp_name, s.sp_bar_code, s.sp_type_id, s.sp_state, s.sp_Company, s.sp_Specifications, s.sp_color, s.sp_Preset_price, s.sp_jprice, s.sp_Manufacturer, s.sp_beizhu, s.sp_time, s.sh_img
+        ,y.sp_type_id,y.sp_type_name
+        from projects.shop_type y
+        INNER JOIN projects.shop s
+        on s.sp_type_id=y.sp_type_id
+        <where>
+            <if test="shopstatic == 0 or shopstatic == 1">
+                and sp_state = #{shopstatic}
+            </if>
+            <if test="shoptypename != null and shoptypename != '所有类别' ">
+                and sp_type_name = #{shoptypename}
+            </if>
+            <if test="shopname != null and shopname != ''">
+                and sp_name like concat('%',#{shopname},'%')
+                or sp_bar_code like concat('%',#{shopname},'%')
+                or sp_shopid like concat('%',#{shopname},'%')
+            </if>
+        </where>
+    </select>
+    <select id="selectCount" resultType="integer">
+        select
+        count(*)
+        from projects.shop
+        <where>
+            <if test="shopname != null and shopname != ''">
+                and sp_name like concat('%',#{shopname},'%')
+                or sp_bar_code like concat('%',#{shopname},'%')
+                or sp_shopid like concat('%',#{shopname},'%')
+            </if>
+        </where>
+
+    </select>
+    <select id="findAllByShopName" resultMap="ShopMap">
+        select  * from projects.shop where sp_name = #{shopname}
+    </select>
+
+    <update id="updateStatic" >
+        update projects.shop
+        set
+        sp_state=1
+        <where>
+            <if test="shopid != null and shopid !=0">
+                sp_shopid = #{shopid}
+            </if>
+        </where>
+    </update>
+    <update id="updateStatic2" >
+        update projects.shop
+        set
+        sp_state=0
+        <where>
+            <if test="shopid != null and shopid !=0">
+                sp_shopid = #{shopid}
+            </if>
+        </where>
+    </update>
+
+    <update id="updatePil">
+        update projects.shop
+        <set>
+            sp_state=1
+        </set>
+        <where>
+            <if test="listid.length != null and listid.length != 0">
+                and sp_shopid in
+                <foreach collection="listid" item="item" index="index" open="(" separator="," close=")" >
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </update>
+    <delete id="delShop">
+        delete from projects.shop
+        <where>
+            <if test="shopid != null and shopid != 0">
+                and sp_shopid in
+                <foreach collection="shopid" item="shopid" index="index" open="(" separator="," close=")">
+                    #{shopid}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+
+
+<!--  一哥的  -->
+
+    <!-- 库存查询中的修改进价-->
+    <update id="updatePrice">
+        UPDATE shop  SET
+        <if test="jpe !=null">
+            sp_jprice = #{jpe}
+        </if>
+        <where>
+            <if test="spid !=null">
+                sp_shopid=#{spid}
+            </if>
+        </where>
+    </update>
+
+</mapper>
+

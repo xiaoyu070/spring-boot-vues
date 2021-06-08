@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.SuppliertypeDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.Suppliertype" id="SuppliertypeMap">
+        <result property="suptypeid" column="suptypeid" jdbcType="INTEGER"/>
+        <result property="supname" column="supname" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="SuppliertypeMap">
+        select
+         *
+         from projects.suppliertype
+
+    </select>
+    <!--查询单个-->
+    <select id="queryById" resultMap="SuppliertypeMap">
+        select
+          suptypeid, supname
+        from projects.suppliertype
+        where suptypeid = #{suptypeid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SuppliertypeMap">
+        select
+          suptypeid, supname
+        from projects.suppliertype
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="SuppliertypeMap">
+        select
+        suptypeid, supname
+        from projects.suppliertype
+        <where>
+            <if test="suptypeid != null">
+                and suptypeid = #{suptypeid}
+            </if>
+            <if test="supname != null and supname != ''">
+                and supname = #{supname}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="suptypeid" useGeneratedKeys="true">
+        insert into projects.suppliertype(supname)
+        values (#{supname})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="suptypeid" useGeneratedKeys="true">
+        insert into projects.suppliertype(supname)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.supname})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="suptypeid" useGeneratedKeys="true">
+        insert into projects.suppliertype(supname)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.supname})
+        </foreach>
+        on duplicate key update
+        supname = values(supname)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.suppliertype
+        <set>
+            <if test="supname != null and supname != ''">
+                supname = #{supname},
+            </if>
+        </set>
+        where suptypeid = #{suptypeid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.suppliertype where suptypeid = #{suptypeid}
+    </delete>
+
+</mapper>
+

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.BranchDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.Branch" id="BranchMap">
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
+        <result property="branchname" column="branchname" jdbcType="VARCHAR"/>
+        <result property="lxaddress" column="lxaddress" jdbcType="VARCHAR"/>
+        <result property="lxphone" column="lxphone" jdbcType="VARCHAR"/>
+        <result property="zhifu" column="zhifu" jdbcType="VARCHAR"/>
+        <result property="shuoming" column="shuoming" jdbcType="VARCHAR"/>
+        <result property="cjtime" column="cjtime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BranchMap">
+        select
+          branchid, branchname, lxaddress, lxphone, zhifu, shuoming, cjtime
+        from projects.branch
+        where branchid = #{branchid}
+    </select>
+
+
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BranchMap">
+        select
+          branchid, branchname, lxaddress, lxphone, zhifu, shuoming, cjtime
+        from projects.branch
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BranchMap">
+        select
+        branchid, branchname, lxaddress, lxphone, zhifu, shuoming, cjtime
+        from projects.branch
+        <where>
+            <if test="branchid != null">
+                and branchid = #{branchid}
+            </if>
+            <if test="branchname != null and branchname != ''">
+                and branchname = #{branchname}
+            </if>
+            <if test="lxaddress != null and lxaddress != ''">
+                and lxaddress = #{lxaddress}
+            </if>
+            <if test="lxphone != null and lxphone != ''">
+                and lxphone = #{lxphone}
+            </if>
+            <if test="zhifu != null and zhifu != ''">
+                and zhifu = #{zhifu}
+            </if>
+            <if test="shuoming != null and shuoming != ''">
+                and shuoming = #{shuoming}
+            </if>
+            <if test="cjtime != null">
+                and cjtime = #{cjtime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="branchid" useGeneratedKeys="true">
+        insert into projects.branch(branchname, lxaddress, lxphone, shuoming)
+        values (#{branchname}, #{lxaddress}, #{lxphone}, #{shuoming})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="branchid" useGeneratedKeys="true">
+        insert into projects.branch(branchname, lxaddress, lxphone, zhifu, shuoming, cjtime)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.branchname}, #{entity.lxaddress}, #{entity.lxphone}, #{entity.zhifu}, #{entity.shuoming},
+            #{entity.cjtime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="branchid" useGeneratedKeys="true">
+        insert into projects.branch(branchname, lxaddress, lxphone, zhifu, shuoming, cjtime)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.branchname}, #{entity.lxaddress}, #{entity.lxphone}, #{entity.zhifu}, #{entity.shuoming},
+            #{entity.cjtime})
+        </foreach>
+        on duplicate key update
+        branchname = values(branchname) , lxaddress = values(lxaddress) , lxphone = values(lxphone) , zhifu =
+        values(zhifu) , shuoming = values(shuoming) , cjtime = values(cjtime)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.branch
+        <set>
+            <if test="branchname != null and branchname != ''">
+                branchname = #{branchname},
+            </if>
+            <if test="lxaddress != null and lxaddress != ''">
+                lxaddress = #{lxaddress},
+            </if>
+            <if test="lxphone != null and lxphone != ''">
+                lxphone = #{lxphone},
+            </if>
+            <if test="zhifu != null and zhifu != ''">
+                zhifu = #{zhifu},
+            </if>
+            <if test="shuoming != null and shuoming != ''">
+                shuoming = #{shuoming},
+            </if>
+            <if test="cjtime != null">
+                cjtime = #{cjtime},
+            </if>
+        </set>
+        where branchid = #{branchid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.branch where branchid = #{branchid}
+    </delete>
+
+    <!-- 查询所有店面 -->
+    <select id="selectall" resultMap="BranchMap">
+        SELECT * FROM branch
+    </select>
+
+    <select id="findAll" resultMap="BranchMap">
+        select * from projects.branch
+    </select>
+
+
+<!--  老弟的  -->
+    <sql id="Base_Column_List">
+    branchid, branchname, lxaddress, lxphone, zhifu, shuoming, cjtime
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BranchMap">
+        select
+        <include refid="Base_Column_List" />
+        from branch
+        where branchid = #{branchid,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from branch
+    where branchid = #{branchid,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByBranchAndNames">
+        delete from branch
+        where branchid  IN
+        <foreach collection="branchid" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <insert id="insertSelective" keyColumn="branchid" keyProperty="branchid" parameterType="com.trkj.projects.mybatis.entity.Branch" useGeneratedKeys="true">
+        insert into branch
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="branchname != null">
+                branchname,
+            </if>
+            <if test="lxaddress != null">
+                lxaddress,
+            </if>
+            <if test="lxphone != null">
+                lxphone,
+            </if>
+            <if test="zhifu != null">
+                zhifu,
+            </if>
+            <if test="shuoming != null">
+                shuoming,
+            </if>
+            <if test="cjtime != null">
+                cjtime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="branchname != null">
+                #{branchname,jdbcType=VARCHAR},
+            </if>
+            <if test="lxaddress != null">
+                #{lxaddress,jdbcType=VARCHAR},
+            </if>
+            <if test="lxphone != null">
+                #{lxphone,jdbcType=VARCHAR},
+            </if>
+            <if test="zhifu != null">
+                #{zhifu,jdbcType=VARCHAR},
+            </if>
+            <if test="shuoming != null">
+                #{shuoming,jdbcType=VARCHAR},
+            </if>
+            <if test="cjtime != null">
+                #{cjtime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.trkj.projects.mybatis.entity.Branch">
+        update branch
+        <set>
+            <if test="branchname != null">
+                branchname = #{branchname,jdbcType=VARCHAR},
+            </if>
+            <if test="lxaddress != null">
+                lxaddress = #{lxaddress,jdbcType=VARCHAR},
+            </if>
+            <if test="lxphone != null">
+                lxphone = #{lxphone,jdbcType=VARCHAR},
+            </if>
+            <if test="zhifu != null">
+                zhifu = #{zhifu,jdbcType=VARCHAR},
+            </if>
+            <if test="shuoming != null">
+                shuoming = #{shuoming,jdbcType=VARCHAR},
+            </if>
+            <if test="cjtime != null">
+                cjtime = #{cjtime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where branchid = #{branchid,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.trkj.projects.mybatis.entity.Branch">
+    update branch
+    set branchname = #{branchname,jdbcType=VARCHAR},
+      lxaddress = #{lxaddress,jdbcType=VARCHAR},
+      lxphone = #{lxphone,jdbcType=VARCHAR},
+      shuoming = #{shuoming,jdbcType=VARCHAR},
+      cjtime = #{cjtime,jdbcType=TIMESTAMP}
+    where branchid = #{branchid,jdbcType=INTEGER}
+  </update>
+
+<!--  一哥的  -->
+    <select id="queryBranchAll" resultMap="BranchMap">
+        select branchid, branchname, lxaddress, lxphone, zhifu, shuoming, cjtime from projects.branch
+    </select>
+
+</mapper>
+

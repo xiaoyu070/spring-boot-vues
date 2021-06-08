@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.SysRolesDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.SysRoles" id="SysRolesMap">
+        <result property="rolesId" column="roles_id" jdbcType="INTEGER"/>
+        <result property="rolesLv" column="roles_lv" jdbcType="INTEGER"/>
+        <result property="rolesName" column="roles_name" jdbcType="VARCHAR"/>
+        <result property="menuId" column="menu_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SysRolesMap">
+        select
+          roles_id, roles_lv, roles_name, menu_id
+        from projects.sys_roles
+        where roles_id = #{rolesId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SysRolesMap">
+        select
+          roles_id, roles_lv, roles_name, menu_id
+        from projects.sys_roles
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="SysRolesMap">
+        select
+        roles_id, roles_lv, roles_name, menu_id
+        from projects.sys_roles
+        <where>
+            <if test="rolesId != null">
+                and roles_id = #{rolesId}
+            </if>
+            <if test="rolesLv != null">
+                and roles_lv = #{rolesLv}
+            </if>
+            <if test="rolesName != null and rolesName != ''">
+                and roles_name = #{rolesName}
+            </if>
+            <if test="menuId != null">
+                and menu_id = #{menuId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="rolesId" useGeneratedKeys="true">
+        insert into projects.sys_roles(roles_lv, roles_name, menu_id)
+        values (#{rolesLv}, #{rolesName}, #{menuId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="rolesId" useGeneratedKeys="true">
+        insert into projects.sys_roles(roles_lv, roles_name, menu_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.rolesLv}, #{entity.rolesName}, #{entity.menuId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="rolesId" useGeneratedKeys="true">
+        insert into projects.sys_roles(roles_lv, roles_name, menu_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.rolesLv}, #{entity.rolesName}, #{entity.menuId})
+        </foreach>
+        on duplicate key update
+        roles_lv = values(roles_lv) , roles_name = values(roles_name) , menu_id = values(menu_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.sys_roles
+        <set>
+            <if test="rolesLv != null">
+                roles_lv = #{rolesLv},
+            </if>
+            <if test="rolesName != null and rolesName != ''">
+                roles_name = #{rolesName},
+            </if>
+            <if test="menuId != null">
+                menu_id = #{menuId},
+            </if>
+        </set>
+        where roles_id = #{rolesId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.sys_roles where roles_id = #{rolesId}
+    </delete>
+
+</mapper>
+

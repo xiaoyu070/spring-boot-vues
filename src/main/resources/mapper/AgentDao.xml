@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.AgentDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.Agent" id="AgentMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="agentId" column="agent_id" jdbcType="INTEGER"/>
+        <result property="agentName" column="agent_name" jdbcType="VARCHAR"/>
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
+        <result property="agentZw" column="agent_zw" jdbcType="VARCHAR"/>
+        <result property="agentTicheng" column="agent_ticheng" jdbcType="NUMERIC"/>
+        <result property="agentPhone" column="agent_phone" jdbcType="VARCHAR"/>
+        <result property="agentAddress" column="agent_address" jdbcType="VARCHAR"/>
+        <result property="agentBz" column="agent_bz" jdbcType="VARCHAR"/>
+        <result property="purchasePom" column="purchase_pom" jdbcType="INTEGER"/>
+        <result property="salePom" column="sale_pom" jdbcType="INTEGER"/>
+        <result property="stockPom" column="stock_pom" jdbcType="INTEGER"/>
+        <result property="agentStatie" column="agent_statie" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="AgentMap">
+        select
+          id, agent_id, agent_name, branchid, agent_zw, agent_ticheng, agent_phone, agent_address, agent_bz, purchase_pom, sale_pom, stock_pom, agent_statie
+        from projects.agent
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="AgentMap">
+        select
+          id, agent_id, agent_name, branchid, agent_zw, agent_ticheng, agent_phone, agent_address, agent_bz, purchase_pom, sale_pom, stock_pom, agent_statie
+        from projects.agent
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="AgentMap">
+        select
+        id, agent_id, agent_name, branchid, agent_zw, agent_ticheng, agent_phone, agent_address, agent_bz, purchase_pom,
+        sale_pom, stock_pom, agent_statie
+        from projects.agent
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="agentName != null and agentName != ''">
+                and agent_name = #{agentName}
+            </if>
+            <if test="branchid != null">
+                and branchid = #{branchid}
+            </if>
+            <if test="agentZw != null and agentZw != ''">
+                and agent_zw = #{agentZw}
+            </if>
+            <if test="agentTicheng != null">
+                and agent_ticheng = #{agentTicheng}
+            </if>
+            <if test="agentPhone != null and agentPhone != ''">
+                and agent_phone = #{agentPhone}
+            </if>
+            <if test="agentAddress != null and agentAddress != ''">
+                and agent_address = #{agentAddress}
+            </if>
+            <if test="agentBz != null and agentBz != ''">
+                and agent_bz = #{agentBz}
+            </if>
+            <if test="purchasePom != null">
+                and purchase_pom = #{purchasePom}
+            </if>
+            <if test="salePom != null">
+                and sale_pom = #{salePom}
+            </if>
+            <if test="stockPom != null">
+                and stock_pom = #{stockPom}
+            </if>
+            <if test="agentStatie != null">
+                and agent_statie = #{agentStatie}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.agent(agent_id, agent_name, branchid, agent_zw, agent_ticheng, agent_phone, agent_address, agent_bz, purchase_pom, sale_pom, stock_pom, agent_statie)
+        values (#{agentId}, #{agentName}, #{branchid}, #{agentZw}, #{agentTicheng}, #{agentPhone}, #{agentAddress}, #{agentBz}, #{purchasePom}, #{salePom}, #{stockPom}, #{agentStatie})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.agent(agent_id, agent_name, branchid, agent_zw, agent_ticheng, agent_phone, agent_address,
+        agent_bz, purchase_pom, sale_pom, stock_pom, agent_statie)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.agentId}, #{entity.agentName}, #{entity.branchid}, #{entity.agentZw}, #{entity.agentTicheng},
+            #{entity.agentPhone}, #{entity.agentAddress}, #{entity.agentBz}, #{entity.purchasePom}, #{entity.salePom},
+            #{entity.stockPom}, #{entity.agentStatie})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.agent(agent_id, agent_name, branchid, agent_zw, agent_ticheng, agent_phone, agent_address,
+        agent_bz, purchase_pom, sale_pom, stock_pom, agent_statie)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.agentId}, #{entity.agentName}, #{entity.branchid}, #{entity.agentZw}, #{entity.agentTicheng},
+            #{entity.agentPhone}, #{entity.agentAddress}, #{entity.agentBz}, #{entity.purchasePom}, #{entity.salePom},
+            #{entity.stockPom}, #{entity.agentStatie})
+        </foreach>
+        on duplicate key update
+        agent_id = values(agent_id) , agent_name = values(agent_name) , branchid = values(branchid) , agent_zw =
+        values(agent_zw) , agent_ticheng = values(agent_ticheng) , agent_phone = values(agent_phone) , agent_address =
+        values(agent_address) , agent_bz = values(agent_bz) , purchase_pom = values(purchase_pom) , sale_pom =
+        values(sale_pom) , stock_pom = values(stock_pom) , agent_statie = values(agent_statie)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.agent
+        <set>
+            <if test="agentId != null">
+                agent_id = #{agentId},
+            </if>
+            <if test="agentName != null and agentName != ''">
+                agent_name = #{agentName},
+            </if>
+            <if test="branchid != null">
+                branchid = #{branchid},
+            </if>
+            <if test="agentZw != null and agentZw != ''">
+                agent_zw = #{agentZw},
+            </if>
+            <if test="agentTicheng != null">
+                agent_ticheng = #{agentTicheng},
+            </if>
+            <if test="agentPhone != null and agentPhone != ''">
+                agent_phone = #{agentPhone},
+            </if>
+            <if test="agentAddress != null and agentAddress != ''">
+                agent_address = #{agentAddress},
+            </if>
+            <if test="agentBz != null and agentBz != ''">
+                agent_bz = #{agentBz},
+            </if>
+            <if test="purchasePom != null">
+                purchase_pom = #{purchasePom},
+            </if>
+            <if test="salePom != null">
+                sale_pom = #{salePom},
+            </if>
+            <if test="stockPom != null">
+                stock_pom = #{stockPom},
+            </if>
+            <if test="agentStatie != null">
+                agent_statie = #{agentStatie},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.agent where id = #{id}
+    </delete>
+
+    <select id="querybyBranchid" resultMap="AgentMap">
+        SELECT a.* FROM agent a LEFT JOIN branch b ON a.`branchid`=b.branchid WHERE b.`branchid` = #{id}
+    </select>
+
+    <select id="selectallbybranchid" resultMap="AgentMap">
+        select
+        id, agent_id, agent_name, branchid, agent_zw, agent_ticheng, agent_phone, agent_address, agent_bz, purchase_pom, sale_pom, stock_pom, agent_statie
+        from projects.agent
+        where branchid = #{branchid}
+    </select>
+
+
+</mapper>
+

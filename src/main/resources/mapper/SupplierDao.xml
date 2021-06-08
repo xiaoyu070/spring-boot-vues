@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.SupplierDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.Supplier" id="SupplierMap">
+        <result property="sId" column="s_id" jdbcType="INTEGER"/>
+        <result property="supplierid" column="supplierid" jdbcType="INTEGER"/>
+        <result property="suppliername" column="suppliername" jdbcType="VARCHAR"/>
+        <result property="contacts" column="contacts" jdbcType="VARCHAR"/>
+        <result property="contactnumber" column="contactnumber" jdbcType="VARCHAR"/>
+        <result property="suptypeid" column="suptypeid" jdbcType="INTEGER"/>
+        <result property="addressid" column="addressid" jdbcType="INTEGER"/>
+        <result property="payablemoney" column="payablemoney" jdbcType="NUMERIC"/>
+        <result property="companyid" column="companyid" jdbcType="INTEGER"/>
+        <result property="money" column="money" jdbcType="NUMERIC"/>
+        <result property="state" column="static" jdbcType="INTEGER"/>
+        <result property="ismoren" column="ismoren" jdbcType="INTEGER"/>
+        <result property="lxaddress" column="lxaddress" jdbcType="VARCHAR"/>
+        <result property="cjtime" column="cjtime" jdbcType="TIMESTAMP"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+        <association property="address" javaType="com.trkj.projects.mybatis.entity.Address">
+            <result property="addressid" column="addressid"/>
+            <result property="address" column="address"/>
+        </association>
+        <association property="branch" javaType="com.trkj.projects.mybatis.entity.Branch">
+            <result property="branchid" column="branchid"/>
+            <result property="branchname" column="branchname"/>
+            <result property="lxaddress" column="lxaddress"/>
+            <result property="lxphone" column="lxphone"/>
+            <result property="shuoming" column="shuoming"/>
+            <result property="zhifu" column="zhifu"/>
+            <result property="cjtime" column="cjtime"/>
+        </association>
+        <association property="suppliertype" javaType="com.trkj.projects.mybatis.entity.Suppliertype">
+            <result property="suptypeid" column="suptypeid"/>
+            <result property="supname" column="supname"/>
+        </association>
+
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SupplierMap">
+        select
+          s_id, supplierid, suppliername, contacts, contactnumber, suptypeid, addressid, payablemoney, companyid, money, static, ismoren, lxaddress, cjtime, beizhu
+        from projects.supplier
+        where s_id = #{sId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SupplierMap">
+        select
+          s_id, supplierid, suppliername, contacts, contactnumber, suptypeid, addressid, payablemoney, companyid, money, static, ismoren, lxaddress, cjtime, beizhu
+        from projects.supplier
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="SupplierMap">
+        select
+        s_id, supplierid, suppliername, contacts, contactnumber, suptypeid, addressid, payablemoney, companyid, money,
+        static, ismoren, lxaddress, cjtime, beizhu
+        from projects.supplier
+        <where>
+            <if test="sId != null">
+                and s_id = #{sId}
+            </if>
+            <if test="supplierid != null">
+                and supplierid = #{supplierid}
+            </if>
+            <if test="suppliername != null and suppliername != ''">
+                and suppliername = #{suppliername}
+            </if>
+            <if test="contacts != null and contacts != ''">
+                and contacts = #{contacts}
+            </if>
+            <if test="contactnumber != null and contactnumber != ''">
+                and contactnumber = #{contactnumber}
+            </if>
+            <if test="suptypeid != null">
+                and suptypeid = #{suptypeid}
+            </if>
+            <if test="addressid != null">
+                and addressid = #{addressid}
+            </if>
+            <if test="payablemoney != null">
+                and payablemoney = #{payablemoney}
+            </if>
+            <if test="companyid != null">
+                and companyid = #{companyid}
+            </if>
+            <if test="money != null">
+                and money = #{money}
+            </if>
+            <if test="state != null">
+                and static = #{state}
+            </if>
+            <if test="ismoren != null">
+                and ismoren = #{ismoren}
+            </if>
+            <if test="lxaddress != null and lxaddress != ''">
+                and lxaddress = #{lxaddress}
+            </if>
+            <if test="cjtime != null">
+                and cjtime = #{cjtime}
+            </if>
+            <if test="beizhu != null and beizhu != ''">
+                and beizhu = #{beizhu}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="sId" useGeneratedKeys="true">
+        insert into projects.supplier(supplierid, suppliername, contacts, contactnumber, suptypeid, addressid, payablemoney, companyid, money, static, ismoren, lxaddress, cjtime, beizhu)
+        values (#{sId}, #{suppliername}, #{contacts}, #{contactnumber}, #{suptypeid}, #{addressid}, #{payablemoney}, #{companyid}, #{money}, #{state}, #{ismoren}, #{lxaddress}, #{cjtime}, #{beizhu})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="sId" useGeneratedKeys="true">
+        insert into projects.supplier(supplierid, suppliername, contacts, contactnumber, suptypeid, addressid,
+        payablemoney, companyid, money, static, ismoren, lxaddress, cjtime, beizhu)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.supplierid}, #{entity.suppliername}, #{entity.contacts}, #{entity.contactnumber},
+            #{entity.suptypeid}, #{entity.addressid}, #{entity.payablemoney}, #{entity.companyid}, #{entity.money},
+            #{entity.state}, #{entity.ismoren}, #{entity.lxaddress}, #{entity.cjtime}, #{entity.beizhu})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="sId" useGeneratedKeys="true">
+        insert into projects.supplier(supplierid, suppliername, contacts, contactnumber, suptypeid, addressid,
+        payablemoney, companyid, money, static, ismoren, lxaddress, cjtime, beizhu)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.supplierid}, #{entity.suppliername}, #{entity.contacts}, #{entity.contactnumber},
+            #{entity.suptypeid}, #{entity.addressid}, #{entity.payablemoney}, #{entity.companyid}, #{entity.money},
+            #{entity.state}, #{entity.ismoren}, #{entity.lxaddress}, #{entity.cjtime}, #{entity.beizhu})
+        </foreach>
+        on duplicate key update
+        supplierid = values(supplierid) , suppliername = values(suppliername) , contacts = values(contacts) ,
+        contactnumber = values(contactnumber) , suptypeid = values(suptypeid) , addressid = values(addressid) ,
+        payablemoney = values(payablemoney) , companyid = values(companyid) , money = values(money) , static =
+        values(state) , ismoren = values(ismoren) , lxaddress = values(lxaddress) , cjtime = values(cjtime) , beizhu =
+        values(beizhu)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.supplier
+        <set>
+            <if test="supplierid != null">
+                supplierid = #{supplierid},
+            </if>
+            <if test="suppliername != null and suppliername != ''">
+                suppliername = #{suppliername},
+            </if>
+            <if test="contacts != null and contacts != ''">
+                contacts = #{contacts},
+            </if>
+            <if test="contactnumber != null and contactnumber != ''">
+                contactnumber = #{contactnumber},
+            </if>
+            <if test="suptypeid != null">
+                suptypeid = #{suptypeid},
+            </if>
+            <if test="addressid != null">
+                addressid = #{addressid},
+            </if>
+            <if test="payablemoney != null">
+                payablemoney = #{payablemoney},
+            </if>
+            <if test="companyid != null">
+                companyid = #{companyid},
+            </if>
+            <if test="money != null">
+                money = #{money},
+            </if>
+                static = #{state},
+            <if test="ismoren != null">
+                ismoren = #{ismoren},
+            </if>
+            <if test="lxaddress != null and lxaddress != ''">
+                lxaddress = #{lxaddress},
+            </if>
+            <if test="cjtime != null">
+                cjtime = #{cjtime},
+            </if>
+            <if test="beizhu != null and beizhu != ''">
+                beizhu = #{beizhu},
+            </if>
+        </set>
+        where supplierid = #{supplierid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.supplier where s_id = #{sId}
+    </delete>
+
+    <select id="queryall" resultMap="SupplierMap">
+        select * from supplier
+    </select>
+
+
+    <select id="findAllByName" resultMap="SupplierMap">
+        SELECT su.s_id,su.supplierid,su.suppliername,su.contacts,su.contactnumber,su.suptypeid,st.supname,
+        su.addressid,ad.address,su.payablemoney,su.companyid,b.branchname,su.money,su.static,su.ismoren,
+        su.lxaddress,su.cjtime,su.beizhu FROM supplier su
+        LEFT JOIN
+        suppliertype st ON su.suptypeid=st.suptypeid
+        LEFT JOIN
+        address ad ON ad.addressid=su.addressid
+        LEFT JOIN
+        branch b ON b.branchid=su.companyid
+        <where>
+            <if test="branchnames != null and branchnames != '' and branchnames != '所有门店'">
+                and branchname = #{branchnames}
+            </if>
+            <if test="suppliername != null and suppliername != '' ">
+                and supplierid like concat('%',#{suppliername},'%')
+                or suppliername like concat('%',#{suppliername},'%')
+                or address like concat('%',#{suppliername},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="findAll" resultMap="SupplierMap">
+        SELECT su.s_id,su.supplierid,su.suppliername,su.contacts,su.contactnumber,su.suptypeid,st.supname,
+        su.addressid,ad.address,su.payablemoney,su.companyid,b.branchname,su.money,su.static,su.ismoren,
+        su.lxaddress,su.cjtime,su.beizhu FROM supplier su
+        LEFT JOIN
+        suppliertype st ON su.suptypeid=st.suptypeid
+        LEFT JOIN
+        address ad ON ad.addressid=su.addressid
+        LEFT JOIN
+        branch b ON b.branchid=su.companyid
+    </select>
+
+    <delete id="pildelsup" >
+        delete from projects.supplier
+        <where>
+            <if test="sid != null">
+                and s_id in
+                <foreach collection="sid" item="sid" index="index" open="(" close=")" separator=",">
+                    #{sid}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+
+</mapper>
+

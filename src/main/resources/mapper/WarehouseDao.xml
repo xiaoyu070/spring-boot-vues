@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.WarehouseDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.Warehouse" id="WarehouseMap">
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
+        <result property="wname" column="wname" jdbcType="VARCHAR"/>
+        <result property="charge" column="charge" jdbcType="VARCHAR"/>
+        <result property="lxphone" column="lxphone" jdbcType="VARCHAR"/>
+        <result property="waddress" column="waddress" jdbcType="VARCHAR"/>
+        <result property="ismoren" column="ismoren" jdbcType="INTEGER"/>
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
+        <result property="cjdate" column="cjdate" jdbcType="TIMESTAMP"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="WarehouseMap">
+        select
+          wid, wname, charge, lxphone, waddress, ismoren, branchid, cjdate, beizhu
+        from projects.warehouse
+        where wid = #{wid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="WarehouseMap">
+        select
+          wid, wname, charge, lxphone, waddress, ismoren, branchid, cjdate, beizhu
+        from projects.warehouse
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="WarehouseMap">
+        select
+        wid, wname, charge, lxphone, waddress, ismoren, branchid, cjdate, beizhu
+        from projects.warehouse
+        <where>
+            <if test="wid != null">
+                and wid = #{wid}
+            </if>
+            <if test="wname != null and wname != ''">
+                and wname = #{wname}
+            </if>
+            <if test="charge != null and charge != ''">
+                and charge = #{charge}
+            </if>
+            <if test="lxphone != null and lxphone != ''">
+                and lxphone = #{lxphone}
+            </if>
+            <if test="waddress != null and waddress != ''">
+                and waddress = #{waddress}
+            </if>
+            <if test="ismoren != null">
+                and ismoren = #{ismoren}
+            </if>
+            <if test="branchid != null">
+                and branchid = #{branchid}
+            </if>
+            <if test="cjdate != null">
+                and cjdate = #{cjdate}
+            </if>
+            <if test="beizhu != null and beizhu != ''">
+                and beizhu = #{beizhu}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="wid" useGeneratedKeys="true">
+        insert into projects.warehouse(wname, charge, lxphone, waddress, ismoren, branchid, cjdate, beizhu)
+        values (#{wname}, #{charge}, #{lxphone}, #{waddress}, #{ismoren}, #{branchid}, #{cjdate}, #{beizhu})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="wid" useGeneratedKeys="true">
+        insert into projects.warehouse(wname, charge, lxphone, waddress, ismoren, branchid, cjdate, beizhu)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.wname}, #{entity.charge}, #{entity.lxphone}, #{entity.waddress}, #{entity.ismoren},
+            #{entity.branchid}, #{entity.cjdate}, #{entity.beizhu})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="wid" useGeneratedKeys="true">
+        insert into projects.warehouse(wname, charge, lxphone, waddress, ismoren, branchid, cjdate, beizhu)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.wname}, #{entity.charge}, #{entity.lxphone}, #{entity.waddress}, #{entity.ismoren},
+            #{entity.branchid}, #{entity.cjdate}, #{entity.beizhu})
+        </foreach>
+        on duplicate key update
+        wname = values(wname) , charge = values(charge) , lxphone = values(lxphone) , waddress = values(waddress) ,
+        ismoren = values(ismoren) , branchid = values(branchid) , cjdate = values(cjdate) , beizhu = values(beizhu)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.warehouse
+        <set>
+            <if test="wname != null and wname != ''">
+                wname = #{wname},
+            </if>
+            <if test="charge != null and charge != ''">
+                charge = #{charge},
+            </if>
+            <if test="lxphone != null and lxphone != ''">
+                lxphone = #{lxphone},
+            </if>
+            <if test="waddress != null and waddress != ''">
+                waddress = #{waddress},
+            </if>
+            <if test="ismoren != null">
+                ismoren = #{ismoren},
+            </if>
+            <if test="branchid != null">
+                branchid = #{branchid},
+            </if>
+            <if test="cjdate != null">
+                cjdate = #{cjdate},
+            </if>
+            <if test="beizhu != null and beizhu != ''">
+                beizhu = #{beizhu},
+            </if>
+        </set>
+        where wid = #{wid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.warehouse where wid = #{wid}
+    </delete>
+
+    <!--查询仓库表中所有字段-->
+    <select id="selectall" resultMap="WarehouseMap">
+        select w.* from projects.warehouse w;
+    </select>
+
+    <!-- 根据branchid查询仓库 -->
+    <select id="selectbranchid" resultMap="WarehouseMap">
+        SELECT * FROM warehouse WHERE branchid = #{id}
+    </select>
+
+    <select id="queryBybranchid" resultMap="WarehouseMap">
+        select
+          wid, wname, charge, lxphone, waddress, ismoren, branchid, cjdate, beizhu
+        from projects.warehouse
+        where branchid = #{branchid}
+    </select>
+
+
+<!--  老弟的  -->
+    <sql id="Base_Column_List">
+    wid, wname, charge, lxphone, waddress, ismoren, branchid, cjdate, beizhu
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="WarehouseMap">
+        select
+        <include refid="Base_Column_List" />
+        from warehouse
+        where wid = #{wid,jdbcType=INTEGER}
+    </select>
+    <select id="selectByBrachid" parameterType="java.lang.Integer" resultMap="WarehouseMap">
+        select
+        <include refid="Base_Column_List" />
+        from warehouse
+        <where>
+            <if test="branchid != null and branchid !=''">
+                and branchid = #{branchid,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+    <select id="selectMohu" resultMap="WarehouseMap">
+        select <include refid="Base_Column_List" />
+        from warehouse
+        <where>
+            <if test="wname != null and wname !=''">
+                and wname like "%"#{wname,jdbcType=VARCHAR}"%"
+            </if>
+        </where>
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from warehouse
+    where wid = #{wid,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteWarehouse" parameterType="java.lang.Integer">
+    delete from Warehouse
+    where branchid = #{branchid,jdbcType=INTEGER}
+  </delete>
+    <delete id="deleteByWarehouse">
+        delete from warehouse
+        where branchid  IN
+        <foreach collection="branchid" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    <delete id="deleteWarehouseId">
+        delete from warehouse
+        where wid IN
+        <foreach collection="wid" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <insert id="insertSelective" keyColumn="wid" keyProperty="wid" parameterType="com.trkj.projects.mybatis.entity.Warehouse" useGeneratedKeys="true">
+        insert into warehouse
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="wname != null">
+                wname,
+            </if>
+            <if test="charge != null">
+                charge,
+            </if>
+            <if test="lxphone != null">
+                lxphone,
+            </if>
+            <if test="waddress != null">
+                waddress,
+            </if>
+            <if test="ismoren != null">
+                ismoren,
+            </if>
+            <if test="branchid != null">
+                branchid,
+            </if>
+            <if test="cjdate != null">
+                cjdate,
+            </if>
+            <if test="beizhu != null">
+                beizhu,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="wname != null">
+                #{wname,jdbcType=VARCHAR},
+            </if>
+            <if test="charge != null">
+                #{charge,jdbcType=VARCHAR},
+            </if>
+            <if test="lxphone != null">
+                #{lxphone,jdbcType=VARCHAR},
+            </if>
+            <if test="waddress != null">
+                #{waddress,jdbcType=VARCHAR},
+            </if>
+            <if test="ismoren != null">
+                #{ismoren,jdbcType=INTEGER},
+            </if>
+            <if test="branchid != null">
+                #{branchid,jdbcType=INTEGER},
+            </if>
+            <if test="cjdate != null">
+                #{cjdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="beizhu != null">
+                #{beizhu,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.trkj.projects.mybatis.entity.Warehouse">
+        update warehouse
+        <set>
+            <if test="wname != null">
+                wname = #{wname,jdbcType=VARCHAR},
+            </if>
+            <if test="charge != null">
+                charge = #{charge,jdbcType=VARCHAR},
+            </if>
+            <if test="lxphone != null">
+                lxphone = #{lxphone,jdbcType=VARCHAR},
+            </if>
+            <if test="waddress != null">
+                waddress = #{waddress,jdbcType=VARCHAR},
+            </if>
+            <if test="ismoren != null">
+                ismoren = #{ismoren,jdbcType=INTEGER},
+            </if>
+            <if test="branchid != null">
+                branchid = #{branchid,jdbcType=INTEGER},
+            </if>
+            <if test="cjdate != null">
+                cjdate = #{cjdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="beizhu != null">
+                beizhu = #{beizhu,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where wid = #{wid,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.trkj.projects.mybatis.entity.Warehouse">
+    update warehouse
+    set wname = #{wname,jdbcType=VARCHAR},
+      charge = #{charge,jdbcType=VARCHAR},
+      lxphone = #{lxphone,jdbcType=VARCHAR},
+      waddress = #{waddress,jdbcType=VARCHAR},
+      ismoren = #{ismoren,jdbcType=INTEGER},
+      branchid = #{branchid,jdbcType=INTEGER},
+      cjdate = #{cjdate,jdbcType=TIMESTAMP},
+      beizhu = #{beizhu,jdbcType=VARCHAR}
+    where wid = #{wid,jdbcType=INTEGER}
+  </update>
+
+
+    <!--  一哥的  -->
+    <select id="queryWarehouse" resultType="com.trkj.projects.mybatis.entity.Warehouse">
+        SELECT * FROM warehouse WHERE branchid=#{id}
+    </select>
+
+    <select id="findAll" resultMap="WarehouseMap">
+        select * from warehouse
+    </select>
+
+</mapper>
+

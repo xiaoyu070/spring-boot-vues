@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.AddressDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.Address" id="AddressMap">
+        <result property="addressid" column="addressid" jdbcType="INTEGER"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="AddressMap">
+        select
+         * from projects.address
+    </select>
+    <!--查询单个-->
+    <select id="queryById" resultMap="AddressMap">
+        select
+          addressid, address
+        from projects.address
+        where addressid = #{addressid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="AddressMap">
+        select
+          addressid, address
+        from projects.address
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="AddressMap">
+        select
+        addressid, address
+        from projects.address
+        <where>
+            <if test="addressid != null">
+                and addressid = #{addressid}
+            </if>
+            <if test="address != null and address != ''">
+                and address = #{address}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="addressid" useGeneratedKeys="true">
+        insert into projects.address(address)
+        values (#{address})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="addressid" useGeneratedKeys="true">
+        insert into projects.address(address)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.address})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="addressid" useGeneratedKeys="true">
+        insert into projects.address(address)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.address})
+        </foreach>
+        on duplicate key update
+        address = values(address)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.address
+        <set>
+            <if test="address != null and address != ''">
+                address = #{address},
+            </if>
+        </set>
+        where addressid = #{addressid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.address where addressid = #{addressid}
+    </delete>
+
+</mapper>
+

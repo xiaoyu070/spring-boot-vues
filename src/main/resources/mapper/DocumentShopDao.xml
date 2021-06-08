@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.DocumentShopDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.DocumentShop" id="DocumentShopMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
+        <result property="supplierid" column="supplierid" jdbcType="INTEGER"/>
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
+        <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="lossNumber" column="loss_number" jdbcType="INTEGER"/>
+        <result property="zje" column="zje" jdbcType="NUMERIC"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="DocumentShopVo" type="com.trkj.projects.vo.DocumentShopVo">
+        <result property="id" column="id" jdbcType="INTEGER" />
+        <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
+        <result property="sk_number" column="sk_number" jdbcType="INTEGER"/>
+        <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="lossNumber" column="loss_number" jdbcType="INTEGER"/>
+        <result property="zje" column="zje" jdbcType="NUMERIC"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap type="com.trkj.projects.vo.SpcgmxVo" id="SpcgmxVo">
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="lossNumber" column="loss_number" jdbcType="INTEGER"/>
+        <result property="zje" column="zje" jdbcType="NUMERIC"/>
+        <result property="spShopId" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="spBeiZhu" column="sp_beizhu" jdbcType="VARCHAR"/>
+        <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
+        <result property="dlDate" column="dl_date" jdbcType="VARCHAR"/>
+        <result property="spTypeName" column="sp_type_name" jdbcType="VARCHAR"/>
+        <result property="WName" column="wname" jdbcType="VARCHAR"/>
+        <result property="agentName" column="agent_name" jdbcType="VARCHAR"/>
+        <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!--查询单个-->
+    <select id="queryById" resultMap="DocumentShopMap">
+        select
+          id, dl_number, supplierid, wid, sp_shopid, sp_name, sp_Company, sp_jprice, number, loss_number, zje, sp_Specifications, sp_color, beizhu
+        from projects.document_shop
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="DocumentShopMap">
+        select
+          id, dl_number, supplierid, wid, sp_shopid, sp_name, sp_Company, sp_jprice, number, loss_number, zje, sp_Specifications, sp_color, beizhu
+        from projects.document_shop
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="DocumentShopMap">
+        select
+        id, dl_number, supplierid, wid, sp_shopid, sp_name, sp_Company, sp_jprice, number, loss_number, zje,
+        sp_Specifications, sp_color, beizhu
+        from projects.document_shop
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="dlNumber != null and dlNumber != ''">
+                and dl_number = #{dlNumber}
+            </if>
+            <if test="supplierid != null">
+                and supplierid = #{supplierid}
+            </if>
+            <if test="wid != null">
+                and wid = #{wid}
+            </if>
+            <if test="spShopid != null">
+                and sp_shopid = #{spShopid}
+            </if>
+            <if test="spName != null and spName != ''">
+                and sp_name = #{spName}
+            </if>
+            <if test="spCompany != null and spCompany != ''">
+                and sp_Company = #{spCompany}
+            </if>
+            <if test="spJprice != null">
+                and sp_jprice = #{spJprice}
+            </if>
+            <if test="number != null">
+                and number = #{number}
+            </if>
+            <if test="lossNumber != null">
+                and loss_number = #{lossNumber}
+            </if>
+            <if test="zje != null">
+                and zje = #{zje}
+            </if>
+            <if test="spSpecifications != null and spSpecifications != ''">
+                and sp_Specifications = #{spSpecifications}
+            </if>
+            <if test="spColor != null and spColor != ''">
+                and sp_color = #{spColor}
+            </if>
+            <if test="beizhu != null and beizhu != ''">
+                and beizhu = #{beizhu}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.document_shop(dl_number, supplierid, wid, sp_shopid, sp_name, sp_Company, sp_jprice, number, loss_number, zje, sp_Specifications, sp_color, beizhu)
+        values (#{dlNumber}, #{supplierid}, #{wid}, #{spShopid}, #{spName}, #{spCompany}, #{spJprice}, #{number}, #{lossNumber}, #{zje}, #{spSpecifications}, #{spColor}, #{beizhu})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.document_shop(dl_number, supplierid, wid, sp_shopid, sp_name, sp_Company, sp_jprice,
+        number, loss_number, zje, sp_Specifications, sp_color, beizhu)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.dlNumber}, #{entity.supplierid}, #{entity.wid}, #{entity.spShopid}, #{entity.spName},
+            #{entity.spCompany}, #{entity.spJprice}, #{entity.number}, #{entity.lossNumber}, #{entity.zje},
+            #{entity.spSpecifications}, #{entity.spColor}, #{entity.beizhu})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.document_shop(dl_number, supplierid, wid, sp_shopid, sp_name, sp_Company, sp_jprice,
+        number, loss_number, zje, sp_Specifications, sp_color, beizhu)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.dlNumber}, #{entity.supplierid}, #{entity.wid}, #{entity.spShopid}, #{entity.spName},
+            #{entity.spCompany}, #{entity.spJprice}, #{entity.number}, #{entity.lossNumber}, #{entity.zje},
+            #{entity.spSpecifications}, #{entity.spColor}, #{entity.beizhu})
+        </foreach>
+        on duplicate key update
+        dl_number = values(dl_number) , supplierid = values(supplierid) , wid = values(wid) , sp_shopid =
+        values(sp_shopid) , sp_name = values(sp_name) , sp_Company = values(sp_Company) , sp_jprice = values(sp_jprice)
+        , number = values(number) , loss_number = values(loss_number) , zje = values(zje) , sp_Specifications =
+        values(sp_Specifications) , sp_color = values(sp_color) , beizhu = values(beizhu)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.document_shop
+        <set>
+            <if test="spJprice != null">
+                sp_jprice = #{spJprice},
+            </if>
+            <if test="number != null">
+                number = #{number},
+            </if>
+            <if test="lossNumber != null">
+                loss_number = #{lossNumber},
+            </if>
+            <if test="zje != null">
+                zje = #{zje},
+            </if>
+            <if test="beizhu != null and beizhu != ''">
+                beizhu = #{beizhu},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.document_shop where id = #{id}
+    </delete>
+
+    <!-- 通过单据号查询商品 -->
+    <select id="selectnumber" resultMap="DocumentShopVo">
+        SELECT dsp.id,dsp.dl_number,dsp.sp_shopid,dsp.sp_name,dsp.sp_Company,dsp.sp_jprice,sk.sk_number,dsp.number,dsp.loss_number,dsp.zje,dsp.sp_Specifications,dsp.sp_color,dsp.beizhu
+        FROM document_shop dsp
+        LEFT JOIN warehouse ws ON dsp.wid = ws.wid
+        LEFT JOIN stock sk ON sk.sk_shopid = dsp.sp_shopid
+        WHERE dsp.dl_number =  #{number}
+    </select>
+
+
+    <resultMap id="FltjVo" type="com.trkj.projects.vo.SpcgmxVo">
+        <result property="spTypeName" column="sp_type_name" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!--<select id="cghz" resultMap="SpcgmxVo">
+        SELECT  SUM(sp.loss_number),SUM(sp.number),s.*  FROM document_shop sp
+        LEFT JOIN shop s ON sp.sp_shopid=s.sp_shopid
+        GROUP BY sp.sp_shopid
+    </select>-->
+    <select id="flcx" resultMap="SpcgmxVo">
+        SELECT sp.number,sp.loss_number,sp.zje,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Specifications,s.sp_color,s.sp_beizhu,l.dl_number,l.dl_date, lb.sp_type_name, w.wname,a.agent_name,sup.suppliername FROM document_shop sp
+        LEFT JOIN shop s ON sp.sp_shopid=s.sp_shopid
+        LEFT JOIN warehouse w ON sp.wid=w.wid
+        LEFT JOIN document_list l ON sp.dl_number=l.dl_number
+        LEFT JOIN supplier sup ON sp.supplierid=sup.supplierid
+        LEFT JOIN shop_type lb ON s.sp_type_id=lb.sp_type_id
+        LEFT JOIN agent a ON l.agent_id=a.id
+        <where>
+            <if test="spName != null">
+                s.sp_name LIKE CONCAT('%',#{spName},'%')
+            </if>
+            <if test="spTypeName != null">
+                and lb.sp_type_name = #{spTypeName}
+            </if>
+        </where>
+    </select>
+    <select id="selectPurch" resultMap="SpcgmxVo">
+         SELECT sp.number,sp.loss_number,sp.zje,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Specifications,s.sp_color,s.sp_beizhu,l.dl_number,l.dl_date, lb.sp_type_name, w.wname,a.agent_name,sup.suppliername FROM document_shop sp
+        LEFT JOIN shop s ON sp.sp_shopid=s.sp_shopid
+        LEFT JOIN warehouse w ON sp.wid=w.wid
+        LEFT JOIN document_list l ON sp.dl_number=l.dl_number
+        LEFT JOIN supplier sup ON sp.supplierid=sup.supplierid
+        LEFT JOIN shop_type lb ON s.sp_type_id=lb.sp_type_id
+        LEFT JOIN agent a ON l.agent_id=a.id
+    </select>
+
+    <select id="selectfltj" resultMap="FltjVo">
+            SELECT sp_type_name
+            FROM shop_type
+    </select>
+
+</mapper>
+

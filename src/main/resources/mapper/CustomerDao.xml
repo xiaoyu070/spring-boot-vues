@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.CustomerDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.Customer" id="CustomerMap">
+        <result property="cId" column="c_id" jdbcType="INTEGER"/>
+        <result property="cTypeid" column="c_typeid" jdbcType="INTEGER"/>
+        <result property="cContacts" column="c_contacts" jdbcType="VARCHAR"/>
+        <result property="addressid" column="addressid" jdbcType="INTEGER"/>
+        <result property="cPhone" column="c_phone" jdbcType="VARCHAR"/>
+        <result property="cMoney" column="c_money" jdbcType="NUMERIC"/>
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
+        <result property="userid" column="userid" jdbcType="INTEGER"/>
+        <result property="cLxaddress" column="c_lxaddress" jdbcType="VARCHAR"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+        <result property="cTime" column="c_time" jdbcType="TIMESTAMP"/>
+        <result property="cState" column="c_state" jdbcType="INTEGER"/>
+        <result property="cIsmoren" column="c_ismoren" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="selectBybranchid" resultMap="CustomerMap">
+        select
+         c_id, c_typeid, c_contacts, addressid, c_phone, c_money, branchid, userid, c_lxaddress, beizhu, c_time, c_state, c_ismoren
+        from projects.customer
+        where branchid = #{branchid}
+    </select>
+    <!--查询单个-->
+    <select id="queryById" resultMap="CustomerMap">
+        select
+          c_id, c_typeid, c_contacts, addressid, c_phone, c_money, branchid, userid, c_lxaddress, beizhu, c_time, c_state, c_ismoren
+        from projects.customer
+        where c_id = #{cId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="CustomerMap">
+        select
+          c_id, c_typeid, c_contacts, addressid, c_phone, c_money, branchid, userid, c_lxaddress, beizhu, c_time, c_state, c_ismoren
+        from projects.customer
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="CustomerMap">
+        select
+        c_id, c_typeid, c_contacts, addressid, c_phone, c_money, branchid, userid, c_lxaddress, beizhu, c_time, c_state,
+        c_ismoren
+        from projects.customer
+        <where>
+            <if test="cId != null">
+                and c_id = #{cId}
+            </if>
+            <if test="cTypeid != null">
+                and c_typeid = #{cTypeid}
+            </if>
+            <if test="cContacts != null and cContacts != ''">
+                and c_contacts = #{cContacts}
+            </if>
+            <if test="addressid != null">
+                and addressid = #{addressid}
+            </if>
+            <if test="cPhone != null and cPhone != ''">
+                and c_phone = #{cPhone}
+            </if>
+            <if test="cMoney != null">
+                and c_money = #{cMoney}
+            </if>
+            <if test="branchid != null">
+                and branchid = #{branchid}
+            </if>
+            <if test="userid != null">
+                and userid = #{userid}
+            </if>
+            <if test="cLxaddress != null and cLxaddress != ''">
+                and c_lxaddress = #{cLxaddress}
+            </if>
+            <if test="beizhu != null and beizhu != ''">
+                and beizhu = #{beizhu}
+            </if>
+            <if test="cTime != null">
+                and c_time = #{cTime}
+            </if>
+            <if test="cState != null">
+                and c_state = #{cState}
+            </if>
+            <if test="cIsmoren != null">
+                and c_ismoren = #{cIsmoren}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="cId" useGeneratedKeys="true">
+        insert into projects.customer(c_typeid, c_contacts, addressid, c_phone, c_money, branchid, userid, c_lxaddress, beizhu, c_time, c_state, c_ismoren)
+        values (#{cTypeid}, #{cContacts}, #{addressid}, #{cPhone}, #{cMoney}, #{branchid}, #{userid}, #{cLxaddress}, #{beizhu}, #{cTime}, #{cState}, #{cIsmoren})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="cId" useGeneratedKeys="true">
+        insert into projects.customer(c_typeid, c_contacts, addressid, c_phone, c_money, branchid, userid, c_lxaddress,
+        beizhu, c_time, c_state, c_ismoren)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.cTypeid}, #{entity.cContacts}, #{entity.addressid}, #{entity.cPhone}, #{entity.cMoney},
+            #{entity.branchid}, #{entity.userid}, #{entity.cLxaddress}, #{entity.beizhu}, #{entity.cTime},
+            #{entity.cState}, #{entity.cIsmoren})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="cId" useGeneratedKeys="true">
+        insert into projects.customer(c_typeid, c_contacts, addressid, c_phone, c_money, branchid, userid, c_lxaddress,
+        beizhu, c_time, c_state, c_ismoren)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.cTypeid}, #{entity.cContacts}, #{entity.addressid}, #{entity.cPhone}, #{entity.cMoney},
+            #{entity.branchid}, #{entity.userid}, #{entity.cLxaddress}, #{entity.beizhu}, #{entity.cTime},
+            #{entity.cState}, #{entity.cIsmoren})
+        </foreach>
+        on duplicate key update
+        c_typeid = values(c_typeid) , c_contacts = values(c_contacts) , addressid = values(addressid) , c_phone =
+        values(c_phone) , c_money = values(c_money) , branchid = values(branchid) , userid = values(userid) ,
+        c_lxaddress = values(c_lxaddress) , beizhu = values(beizhu) , c_time = values(c_time) , c_state =
+        values(c_state) , c_ismoren = values(c_ismoren)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.customer
+        <set>
+            <if test="cTypeid != null">
+                c_typeid = #{cTypeid},
+            </if>
+            <if test="cContacts != null and cContacts != ''">
+                c_contacts = #{cContacts},
+            </if>
+            <if test="addressid != null">
+                addressid = #{addressid},
+            </if>
+            <if test="cPhone != null and cPhone != ''">
+                c_phone = #{cPhone},
+            </if>
+            <if test="cMoney != null">
+                c_money = #{cMoney},
+            </if>
+            <if test="branchid != null">
+                branchid = #{branchid},
+            </if>
+            <if test="userid != null">
+                userid = #{userid},
+            </if>
+            <if test="cLxaddress != null and cLxaddress != ''">
+                c_lxaddress = #{cLxaddress},
+            </if>
+            <if test="beizhu != null and beizhu != ''">
+                beizhu = #{beizhu},
+            </if>
+            <if test="cTime != null">
+                c_time = #{cTime},
+            </if>
+            <if test="cState != null">
+                c_state = #{cState},
+            </if>
+            <if test="cIsmoren != null">
+                c_ismoren = #{cIsmoren},
+            </if>
+        </set>
+        where c_id = #{cId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.customer where c_id = #{cId}
+    </delete>
+
+</mapper>
+
