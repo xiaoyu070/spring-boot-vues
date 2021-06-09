@@ -125,16 +125,19 @@ public class DocumentListController {
         @PostMapping("shenheqr")
         public AjaxResponse shenheqr(@RequestBody String a){
             JSONObject jsonObject=JSONObject.parseObject(a);
+            System.out.println("aaaaa:"+jsonObject);
             String one = jsonObject.getString("ttt");
             int xid = jsonObject.getInteger("xid");
             String two = jsonObject.getString("list");
             DocumentlistVo documentlistVo = JSONObject.parseObject(one, DocumentlistVo.class);
+            System.out.println(documentlistVo.getDlyfje()+",,,"+documentlistVo.getDlsfje());
             System.out.println(documentlistVo);
             System.out.println(xid);
             Establishment establishment = new Establishment();
             establishment.setXid(xid);
             establishment.setOpening(documentlistVo.getDlsfje());
             List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
+
             //审核通过后将该单据中包含的商品添加到库存中
             Stock stock=new Stock();
             for(int b=0;b<listshop.size();b++){
@@ -231,8 +234,16 @@ public class DocumentListController {
             map.put("rows",list);
             return AjaxResponse.success(map);
         }
+        //根据单据号删除商品
+        @GetMapping("deletelistandshop")
+        public AjaxResponse deletelistandshop(String number){
+            System.out.println("number:"+number);
+            this.documentListService.deleteById(number);
+            this.documentShopService.deleteshoplist(number);
+            return AjaxResponse.success("删除成功！");
+        }
 
-
+    //小宇子的
     @GetMapping("cgdj")
     public AjaxResponse selectcx(int currentPage, int pageSize){
         AjaxResponse ajaxResponse =null;

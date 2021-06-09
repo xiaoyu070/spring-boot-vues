@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.trkj.projects.mybatis.dao.DocumentListDao">
 
+<!--  欧阳渗的实体类  -->
     <resultMap type="com.trkj.projects.mybatis.entity.DocumentList" id="DocumentListMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
@@ -19,6 +20,7 @@
         <result property="dlBeizhu" column="dl_beizhu" jdbcType="VARCHAR"/>
     </resultMap>
 
+<!--  欧阳渗的VO  -->
     <resultMap type="com.trkj.projects.vo.DocumentlistVo" id="DocumentListVOMap">
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
         <result property="dlDate" column="dl_date" jdbcType="TIMESTAMP"/>
@@ -37,6 +39,7 @@
         <result property="branchid" column="branchid" jdbcType="INTEGER"/>
     </resultMap>
 
+    <!--  小宇子的vo  -->
     <resultMap type="com.trkj.projects.vo.CgdjVo" id="CghzVo">
         <result property="dlDate" column="dl_date" jdbcType="VARCHAR"/>
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
@@ -110,6 +113,7 @@
             <if test="dlBeizhu != null and dlBeizhu != ''">
                 and dl_beizhu = #{dlBeizhu}
             </if>
+            ORDER BY dl.dl_date DESC
         </where>
     </select>
 
@@ -192,7 +196,7 @@
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete from projects.document_list where id = #{id}
+        delete from projects.document_list where dl_number = #{number}
     </delete>
 
     <!-- 查询单据为待审核的数据 -->
@@ -235,6 +239,7 @@
             <if test="branchname != null and branchname != ''">
                 AND dm.branchname LIKE CONCAT('%',#{branchname},'%')
             </if>
+            ORDER BY dl.dl_date DESC
         </where>
     </select>
 
@@ -250,7 +255,7 @@
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id where
         (dl.dl_number LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
         or (sl.suppliername LIKE  CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
-        or (ws.wname LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
+        or (ws.wname LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1) ORDER BY dl.dl_date DESC
     </select>
     <!-- 将待审核状态的单据改为已审核 -->
     <update id="updatestaticzore">
@@ -267,7 +272,7 @@
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
-        LEFT JOIN branch dm ON dm.branchid = sl.companyid WHERE dl.dl_statie_id = 0
+        LEFT JOIN branch dm ON dm.branchid = sl.companyid WHERE dl.dl_statie_id = 0 ORDER BY dl.dl_date DESC
     </select>
 
     <!-- 根据俩个时间之间查询单据 -->
@@ -280,7 +285,7 @@
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
-        LEFT JOIN branch dm ON dm.branchid = sl.companyid WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 0
+        LEFT JOIN branch dm ON dm.branchid = sl.companyid WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 0 ORDER BY dl.dl_date DESC
     </select>
 
     <!-- 根据时间查询单据为待审核的单据 -->
@@ -293,8 +298,10 @@
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
-        WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 1
+        WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d')  BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 1 ORDER BY dl.dl_date DESC
     </select>
+
+    <!--  小宇子的  -->
     <select id="cgdj" resultMap="CghzVo">
         SELECT l.dl_date,l.dl_number,l.dl_yfje,l.dl_sfje,l.dl_beizhu,a.agent_name,w.wname,sup.suppliername,un.user_name  FROM document_list l
             LEFT JOIN agent a ON l.agent_id=a.id
