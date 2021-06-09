@@ -7,6 +7,7 @@
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
         <result property="dlDate" column="dl_date" jdbcType="TIMESTAMP"/>
         <result property="supplierid" column="supplierid" jdbcType="INTEGER"/>
+        <result property="customerid" column="customerid" jdbcType="INTEGER"/>
         <result property="wid" column="wid" jdbcType="INTEGER"/>
         <result property="dlYfje" column="dl_yfje" jdbcType="NUMERIC"/>
         <result property="dlSfje" column="dl_sfje" jdbcType="NUMERIC"/>
@@ -23,6 +24,7 @@
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
         <result property="dlDate" column="dl_date" jdbcType="TIMESTAMP"/>
         <result property="suppliername" column="suppliername" jdbcType="VARCHAR"/>
+        <result property="contacts" column="c_contacts" jdbcType="VARCHAR"/>
         <result property="wname" column="wname" jdbcType="VARCHAR"/>
         <result property="dlyfje" column="dl_yfje" jdbcType="NUMERIC"/>
         <result property="dlsfje" column="dl_sfje" jdbcType="NUMERIC"/>
@@ -48,6 +50,38 @@
         <result property="userName" column="user_name" jdbcType="VARCHAR"/>
         <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
     </resultMap>
+<!--    邓峄楷-->
+    <select id="findallbyfdandkhanduserandgjz" resultMap="DocumentListVOMap">
+        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,c.c_contacts,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_name,dl.dl_beizhu
+        FROM document_list dl
+        LEFT JOIN customer c ON dl.customerid = c.c_id
+        LEFT JOIN warehouse ws ON dl.wid = ws.wid
+        LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
+        LEFT JOIN sys_user su ON dl.admin = su.user_id
+        LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
+        LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
+        LEFT JOIN branch dm ON dm.branchid = c.branchid
+        <where>
+            dls.dl_statie_name = '销售未审核' AND dlt.dl_type_name = '销售出货'
+            <if test="qishitime != null and qishitime != '' and zuihotime != null and zuihotime != ''">
+                and dl.dl_date between #{qishitime} and #{zuihotime}
+            </if>
+            <if test="branchid != 0 and branchid != null">
+                and c.branchid = #{branchid}
+            </if>
+            <if test="customerid != 0 and customerid != null">
+                and c_id = #{customerid}
+            </if>
+            <if test="userid != 0 and userid != null">
+                and su.user_id = #{userid}
+            </if>
+            <if test="gjz != null and gjz != ''">
+                and dl.dl_number like concat('%',#{gjz},'%')
+                or c.c_contacts like concat('%',#{gjz},'%')
+            </if>
+        </where>
+    </select>
+
     <!--查询单个-->
     <select id="queryById" resultMap="DocumentListMap">
         select
@@ -115,8 +149,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into projects.document_list(dl_number, dl_date, supplierid, wid, dl_yfje, dl_sfje, dl_qkje, dl_yhje, agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu)
-        values (#{dlNumber}, #{dlDate}, #{supplierid}, #{wid}, #{dlYfje}, #{dlSfje}, #{dlQkje}, #{dlYhje}, #{agentId}, #{admin}, #{dlTypeId}, #{dlStatieId}, #{dlBeizhu})
+        insert into projects.document_list(dl_number, dl_date, supplierid,customerid, wid, dl_yfje, dl_sfje, dl_qkje, dl_yhje, agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu)
+        values (#{dlNumber}, #{dlDate}, #{supplierid},#{customerid}, #{wid}, #{dlYfje}, #{dlSfje}, #{dlQkje}, #{dlYhje}, #{agentId}, #{admin}, #{dlTypeId}, #{dlStatieId}, #{dlBeizhu})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
@@ -156,6 +190,10 @@
             <if test="supplierid != null">
                 supplierid = #{supplierid},
             </if>
+            <if test="customerid != null">
+                customerid = #{customerid},
+            </if>
+
             <if test="wid != null">
                 wid = #{wid},
             </if>
@@ -237,6 +275,49 @@
             </if>
         </where>
     </select>
+    <!-- 查询销售单据为待审核和销售出货的数据 -->
+    <select id="selectxsvo" resultMap="DocumentListVOMap">
+        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_name,dl.dl_beizhu
+        FROM document_list dl
+        LEFT JOIN customer sl ON dl.customerid = sl.c_id
+        LEFT JOIN warehouse ws ON dl.wid = ws.wid
+        LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
+        LEFT JOIN sys_user su ON dl.admin = su.user_id
+        LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
+        LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
+        LEFT JOIN branch dm ON dm.branchid = sl.branchid
+        <where>
+            dl.dl_statie_id = 3 and dl.dl_type_id = 2
+            <if test="dlNumber != null  and dlNumber != ''">
+                AND dl.dl_number LIKE CONCAT('%',#{dlNumber},'%')
+            </if>
+            <if test="contacts != null and  contacts != ''">
+                AND sl.c_contacts LIKE CONCAT('%',#{contacts},'%')
+            </if>
+            <if test="wname != null and wname != ''">
+                AND ws.wname LIKE CONCAT('%',#{wname},'%')
+            </if>
+            <if test="agentname != null and agentname != ''">
+                AND ag.agent_name LIKE CONCAT('%',#{agentname},'%')
+            </if>
+            <if test="username != null and username != ''">
+                AND su.user_name LIKE CONCAT('%',#{username},'%')
+            </if>
+            <if test="dltypename != null and dltypename != ''">
+                AND dlt.dl_type_name LIKE CONCAT('%',#{dltypename},'%')
+            </if>
+            <if test="dlstatiename != null and dlstatiename != ''">
+                AND dls.dl_statie_name LIKE CONCAT('%',#{dlstatiename},'%')
+            </if>
+            <if test="dlbeizhu != null and dlbeizhu != ''">
+                AND dl.dl_beizhu LIKE CONCAT('%',#{dlbeizhu},'%')
+            </if>
+            <if test="branchname != null and branchname != ''">
+                AND dm.branchname LIKE CONCAT('%',#{branchname},'%')
+            </if>
+        </where>
+    </select>
+
 
     <!-- 模糊查询单据为待审核的单据 -->
     <select id="likevo" resultMap="DocumentListVOMap">
@@ -251,6 +332,21 @@
         (dl.dl_number LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
         or (sl.suppliername LIKE  CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
         or (ws.wname LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
+    </select>
+    <!-- 模糊查询销售单据为待审核的单据 -->
+    <select id="xslikevo" resultMap="DocumentListVOMap">
+        SELECT dl.dl_number,dl.dl_date,sl.c_contacts,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_name,dl.dl_beizhu
+        FROM document_list dl
+        LEFT JOIN customer sl ON dl.customerid = sl.c_id
+        LEFT JOIN warehouse ws ON dl.wid = ws.wid
+        LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
+        LEFT JOIN sys_user su ON dl.admin = su.user_id
+        LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
+        LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
+        where
+        (dl.dl_number LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 3)
+        or (sl.c_contacts LIKE  CONCAT('%',#{text},'%') and dl.dl_statie_id = 3)
+        or (ws.wname LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 3)
     </select>
     <!-- 将待审核状态的单据改为已审核 -->
     <update id="updatestaticzore">
@@ -295,6 +391,19 @@
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
         WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 1
     </select>
+    <!-- 根据时间查询单据为待审核的销售单据 -->
+    <select id="xsselectdatesdanju" resultMap="DocumentListVOMap">
+        SELECT dl.dl_number,dl.dl_date,sl.c_contacts,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_name,dl.dl_beizhu
+        FROM document_list dl
+        LEFT JOIN customer sl ON dl.customerid = sl.c_id
+        LEFT JOIN warehouse ws ON dl.wid = ws.wid
+        LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
+        LEFT JOIN sys_user su ON dl.admin = su.user_id
+        LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
+        LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
+        WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 3 and dl.dl_type_id = 2
+    </select>
+
     <select id="cgdj" resultMap="CghzVo">
         SELECT l.dl_date,l.dl_number,l.dl_yfje,l.dl_sfje,l.dl_beizhu,a.agent_name,w.wname,sup.suppliername,un.user_name  FROM document_list l
             LEFT JOIN agent a ON l.agent_id=a.id

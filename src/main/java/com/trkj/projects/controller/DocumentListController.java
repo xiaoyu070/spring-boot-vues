@@ -88,6 +88,28 @@ public class DocumentListController {
     }
 
     /**
+     * 查询销售单据vo
+     * @param DocumentlistVo
+     * @return
+     */
+    @PostMapping("selectxsvo")
+    public AjaxResponse selectxsvo(@RequestBody String DocumentlistVo){
+        JSONObject jsonObject=JSONObject.parseObject(DocumentlistVo);
+        String vo=jsonObject.getString("DocumentlistVo");
+        String ttt = jsonObject.getString("text");
+        //json转实体类对象
+        com.trkj.projects.vo.DocumentlistVo documentlistVo=JSON.parseObject(vo, com.trkj.projects.vo.DocumentlistVo.class);
+        int currenPage = jsonObject.getInteger("currenPage");
+        int pageSize = jsonObject.getInteger("pageSize");
+        Map<String,Object> map=new HashMap<>();
+        Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+        List<com.trkj.projects.vo.DocumentlistVo> list = this.documentListService.selectxsvo(documentlistVo);
+        map.put("total",pg.getTotal());
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
+
+    /**
      * 模糊查询单据
      * @param a
      * @return
@@ -105,6 +127,24 @@ public class DocumentListController {
             map.put("rows",list);
             return AjaxResponse.success(map);
         }
+    /**
+     * 模糊销售查询单据
+     * @param a
+     * @return
+     */
+    @PostMapping("xslikevo")
+    public AjaxResponse xslikevo(@RequestBody String a){
+        JSONObject jsonObject=JSONObject.parseObject(a);
+        int currenPage = jsonObject.getInteger("currenPage");
+        int pageSize = jsonObject.getInteger("pageSize");
+        String texts = jsonObject.getString("text");
+        Map<String,Object> map=new HashMap<>();
+        Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+        List<DocumentlistVo> list = this.documentListService.xslikevo(texts);
+        map.put("total",pg.getTotal());
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
         //根据时间查询采购审核单中状态为待审核的单据
         @PostMapping("shenhedates")
         public AjaxResponse shenhedates(@RequestBody String b){
@@ -121,6 +161,22 @@ public class DocumentListController {
             map.put("rows",list);
             return AjaxResponse.success(map);
         }
+    //根据时间查询销售审核单中状态为待审核的单据
+    @PostMapping("xsshenhedates")
+    public AjaxResponse xsshenhedates(@RequestBody String b){
+        JSONObject jsonObject=JSONObject.parseObject(b);
+        System.out.println("时间jsonObject"+jsonObject);
+        int currenPage = jsonObject.getInteger("currenPage");
+        int pageSize = jsonObject.getInteger("pageSize");
+        String data1 = jsonObject.getString("data1");
+        String data2 = jsonObject.getString("data2");
+        Map<String,Object> map=new HashMap<>();
+        Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+        List<DocumentlistVo> list = this.documentListService.xsselectdatesdanju(data1,data2);
+        map.put("total",pg.getTotal());
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
         //审核确认
         @PostMapping("shenheqr")
         public AjaxResponse shenheqr(@RequestBody String a){
@@ -238,6 +294,54 @@ public class DocumentListController {
         AjaxResponse ajaxResponse =null;
         PageInfo<SpcgmxVo> list= this.documentListService.cgdj(currentPage,pageSize);
         return ajaxResponse.success(list);
+    }
+
+    /**
+     * KK:添加到单据表和单据详情表
+     * @param www
+     * @param i
+     * @return
+     */
+    @PostMapping("adddocument/{i}")
+    public AjaxResponse adddocument(@RequestBody String www,@PathVariable("i") int i){
+        JSONObject jsonObject = JSONObject.parseObject(www);
+        String ww = jsonObject.getString("sss");
+        DocumentList list = JSON.parseObject(ww,DocumentList.class);
+
+        System.out.println(list);
+        this.documentListService.insert(list);
+        String ss = jsonObject.getString("list");
+        List<DocumentShop> list2 = JSON.parseArray(ss,DocumentShop.class);
+        if(i == 2){
+            Stock stock = new Stock();
+            for (int a=0;a<list2.size();a++){
+                stock.setSkShopid(list2.get(a).getSpShopid());
+                stock.setSkNumber(list2.get(a).getNumber());
+                stock.setSkLossnumber(list2.get(a).getLossNumber());
+                this.stockService.update(stock);
+            }
+        }
+        this.documentShopService.insertBatch(list2);
+
+        return AjaxResponse.success("销售成功");
+    }
+
+    /**
+     * kk:多条件查询销售审核单
+     * @param branchid
+     * @param customerid
+     * @param userid
+     * @param gjz
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("findallbytj")
+    public AjaxResponse findalltj(String qq,String zh,int branchid, int customerid, int userid, String gjz, int currentPage, int pageSize){
+        System.out.println(branchid+"      "+customerid+"       "+userid+"   "+gjz+"  "+currentPage+"  "+pageSize);
+        PageInfo<DocumentlistVo> info = documentListService.findallbyfdandkhanduserandgjz(qq,zh,branchid,customerid,userid,gjz,currentPage,pageSize);
+        System.out.println(info);
+        return AjaxResponse.success(info);
     }
 
 }

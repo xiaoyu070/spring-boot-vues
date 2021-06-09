@@ -16,6 +16,8 @@ import java.util.List;
  */
 @Mapper
 public interface DocumentListDao {
+    //邓峄楷
+    List<DocumentlistVo> findallbyfdandkhanduserandgjz(@Param("qishitime")String qishitime,@Param("zuihotime")String zuihotime,@Param("branchid") int branchid,@Param("customerid") int customerid,@Param("userid")int userid,@Param("gjz") String gjz);
 
     /**
      * 通过ID查询单条数据
@@ -89,9 +91,18 @@ public interface DocumentListDao {
     List<DocumentlistVo> selectvo(DocumentlistVo documentShopVo);
 
     /**
+     * 查询销售单据状态为待审核的单据
+     */
+    List<DocumentlistVo> selectxsvo(DocumentlistVo documentShopVo);
+
+    /**
      * 模糊查询单据状态为待审核的单据
      */
     List<DocumentlistVo> likevo(String text);
+    /**
+     * 模糊查询单据状态为待审核的单据
+     */
+    List<DocumentlistVo> xslikevo(String text);
 
     /**
      * 将未审核的单据状态改为已审核
@@ -112,6 +123,10 @@ public interface DocumentListDao {
      * 根据给定的时间节点查询状态为待审核的单据
      */
     List<DocumentlistVo> selectdatesdanju(String date1, String date2);
+    /**
+     * 根据给定的时间节点查询状态为待审核的销售单据
+     */
+    List<DocumentlistVo> xsselectdatesdanju(String date1, String date2);
 
     List<SpcgmxVo> cgdj(int currentPage, int pageSize);
 

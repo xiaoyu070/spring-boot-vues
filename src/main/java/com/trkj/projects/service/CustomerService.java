@@ -12,7 +12,7 @@ import java.util.List;
  * @since 2021-06-05 21:45:34
  */
 public interface CustomerService {
-
+    List<Customer> findall();
     List<Customer> queryByBranchId(Integer branchid);
     /**
      * 通过ID查询单条数据

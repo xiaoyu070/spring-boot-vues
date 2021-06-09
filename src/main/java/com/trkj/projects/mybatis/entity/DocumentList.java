@@ -1,6 +1,7 @@
 package com.trkj.projects.mybatis.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.List;
  * @author makejava
  * @since 2021-06-03 22:06:09
  */
+@Data
 public class DocumentList implements Serializable {
     private static final long serialVersionUID = 189653453656644391L;
     /**
@@ -33,6 +35,10 @@ public class DocumentList implements Serializable {
      * 供货商外键id
      */
     private Integer supplierid;
+    /**
+     * 客户外键id
+     */
+    private Integer customerid;
     /**
      * 所属仓库外键id
      */
@@ -76,116 +82,6 @@ public class DocumentList implements Serializable {
 
 
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getDlNumber() {
-        return dlNumber;
-    }
-
-    public void setDlNumber(String dlNumber) {
-        this.dlNumber = dlNumber;
-    }
-
-    public Date getDlDate() {
-        return dlDate;
-    }
-
-    public void setDlDate(Date dlDate) {
-        this.dlDate = dlDate;
-    }
-
-    public Integer getSupplierid() {
-        return supplierid;
-    }
-
-    public void setSupplierid(Integer supplierid) {
-        this.supplierid = supplierid;
-    }
-
-    public Integer getWid() {
-        return wid;
-    }
-
-    public void setWid(Integer wid) {
-        this.wid = wid;
-    }
-
-    public Double getDlYfje() {
-        return dlYfje;
-    }
-
-    public void setDlYfje(Double dlYfje) {
-        this.dlYfje = dlYfje;
-    }
-
-    public Double getDlSfje() {
-        return dlSfje;
-    }
-
-    public void setDlSfje(Double dlSfje) {
-        this.dlSfje = dlSfje;
-    }
-
-    public Double getDlQkje() {
-        return dlQkje;
-    }
-
-    public void setDlQkje(Double dlQkje) {
-        this.dlQkje = dlQkje;
-    }
-
-    public Double getDlYhje() {
-        return dlYhje;
-    }
-
-    public void setDlYhje(Double dlYhje) {
-        this.dlYhje = dlYhje;
-    }
-
-    public Integer getAgentId() {
-        return agentId;
-    }
-
-    public void setAgentId(Integer agentId) {
-        this.agentId = agentId;
-    }
-
-    public Integer getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(Integer admin) {
-        this.admin = admin;
-    }
-
-    public Integer getDlTypeId() {
-        return dlTypeId;
-    }
-
-    public void setDlTypeId(Integer dlTypeId) {
-        this.dlTypeId = dlTypeId;
-    }
-
-    public Integer getDlStatieId() {
-        return dlStatieId;
-    }
-
-    public void setDlStatieId(Integer dlStatieId) {
-        this.dlStatieId = dlStatieId;
-    }
-
-    public String getDlBeizhu() {
-        return dlBeizhu;
-    }
-
-    public void setDlBeizhu(String dlBeizhu) {
-        this.dlBeizhu = dlBeizhu;
-    }
 
 }
