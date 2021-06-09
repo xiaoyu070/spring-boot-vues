@@ -244,6 +244,7 @@ public class DocumentListController {
             for(int xx=0;xx<listshop.size();xx++){
                 System.out.println("listshop:"+listshop.get(xx).getDlNumber());
             }
+
             //将库存new出来根据商品id增加商品库存
                 Stock stock=new Stock();
                 for(int b=0;b<listshop.size();b++){
