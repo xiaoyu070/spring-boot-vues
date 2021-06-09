@@ -66,7 +66,8 @@
 
     <!--通过主键修改数据 修改库存数量-->
     <update id="updateadd">
-        update projects.stock set sk_number = sk_number+#{skNumber},sk_loss_number = sk_loss_number+#{skLossnumber} where sk_shopid = #{skShopid}
+        update projects.stock set sk_number =
+         sk_number+#{skNumber},sk_loss_number = sk_loss_number+#{skLossnumber} where sk_shopid = #{skShopid}
     </update>
 
 
@@ -105,13 +106,16 @@
         LEFT JOIN shop sp ON s.`sk_shopid` = sp.`sp_shopid`
         LEFT JOIN branch bc ON bc.`branchid` = s.`sp_storefront_id`
         LEFT JOIN warehouse ws ON ws.`wid` = s.`sp_Warehouse_id`
-        where s.sk_number >= s.sp_number
+        where s.sk_number &lt;= s.sp_number
   </select>
 
     <!--显示禁用商品    -->
     <select id="selectDisable" resultMap="srockvo">
-        select p.`sp_shopid`,p.`sp_name`,p.`sp_state`,p.`sp_bar_code`,p.`sp_Company`,p.`sp_Specifications`,p.`sp_Preset_price`,p.`sp_jprice`
-        ,p.`sp_Manufacturer`,p.`sp_color`,p.`sp_beizhu`,s.`sk_number` from stock s left join shop p on s.`sk_shopid`=p.`sp_shopid`
+        SELECT p.`sp_shopid`,p.`sp_name`,p.`sp_state`,p.`sp_bar_code`,p.`sp_Company`,p.`sp_Specifications`,p.`sp_Preset_price`,p.`sp_jprice`
+        ,p.`sp_Manufacturer`,p.`sp_color`,p.`sp_beizhu`,s.`sk_number` ,st.`sp_type_name`
+        FROM stock s
+        LEFT JOIN shop p ON  s.`sk_shopid`=p.`sp_shopid`
+        LEFT JOIN shop_type st ON st.`sp_type_id` = p.`sp_type_id`
         <where>
             <if test="did == true">
                 p.sp_state=1
@@ -139,7 +143,10 @@
     <!--    模糊查询-->
     <select id="selectlike" resultMap="srockvo">
         SELECT p.`sp_shopid`,p.`sp_name`,p.`sp_state`,p.`sp_bar_code`,p.`sp_Company`,p.`sp_Specifications`,p.`sp_Preset_price`,p.`sp_jprice`
-        ,p.`sp_Manufacturer`,p.`sp_color`,p.`sp_beizhu`,s.`sk_number` FROM stock s LEFT JOIN shop p ON  s.`sk_shopid`=p.`sp_shopid`
+        ,p.`sp_Manufacturer`,p.`sp_color`,p.`sp_beizhu`,s.`sk_number` ,st.`sp_type_name`
+        FROM stock s
+        LEFT JOIN shop p ON  s.`sk_shopid`=p.`sp_shopid`
+        LEFT JOIN shop_type st ON st.`sp_type_id` = p.`sp_type_id`
         <where>
             <if test="testkike !=null">
                 and p.sp_shopid like concat('%',#{testkike},'%')
@@ -148,25 +155,46 @@
         </where>
     </select>
 
+<!--    模糊查询所有库存报警商品-->
+    <select id="kucunbaojinlike" resultMap="srockvo">
+        SELECT s.`sk_number`,s.`sp_number`,sp.`sp_shopid`,sp.`sp_name`,sp.`sp_Company`,sp.`sp_Specifications`
+        ,sp.`sp_color`, bc.`branchname`,ws.`wname`
+        FROM stock s
+        LEFT JOIN shop sp ON s.`sk_shopid` = sp.`sp_shopid`
+        LEFT JOIN branch bc ON bc.`branchid` = s.`sp_storefront_id`
+        LEFT JOIN warehouse ws ON ws.`wid` = s.`sp_Warehouse_id`
+        <where>
+        <if test="testlike2 !=null">
+            and  sp.`sp_name` like concat('%',#{testkike2},'%')
+            or sp.`sp_shopid` like concat('%',#{testkike2},'%')
+        </if>
+        </where>
+
+
+    </select>
+
     <!--查询所有库存-->
     <select id="queryall" resultMap="srockvo">
         SELECT p.sp_shopid,p.sp_name,p.sp_state,p.sp_bar_code,p.sp_Company,p.sp_Specifications,p.sp_Preset_price,p.sp_jprice
         ,p.sp_Manufacturer,p.sp_color,p.sp_beizhu ,p.sp_time ,w.wname,b.branchname,op.sp_type_name,s.sp_number,s.sk_number
         FROM stock s
         LEFT JOIN
-        shop p ON s.sk_shopid=p.sp_shopid
+        projects.shop p ON s.sk_shopid=p.sp_shopid
         LEFT JOIN
-        warehouse w ON s.sp_Warehouse_id=w.wid
+        projects.warehouse w ON s.sp_Warehouse_id=w.wid
         LEFT JOIN
-        branch b ON s.sp_storefront_id=b.branchid
+        projects.branch b ON s.sp_storefront_id=b.branchid
         LEFT JOIN
-        shop_type op ON p.sp_type_id=op.sp_type_id
+        projects.shop_type op ON p.sp_type_id=op.sp_type_id
     </select>
 
     <!--    库存查询只显示为0 的库存 显示全部库存-->
     <select id="querykucun" resultMap="srockvo">
         SELECT p.`sp_shopid`,p.`sp_name`,p.`sp_state`,p.`sp_bar_code`,p.`sp_Company`,p.`sp_Specifications`,p.`sp_Preset_price`,p.`sp_jprice`
-        ,p.`sp_Manufacturer`,p.`sp_color`,p.`sp_beizhu`,s.`sk_number`  FROM stock s LEFT JOIN shop p ON  s.`sk_shopid`=p.`sp_shopid`
+        ,p.`sp_Manufacturer`,p.`sp_color`,p.`sp_beizhu`,s.`sk_number` ,st.`sp_type_name`
+        FROM stock s
+        LEFT JOIN shop p ON  s.`sk_shopid`=p.`sp_shopid`
+        LEFT JOIN shop_type st ON st.`sp_type_id` = p.`sp_type_id`
         <where>
             <if test="test22 == 1">
                 s.sk_number = 0
@@ -176,6 +204,20 @@
             </if>
         </where>
     </select>
+<!--    修改库存报警中最低库存数量-->
+    <update id="Kcbjupdate">
+        UPDATE stock  SET
+        <if test="kcbj !=null">
+            sp_number = #{kcbj}
+        </if>
+        <where>
+            <if test="skid !=null">
+                sk_shopid=#{skid}
+            </if>
+        </where>
+    </update>
+
+
 
 </mapper>
 

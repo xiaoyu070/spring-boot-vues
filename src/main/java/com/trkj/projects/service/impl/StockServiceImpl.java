@@ -139,6 +139,23 @@ public class StockServiceImpl implements StockService {
     }
 
     /**
+     * 库存报警中的模糊查询
+     * @param currentPage
+     * @param pageSize
+     * @param testlike2
+     * @return
+     */
+    @Override
+    public PageInfo<StockVo> kucunbaojinlike(int currentPage, int pageSize, String testlike2) {
+        List<StockVo> list =this.stockDao.kucunbaojinlike(testlike2);
+        PageHelper.startPage(currentPage,pageSize);
+        PageInfo<StockVo>info=new PageInfo<>(list);
+        info.setTotal(list.size());
+        System.out.println(info);
+        return  info;
+    }
+
+    /**
      * 显示禁用商品
      * @param currentPage
      * @param pageSize
@@ -185,6 +202,17 @@ public class StockServiceImpl implements StockService {
         PageInfo<StockVo>info =new PageInfo<>(list);
         info.setTotal(list.size());
         return info;
+    }
+
+    /**
+     * 库存报警修改最低库存数量
+     * @param skid
+     * @param kcbj
+     * @return
+     */
+    @Override
+    public int Kcbjupdate(int skid, int kcbj) {
+        return this.stockDao.Kcbjupdate(skid,kcbj);
     }
 
 

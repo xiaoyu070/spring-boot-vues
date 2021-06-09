@@ -197,7 +197,7 @@
     </delete>
 
     <select id="queryall" resultMap="SupplierMap">
-        select * from supplier
+        select * from projects.supplier
     </select>
 
 
