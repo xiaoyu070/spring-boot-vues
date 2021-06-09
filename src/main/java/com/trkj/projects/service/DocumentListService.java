@@ -58,7 +58,7 @@ public interface DocumentListService {
      * @param id 主键
      * @return 是否成功
      */
-    boolean deleteById(Integer id);
+    boolean deleteById(String number);
 
     /**
      * 查询单据状态为待审核的单据

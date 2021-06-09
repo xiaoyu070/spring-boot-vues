@@ -27,6 +27,11 @@ public interface DocumentShopDao {
     DocumentShop queryById(Integer id);
 
     /**
+     * 根据单据号删除商品
+     */
+    void deleteshoplist(String number);
+
+    /**
      * 查询指定行数据
      *
      * @param offset 查询起始位置

@@ -83,7 +83,7 @@ public interface DocumentListDao {
      * @param id 主键
      * @return 影响行数
      */
-    int deleteById(Integer id);
+    int deleteById(String number);
 
     /**
      * 查询单据状态为待审核的单据
