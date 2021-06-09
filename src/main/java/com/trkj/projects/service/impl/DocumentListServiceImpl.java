@@ -1,5 +1,6 @@
 package com.trkj.projects.service.impl;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.dao.DocumentListDao;
@@ -23,6 +24,25 @@ public class DocumentListServiceImpl implements DocumentListService {
     @Resource
     private DocumentListDao documentListDao;
 
+    /**
+     * kk:条件查询销售审核单
+     * @param branchid
+     * @param customerid
+     * @param userid
+     * @param gjz
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageInfo<DocumentlistVo> findallbyfdandkhanduserandgjz(String qishitime,String zuihotime,int branchid, int customerid, int userid, String gjz, int currentPage, int pageSize) {
+        List<DocumentlistVo> list = documentListDao.findallbyfdandkhanduserandgjz(qishitime,zuihotime,branchid,userid,customerid,gjz);
+        Page<DocumentlistVo> page= PageHelper.startPage(currentPage,pageSize,true);
+        List<DocumentlistVo> list2 = documentListDao.findallbyfdandkhanduserandgjz(qishitime,zuihotime,branchid,userid,customerid,gjz);
+        PageInfo<DocumentlistVo> info=new PageInfo<>(list2);
+        info.setTotal((long)list.size() );
+        return info;
+    }
     /**
      * 通过ID查询单条数据
      *
@@ -73,12 +93,12 @@ public class DocumentListServiceImpl implements DocumentListService {
     /**
      * 通过主键删除数据
      *
-     * @param id 主键
+     * @param
      * @return 是否成功
      */
     @Override
-    public boolean deleteById(Integer id) {
-        return this.documentListDao.deleteById(id) > 0;
+    public boolean deleteById(String number) {
+        return this.documentListDao.deleteById(number) > 0;
     }
 
     @Override
@@ -86,9 +106,30 @@ public class DocumentListServiceImpl implements DocumentListService {
         return this.documentListDao.selectvo(documentShopVo);
     }
 
+    /**
+     * 查询销售为待审核的单据
+     * @param documentShopVo
+     * @return
+     */
+    @Override
+    public List<DocumentlistVo> selectxsvo(DocumentlistVo documentShopVo) {
+        return this.documentListDao.selectxsvo(documentShopVo);
+    }
+
+
     @Override
     public List<DocumentlistVo> likevo(String text) {
         return this.documentListDao.likevo(text);
+    }
+
+    /**
+     * 模糊查询销售单据
+     * @param text
+     * @return
+     */
+    @Override
+    public List<DocumentlistVo> xslikevo(String text) {
+        return this.documentListDao.xslikevo(text);
     }
 
     @Override
@@ -110,6 +151,11 @@ public class DocumentListServiceImpl implements DocumentListService {
     @Override
     public List<DocumentlistVo> selectdatesdanju(String date1, String date2) {
         return this.documentListDao.selectdatesdanju(date1,date2);
+    }
+    //根据时间段查询销售单据信息
+    @Override
+    public List<DocumentlistVo> xsselectdatesdanju(String date1, String date2) {
+        return this.documentListDao.xsselectdatesdanju(date1,date2);
     }
 
 

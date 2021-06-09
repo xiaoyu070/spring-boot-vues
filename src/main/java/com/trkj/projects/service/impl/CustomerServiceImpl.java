@@ -20,6 +20,11 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerDao customerDao;
 
     @Override
+    public List<Customer> findall() {
+        return customerDao.findall();
+    }
+
+    @Override
     public List<Customer> queryByBranchId(Integer branchid) {
         return customerDao.selectBybranchid(branchid);
     }

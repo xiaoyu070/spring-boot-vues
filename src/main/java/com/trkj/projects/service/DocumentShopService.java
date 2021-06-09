@@ -87,4 +87,8 @@ public interface DocumentShopService {
 
     List<CgdjVo> selectfltj();
 
+    /**
+     * 根据单据号删除商品
+     */
+    void deleteshoplist(String number);
 }
