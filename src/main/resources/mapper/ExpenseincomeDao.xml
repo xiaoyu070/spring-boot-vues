@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.ExpenseincomeDao">
+  <resultMap id="BaseResultMap" type="com.trkj.projects.mybatis.entity.Expenseincome">
+    <id column="sid" jdbcType="INTEGER" property="sid" />
+    <result column="entryid" jdbcType="INTEGER" property="entryid" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="Projecttype" jdbcType="VARCHAR" property="projecttype" />
+    <result column="Additional" jdbcType="VARCHAR" property="additional" />
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <result column="Agentid" jdbcType="INTEGER" property="agentid" />
+    <result column="branchid" jdbcType="INTEGER" property="branchid" />
+    <result column="accountid" jdbcType="INTEGER" property="accountid" />
+    <result column="cost" jdbcType="DECIMAL" property="cost" />
+    <result column="income" jdbcType="DECIMAL" property="income" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+  </resultMap>
+  <resultMap id="ResultMap" type="com.trkj.projects.vo.ExpenseincomeVo">
+    <id column="sid" jdbcType="INTEGER" property="sid" />
+    <result column="typeName" jdbcType="INTEGER" property="typeName" />
+    <result column="date" jdbcType="DECIMAL" property="date" />
+    <result column="amount" jdbcType="VARCHAR" property="amount" />
+    <result column="agent_name" jdbcType="VARCHAR" property="agent" />
+    <result column="user_name" jdbcType="VARCHAR" property="operator" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+  </resultMap>
+  <resultMap id="ExpenEntry" type="com.trkj.projects.vo.ExpenEntryVo">
+    <result column="typeName" jdbcType="INTEGER" property="typeName" />
+    <result column="income" jdbcType="DECIMAL" property="income" />
+    <result column="Additional" jdbcType="VARCHAR" property="additional" />
+    <result column="Projecttype" jdbcType="VARCHAR" property="projecttype" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    sid, entryid, amount, Projecttype, Additional, `date`, Agentid, branchid, accountid, 
+    cost, income, `operator`, remarks
+  </sql>
+  <select id="selectEntry" resultMap="ResultMap">
+    SELECT ag.`agent_name`,br.`branchname`,us.`user_name`,co.`typeName`,e.`date`,e.`remarks`,e.`amount`
+    FROM expenseincome e
+    LEFT JOIN `agent` ag ON e.`Agentid` = ag.`agent_id`
+    LEFT JOIN `branch` br ON e.`branchid` = br.`branchid`
+    LEFT JOIN `sys_user` us ON e.`operatorid` = us.`user_id`
+    LEFT JOIN `cost` co ON e.`entryid` = co.`fid`
+    WHERE co.`typeName` = #{typeName,jdbcType=VARCHAR}
+  </select>
+  <select id="selectExpen"  resultMap="ExpenEntry">
+    SELECT co.`typeName`,co.`Additional`,co.`Projecttype`,e.`income`
+     FROM expenseincome e
+    LEFT JOIN `cost` co ON e.`entryid` = co.`fid`
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from expenseincome
+    where sid = #{sid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from expenseincome
+    where sid = #{sid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="sid" keyProperty="sid" parameterType="com.trkj.projects.mybatis.entity.Expenseincome" useGeneratedKeys="true">
+    insert into expenseincome (entryid, amount, Projecttype, 
+      Additional, `date`, Agentid, 
+      branchid, accountid, cost, 
+      income, `operator`, remarks
+      )
+    values (#{entryid,jdbcType=INTEGER}, #{amount,jdbcType=DECIMAL}, #{projecttype,jdbcType=VARCHAR}, 
+      #{additional,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, #{agentid,jdbcType=INTEGER}, 
+      #{branchid,jdbcType=INTEGER}, #{accountid,jdbcType=INTEGER}, #{cost,jdbcType=DECIMAL}, 
+      #{income,jdbcType=DECIMAL}, #{operator,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="sid" keyProperty="sid" parameterType="com.trkj.projects.mybatis.entity.Expenseincome" useGeneratedKeys="true">
+    insert into expenseincome
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="entryid != null">
+        entryid,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="projecttype != null">
+        Projecttype,
+      </if>
+      <if test="additional != null">
+        Additional,
+      </if>
+      <if test="date != null">
+        `date`,
+      </if>
+      <if test="agentid != null">
+        Agentid,
+      </if>
+      <if test="branchid != null">
+        branchid,
+      </if>
+      <if test="accountid != null">
+        accountid,
+      </if>
+      <if test="cost != null">
+        cost,
+      </if>
+      <if test="income != null">
+        income,
+      </if>
+      <if test="operator != null">
+        `operator`,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="entryid != null">
+        #{entryid,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="projecttype != null">
+        #{projecttype,jdbcType=VARCHAR},
+      </if>
+      <if test="additional != null">
+        #{additional,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="agentid != null">
+        #{agentid,jdbcType=INTEGER},
+      </if>
+      <if test="branchid != null">
+        #{branchid,jdbcType=INTEGER},
+      </if>
+      <if test="accountid != null">
+        #{accountid,jdbcType=INTEGER},
+      </if>
+      <if test="cost != null">
+        #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="income != null">
+        #{income,jdbcType=DECIMAL},
+      </if>
+      <if test="operator != null">
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.trkj.projects.mybatis.entity.Expenseincome">
+    update expenseincome
+    <set>
+      <if test="entryid != null">
+        entryid = #{entryid,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="projecttype != null">
+        Projecttype = #{projecttype,jdbcType=VARCHAR},
+      </if>
+      <if test="additional != null">
+        Additional = #{additional,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        `date` = #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="agentid != null">
+        Agentid = #{agentid,jdbcType=INTEGER},
+      </if>
+      <if test="branchid != null">
+        branchid = #{branchid,jdbcType=INTEGER},
+      </if>
+      <if test="accountid != null">
+        accountid = #{accountid,jdbcType=INTEGER},
+      </if>
+      <if test="cost != null">
+        cost = #{cost,jdbcType=DECIMAL},
+      </if>
+      <if test="income != null">
+        income = #{income,jdbcType=DECIMAL},
+      </if>
+      <if test="operator != null">
+        `operator` = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sid = #{sid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.trkj.projects.mybatis.entity.Expenseincome">
+    update expenseincome
+    set entryid = #{entryid,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=DECIMAL},
+      Projecttype = #{projecttype,jdbcType=VARCHAR},
+      Additional = #{additional,jdbcType=VARCHAR},
+      `date` = #{date,jdbcType=TIMESTAMP},
+      Agentid = #{agentid,jdbcType=INTEGER},
+      branchid = #{branchid,jdbcType=INTEGER},
+      accountid = #{accountid,jdbcType=INTEGER},
+      cost = #{cost,jdbcType=DECIMAL},
+      income = #{income,jdbcType=DECIMAL},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR}
+    where sid = #{sid,jdbcType=INTEGER}
+  </update>
+</mapper>
