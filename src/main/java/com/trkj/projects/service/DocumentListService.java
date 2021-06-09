@@ -88,5 +88,12 @@ public interface DocumentListService {
     List<DocumentlistVo> selectdatesdanju(String date1, String date2);
 
     PageInfo<SpcgmxVo> cgdj(int currentPage, int pageSize);
-
+    PageInfo<SpcgmxVo> djxq(int currentPage, int pageSize);
+    PageInfo<SpcgmxVo> spmx(int currentPage, int pageSize);
+    List<SpcgmxVo> ywymc();
+    PageInfo<SpcgmxVo> ywycx(SpcgmxVo spcgmxVo , int currentPage, int pageSize);
+    /**
+     * 查询给定的俩个时间节点之间的单据
+     */
+    List<SpcgmxVo> sjcx(String date1, String date2);
 }

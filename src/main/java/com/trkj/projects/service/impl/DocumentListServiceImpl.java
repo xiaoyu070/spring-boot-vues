@@ -127,6 +127,57 @@ public class DocumentListServiceImpl implements DocumentListService {
         return info;
     }
 
+    @Override
+    public PageInfo<SpcgmxVo> djxq(int currentPage, int pageSize) {
+        List<SpcgmxVo> list=this.documentListDao.djxq(currentPage,pageSize);
+        //封装分页插件
+        PageHelper.startPage(currentPage,pageSize,true);
+        //再查所有最终传过去的数据
+        List<SpcgmxVo> list2 = this.documentListDao.djxq(currentPage,pageSize);
+        //封装到pageinfo再设置总条数获取第一个list的大小size()方法
+        PageInfo<SpcgmxVo> info = new PageInfo<>(list2);
+        info.setTotal(list.size());
+        System.out.println(list);
+        return info;
+    }
 
+    @Override
+    public PageInfo<SpcgmxVo> spmx(int currentPage, int pageSize) {
+        List<SpcgmxVo> list=this.documentListDao.spmx(currentPage,pageSize);
+        //封装分页插件
+        PageHelper.startPage(currentPage,pageSize,true);
+        //再查所有最终传过去的数据
+        List<SpcgmxVo> list2 = this.documentListDao.spmx(currentPage,pageSize);
+        //封装到pageinfo再设置总条数获取第一个list的大小size()方法
+        PageInfo<SpcgmxVo> info = new PageInfo<>(list2);
+        info.setTotal(list.size());
+        System.out.println(list);
+        return info;
+    }
 
+    @Override
+    public List<SpcgmxVo> ywymc() {
+        List<SpcgmxVo> list2 = this.documentListDao.ywymc();
+        return list2;
+    }
+
+    @Override
+    public PageInfo<SpcgmxVo> ywycx(SpcgmxVo spcgmxVo, int currentPage, int pageSize) {
+            List<SpcgmxVo> list=this.documentListDao.ywycx(spcgmxVo);
+            //封装分页插件
+            PageHelper.startPage(currentPage,pageSize,true);
+            //再查所有最终传过去的数据
+            List<SpcgmxVo> list2=this.documentListDao.ywycx(spcgmxVo);
+            //封装到pageinfo再设置总条数获取第一个list的大小size()方法
+            PageInfo<SpcgmxVo> info = new PageInfo<>(list);
+            info.setTotal(list.size());
+            System.out.println(list);
+            return info;
+        }
+
+    @Override
+    public List<SpcgmxVo> sjcx(String date1, String date2) {
+        return this.documentListDao.sjcx(date1,date2);
+    }
 }
+

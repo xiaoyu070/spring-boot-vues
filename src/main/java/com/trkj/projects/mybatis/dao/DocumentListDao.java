@@ -114,6 +114,14 @@ public interface DocumentListDao {
     List<DocumentlistVo> selectdatesdanju(String date1, String date2);
 
     List<SpcgmxVo> cgdj(int currentPage, int pageSize);
+    List<SpcgmxVo> djxq(int currentPage, int pageSize);
+    List<SpcgmxVo> spmx(int currentPage, int pageSize);
+    List<SpcgmxVo> ywymc();
+    List<SpcgmxVo> ywycx(SpcgmxVo spcgmxVo);
+    /**
+     * 查询给定的俩个时间节点之间的单据
+     */
+    List<SpcgmxVo> sjcx(String date1, String date2);
 
 }
 

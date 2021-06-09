@@ -15,6 +15,7 @@ import com.trkj.projects.service.DocumentShopService;
 import com.trkj.projects.service.EstablishmentService;
 import com.trkj.projects.service.StockService;
 import com.trkj.projects.vo.AjaxResponse;
+import com.trkj.projects.vo.CgdjVo;
 import com.trkj.projects.vo.DocumentlistVo;
 import com.trkj.projects.vo.SpcgmxVo;
 import org.springframework.web.bind.annotation.*;
@@ -238,6 +239,48 @@ public class DocumentListController {
         AjaxResponse ajaxResponse =null;
         PageInfo<SpcgmxVo> list= this.documentListService.cgdj(currentPage,pageSize);
         return ajaxResponse.success(list);
+    }
+    @GetMapping("djxq")
+    public AjaxResponse selectc1(int currentPage, int pageSize){
+        AjaxResponse ajaxResponse =null;
+        PageInfo<SpcgmxVo> list= this.documentListService.djxq(currentPage,pageSize);
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("spmx")
+    public AjaxResponse selectc2(int currentPage, int pageSize){
+        AjaxResponse ajaxResponse =null;
+        PageInfo<SpcgmxVo> list= this.documentListService.spmx(currentPage,pageSize);
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("ywymc")
+    public AjaxResponse selectcx1(){
+        List<SpcgmxVo> list =this.documentListService.ywymc();
+        System.out.println(list);
+        return AjaxResponse.success(list);
+    }
+    @GetMapping("ywycx")
+    public AjaxResponse selectcx2(String agentName1, int currentPage, int pageSize) {
+        System.out.println("mmm"+agentName1);
+        SpcgmxVo spcgmxVo=new SpcgmxVo();
+        spcgmxVo.setAgentName(agentName1);
+        PageInfo<SpcgmxVo> list= this.documentListService.ywycx(spcgmxVo,currentPage,pageSize);
+        return AjaxResponse.success(list);
+    }
+    //根据时间查询采购审核单中状态为待审核的单据
+    @PostMapping("sjcx")
+    public AjaxResponse sjcx(@RequestBody String b){
+        JSONObject jsonObject=JSONObject.parseObject(b);
+        System.out.println("jsonObject"+jsonObject);
+        int currenPage = jsonObject.getInteger("currenPage");
+        int pageSize = jsonObject.getInteger("pageSize");
+        String data1 = jsonObject.getString("data1");
+        String data2 = jsonObject.getString("data2");
+        Map<String,Object> map=new HashMap<>();
+        Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+        List<DocumentlistVo> list = this.documentListService.selectdatesdanju(data1,data2);
+        map.put("total",pg.getTotal());
+        map.put("rows",list);
+        return AjaxResponse.success(map);
     }
 
 }
