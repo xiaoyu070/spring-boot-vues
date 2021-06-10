@@ -277,7 +277,7 @@ public class DocumentListController {
         String data2 = jsonObject.getString("data2");
         Map<String,Object> map=new HashMap<>();
         Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
-        List<DocumentlistVo> list = this.documentListService.selectdatesdanju(data1,data2);
+        List<SpcgmxVo> list = this.documentListService.sjcx(data1,data2);
         map.put("total",pg.getTotal());
         map.put("rows",list);
         return AjaxResponse.success(map);
