@@ -31,6 +31,7 @@
         <result property="spBeizhu" column="sp_beizhu" jdbcType="VARCHAR"/>
         <result property="number" column="sk_number" javaType="INTEGER"/>
         <result property="spBarCode" column="sp_bar_code" jdbcType="VARCHAR"/>
+        <result property="supperlierid" column="s_id" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap type="com.trkj.projects.mybatis.entity.Shops" id="ShopMap">
@@ -225,7 +226,7 @@
 
     <!-- 查询所有商品 -->
     <select id="queryshopanstock" resultMap="ShopandstockVo">
-        SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,sk.`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code` FROM shop s
+        SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,sk.`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`,s.s_id FROM shop s
         LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
         LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid
             <where>

@@ -110,8 +110,8 @@ public class SupplierServiceImpl implements SupplierService {
 
     /**
      * 根据分店类型和关键字查询
-     * @param branchid
-     * @param suppliername
+     * //@param branchid
+     * //@param suppliername
      * @return
      */
     @Override
@@ -156,6 +156,11 @@ public class SupplierServiceImpl implements SupplierService {
     public Integer deletepl(Integer[] supplierid) {
 
         return supplierDao.pildelsup(supplierid);
+    }
+
+    @Override
+    public void numbersmoney(double money, int supplierid) {
+        this.supplierDao.numbersmoney(money,supplierid);
     }
 
 }
