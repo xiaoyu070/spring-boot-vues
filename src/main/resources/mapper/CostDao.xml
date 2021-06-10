@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.CostDao">
+  <resultMap id="BaseResultMap" type="com.trkj.projects.mybatis.entity.Cost">
+    <id column="fid" jdbcType="INTEGER" property="fid" />
+    <result column="Additional" jdbcType="VARCHAR" property="additional" />
+    <result column="Projecttype" jdbcType="VARCHAR" property="projecttype" />
+    <result column="typeName" jdbcType="VARCHAR" property="typename" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    fid, Additional, Projecttype, typeName
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cost
+    where fid = #{fid,jdbcType=INTEGER}
+  </select>
+<!--  根据类型查询项目名-->
+  <select id="selectall" resultMap="BaseResultMap">
+    select
+    fid, Additional, Projecttype, typeName
+    from cost
+    where Projecttype = '费用'
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from cost
+    where fid = #{fid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="fid" keyProperty="fid" parameterType="com.trkj.projects.mybatis.entity.Cost" useGeneratedKeys="true">
+    insert into cost (Additional, Projecttype, typeName
+      )
+    values (#{additional,jdbcType=VARCHAR}, #{projecttype,jdbcType=VARCHAR}, #{typename,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="fid" keyProperty="fid" parameterType="com.trkj.projects.mybatis.entity.Cost" useGeneratedKeys="true">
+    insert into cost
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="additional != null">
+        Additional,
+      </if>
+      <if test="projecttype != null">
+        Projecttype,
+      </if>
+      <if test="typename != null">
+        typeName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="additional != null">
+        #{additional,jdbcType=VARCHAR},
+      </if>
+      <if test="projecttype != null">
+        #{projecttype,jdbcType=VARCHAR},
+      </if>
+      <if test="typename != null">
+        #{typename,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.trkj.projects.mybatis.entity.Cost">
+    update cost
+    <set>
+      <if test="additional != null">
+        Additional = #{additional,jdbcType=VARCHAR},
+      </if>
+      <if test="projecttype != null">
+        Projecttype = #{projecttype,jdbcType=VARCHAR},
+      </if>
+      <if test="typename != null">
+        typeName = #{typename,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fid = #{fid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.trkj.projects.mybatis.entity.Cost">
+    update cost
+    set Additional = #{additional,jdbcType=VARCHAR},
+      Projecttype = #{projecttype,jdbcType=VARCHAR},
+      typeName = #{typename,jdbcType=VARCHAR}
+    where fid = #{fid,jdbcType=INTEGER}
+  </update>
+</mapper>
