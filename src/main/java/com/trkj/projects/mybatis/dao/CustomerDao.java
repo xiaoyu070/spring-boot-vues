@@ -17,6 +17,8 @@ import java.util.List;
 public interface CustomerDao {
 
     List<Customer> selectBybranchid(@Param("branchid")Integer branchid);
+
+    List<Customer> findall();
     /**
      * 通过ID查询单条数据
      *

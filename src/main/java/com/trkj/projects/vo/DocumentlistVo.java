@@ -22,6 +22,10 @@ public class DocumentlistVo {
      * 供货商名称
      */
     private String suppliername;
+    /**
+     * 客户名称
+     */
+    private String contacts;
 
     /**
      * 仓库名称

@@ -88,7 +88,7 @@ public interface WarehouseDao {
     List<Warehouse> queryBybranchid(Integer branchid);
 
     //------------------------老弟的
-    //查询
+    //根据分店id查询
     List<Warehouse> selectByBrachid(Integer branchid);
 
     //模糊查询

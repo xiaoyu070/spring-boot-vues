@@ -1,6 +1,8 @@
 package com.trkj.projects.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.trkj.projects.mybatis.entity.Shop;
+import com.trkj.projects.mybatis.entity.Stock;
 import com.trkj.projects.service.StockService;
 import com.trkj.projects.vo.AjaxResponse;
 import com.trkj.projects.vo.StockVo;
@@ -91,6 +93,21 @@ public class StockController {
         return  AjaxResponse.success(info);
     }
 
+
+    /**
+     * 库存报警中的模糊查询
+     * @param currentPage
+     * @param pageSize
+     * @param testlike2
+     * @return
+     */
+    @GetMapping("KuCuntestLike")
+    public  AjaxResponse KuCuntestLike(Integer currentPage,Integer pageSize,String testlike2){
+        PageInfo<StockVo> info=stockService.kucunbaojinlike(currentPage,pageSize,testlike2);
+        return  AjaxResponse.success(info);
+    }
+
+
     /**
      * 查询显示禁用商品
      * @param currentPage
@@ -129,6 +146,13 @@ public class StockController {
     public AjaxResponse KcMoHuSelec(Integer currentPage,Integer pageSize,String KCmohu ){
         PageInfo<StockVo> info =stockService.KcMoHuSelect(currentPage,pageSize,KCmohu);
         return AjaxResponse.success(info);
+    }
+
+    @GetMapping("Kcbjupdate")
+    public int Kcbjupdate(Integer skid,Integer kcbj ){
+        Stock stock =new Stock();
+        System.out.println("bianhao"+skid+kcbj);
+        return  this.stockService.Kcbjupdate(skid,kcbj);
     }
 
 

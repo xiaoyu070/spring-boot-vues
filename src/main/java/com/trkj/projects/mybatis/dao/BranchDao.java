@@ -92,14 +92,19 @@ public interface BranchDao {
     //--------------------------------老弟的
     int deleteByPrimaryKey(Integer branchid);
 
+    /**
+     * 批量删除分店
+     * @param branchid
+     * @return
+     */
     Integer deleteByBranchAndNames(@Param("branchid")Integer[] branchid);
-
+    //添加分店
     int insertSelective(Branch record);
 
     Branch selectByPrimaryKey(Integer branchid);
 
     int updateByPrimaryKeySelective(Branch record);
-
+    //修改分店信息
     int updateByPrimaryKey(Branch record);
 
 

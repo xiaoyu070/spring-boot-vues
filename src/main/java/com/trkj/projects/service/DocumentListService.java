@@ -15,6 +15,9 @@ import java.util.List;
  * @since 2021-06-03 22:08:18
  */
 public interface DocumentListService {
+    //邓峄楷
+    PageInfo<DocumentlistVo> findallbyfdandkhanduserandgjz(String qishitime,String zuihotime,int branchid, int customerid, int userid, String gjz, int currentPage, int pageSize );
+
 
     /**
      * 通过ID查询单条数据
@@ -55,7 +58,7 @@ public interface DocumentListService {
      * @param id 主键
      * @return 是否成功
      */
-    boolean deleteById(Integer id);
+    boolean deleteById(String number);
 
     /**
      * 查询单据状态为待审核的单据
@@ -63,9 +66,18 @@ public interface DocumentListService {
     List<DocumentlistVo> selectvo(DocumentlistVo documentShopVo);
 
     /**
+     * 查询销售出库单据状态为待审核的单据
+     */
+    List<DocumentlistVo> selectxsvo(DocumentlistVo documentShopVo);
+
+    /**
      * 模糊查询单据状态为待审核的单据
      */
     List<DocumentlistVo> likevo(String text);
+    /**
+     * 模糊查询销售单据状态为待审核的单据
+     */
+    List<DocumentlistVo> xslikevo(String text);
 
     /**
      * 将未审核的单据状态改为已审核
@@ -86,6 +98,14 @@ public interface DocumentListService {
      * 根据给定的时间节点查询状态为待审核的单据
      */
     List<DocumentlistVo> selectdatesdanju(String date1, String date2);
+
+    /**
+     * 根据给定的时间节点查询状态为待审核的销售单据
+     * @param date1
+     * @param date2
+     * @return
+     */
+    List<DocumentlistVo> xsselectdatesdanju(String date1, String date2);
 
     PageInfo<SpcgmxVo> cgdj(int currentPage, int pageSize);
     PageInfo<SpcgmxVo> djxq(int currentPage, int pageSize);

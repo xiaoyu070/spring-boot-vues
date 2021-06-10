@@ -43,6 +43,10 @@ public class CustomerController {
     public List<Customer> selectones(Integer id){
         return this.customerService.queryByBranchId(id);
     }
+    @GetMapping("findallcus")
+    public List<Customer> findall(){
+        return customerService.findall();
+    }
 
 
 }

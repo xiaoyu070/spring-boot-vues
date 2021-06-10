@@ -66,6 +66,15 @@ public interface StockService {
     PageInfo<StockVo>selectlike(int currentPage,int pageSize, String testlike);
 
     /**
+     * 库存报警模糊查询所有商品
+     * @param currentPage
+     * @param pageSize
+     * @param testlike2
+     * @return
+     */
+    PageInfo<StockVo>kucunbaojinlike(int currentPage,int pageSize, String testlike2);
+
+    /**
      * 查询显示禁用商品
      * @param currentPage
      * @param pageSize
@@ -91,4 +100,11 @@ public interface StockService {
      */
     PageInfo<StockVo> KcMoHuSelect(int currentPage, int pageSize, String KCmohu);
 
+    /**
+     * 库存报警修改最低库存数量
+     * @param skid
+     * @param kcbj
+     * @return
+     */
+    int Kcbjupdate (int skid,int kcbj);
 }

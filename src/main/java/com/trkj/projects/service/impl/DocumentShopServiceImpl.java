@@ -129,4 +129,9 @@ public class DocumentShopServiceImpl implements DocumentShopService {
         return list2;
     }
 
+    @Override
+    public void deleteshoplist(String number) {
+        this.documentShopDao.deleteshoplist(number);
+    }
+
 }

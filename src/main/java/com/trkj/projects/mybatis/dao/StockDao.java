@@ -75,6 +75,13 @@ public interface StockDao {
      */
     List<StockVo>selectlike(String testlike);
 
+    /**
+     * 库存报警中的模糊查询
+     * @param testlike2
+     * @return
+     */
+    List<StockVo>kucunbaojinlike(String testlike2);
+
 
     /**
      * 查询所有库存数量  显示为0 不显示为0 所有库存
@@ -88,6 +95,14 @@ public interface StockDao {
      * @return
      */
     List<StockVo> queryall();
+
+    /**
+     * 修改库存报警中的最低库存
+     * @param skid
+     * @param kcbj
+     * @return
+     */
+    int Kcbjupdate(@Param("skid") int skid,@Param("kcbj") int kcbj);
 
 
 }
