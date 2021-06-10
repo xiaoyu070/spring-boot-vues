@@ -61,9 +61,9 @@
         where id = #{id}
     </select>
     <!-- 根据商品单据号删除商品 -->
-    <update id="deleteshoplist" >
-        update projects.document_shop set dl_number = #{number}
-    </update>
+    <delete id="deleteshoplist" >
+        delete projects.document_shop where dl_number = #{number}
+    </delete>
 
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="DocumentShopMap">

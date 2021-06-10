@@ -8,6 +8,7 @@ import com.trkj.projects.util.JwtTokenUtil;
 import com.trkj.projects.util.yan;
 import com.trkj.projects.vo.AjaxResponse;
 import com.trkj.projects.vo.SysUserVo;
+import com.trkj.projects.vo.SysUser_roles;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -131,5 +132,11 @@ public class SysUserController {
             map.put("success","该手机号与验证码不匹配！");
         }
         return AjaxResponse.success(map);
+    }
+
+    @GetMapping("findByUser_roles")
+    public AjaxResponse findByUser_roles(int uid){
+        SysUser_roles list=this.sysUserService.findByUser_roles(uid);
+        return AjaxResponse.success(list);
     }
 }

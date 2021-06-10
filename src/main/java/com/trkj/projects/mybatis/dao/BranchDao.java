@@ -1,6 +1,7 @@
 package com.trkj.projects.mybatis.dao;
 
 import com.trkj.projects.mybatis.entity.Branch;
+import com.trkj.projects.vo.BranchVo;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -88,6 +89,12 @@ public interface BranchDao {
 
     List<Branch> findAll();
 
+    /**
+     * 查询总店
+     * 用于采购进货
+     * @return
+     */
+    List<BranchVo> selecttypeidand1();
 
     //--------------------------------老弟的
     int deleteByPrimaryKey(Integer branchid);

@@ -10,6 +10,7 @@ import com.trkj.projects.mybatis.dao.WarehouseDao;
 import com.trkj.projects.mybatis.entity.Branch;
 import com.trkj.projects.service.BranchService;
 
+import com.trkj.projects.vo.BranchVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -101,6 +102,11 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public List<Branch> findall() {
         return this.branchDao.findAll();
+    }
+
+    @Override
+    public List<BranchVo> selecttypeidand1() {
+        return this.branchDao.selecttypeidand1();
     }
 
 

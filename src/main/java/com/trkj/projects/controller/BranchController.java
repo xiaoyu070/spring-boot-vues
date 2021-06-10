@@ -4,6 +4,7 @@ import com.trkj.projects.jpa.entity.BranchEntity;
 import com.trkj.projects.mybatis.entity.Branch;
 import com.trkj.projects.service.BranchService;
 import com.trkj.projects.vo.AjaxResponse;
+import com.trkj.projects.vo.BranchVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,6 +50,18 @@ public class BranchController {
         System.out.println(list.toString());
         return ajaxResponse.success(list);
     }
+
+    /**
+     * 查询总店
+     * 用于采购进货（只能对总店进行采购）
+     * @return
+     */
+    @GetMapping("selectbranchand1")
+    public AjaxResponse selectbranchand1(){
+        List<BranchVo> list=this.branchService.selecttypeidand1();
+        return AjaxResponse.success(list);
+    }
+
 //---------------------------------------------楷楷的
     @GetMapping("findbranch")
     public List<Branch> findall(){
