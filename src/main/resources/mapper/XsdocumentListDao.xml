@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.XsdocumentListDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.XsdocumentList" id="XsdocumentListMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
+        <result property="dlDate" column="dl_date" jdbcType="TIMESTAMP"/>
+        <result property="customerid" column="customerid" jdbcType="INTEGER"/>
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
+        <result property="dlYsje" column="dl_ysje" jdbcType="NUMERIC"/>
+        <result property="dlSsje" column="dl_ssje" jdbcType="NUMERIC"/>
+        <result property="dlQkje" column="dl_qkje" jdbcType="NUMERIC"/>
+        <result property="dlYhje" column="dl_yhje" jdbcType="NUMERIC"/>
+        <result property="agentId" column="agent_id" jdbcType="INTEGER"/>
+        <result property="admin" column="admin" jdbcType="INTEGER"/>
+        <result property="dlTypeId" column="dl_type_id" jdbcType="INTEGER"/>
+        <result property="dlStatieId" column="dl_statie_id" jdbcType="INTEGER"/>
+        <result property="dlBeizhu" column="dl_beizhu" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap type="com.trkj.projects.vo.XsDocumentlistVo" id="DocumentListVOMap">
+        <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
+        <result property="dlDate" column="dl_date" jdbcType="TIMESTAMP"/>
+        <result property="contacts" column="c_contacts" jdbcType="VARCHAR"/>
+        <result property="wname" column="wname" jdbcType="VARCHAR"/>
+        <result property="dlysje" column="dl_ysje" jdbcType="NUMERIC"/>
+        <result property="dlssje" column="dl_ssje" jdbcType="NUMERIC"/>
+        <result property="dlqkje" column="dl_qkje" jdbcType="NUMERIC"/>
+        <result property="dlyhje" column="dl_yhje" jdbcType="NUMERIC"/>
+        <result property="agentname" column="agent_name" jdbcType="VARCHAR"/>
+        <result property="username" column="user_name" jdbcType="VARCHAR"/>
+        <result property="dltypename" column="dl_type_name" jdbcType="VARCHAR"/>
+        <result property="dlstatiename" column="dl_statie_name" jdbcType="VARCHAR"/>
+        <result property="dlbeizhu" column="dl_beizhu" jdbcType="VARCHAR"/>
+        <result property="branchname" column="branchname" jdbcType="VARCHAR"/>
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="XsdocumentListMap">
+        select
+          id, dl_number, dl_date, customerid, wid, dl_ysje, dl_ssje, dl_qkje, dl_yhje, agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu
+        from projects.xsdocument_list
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="XsdocumentListMap">
+        select
+          id, dl_number, dl_date, customerid, wid, dl_ysje, dl_ssje, dl_qkje, dl_yhje, agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu
+        from projects.xsdocument_list
+        limit #{offset}, #{limit}
+    </select>
+
+    <!-- 查询销售单据为待审核和销售出货的数据 -->
+    <select id="selectxsvo" resultMap="DocumentListVOMap">
+        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_name,dl.dl_beizhu
+        FROM xsdocument_list dl
+        LEFT JOIN customer sl ON dl.customerid = sl.c_id
+        LEFT JOIN warehouse ws ON dl.wid = ws.wid
+        LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
+        LEFT JOIN sys_user su ON dl.admin = su.user_id
+        LEFT JOIN xsdocument_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
+        LEFT JOIN xsdocument_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
+        LEFT JOIN branch dm ON dm.branchid = sl.branchid
+        <where>
+            dl.dl_statie_id = 1
+            <if test="dlNumber != null  and dlNumber != ''">
+                AND dl.dl_number LIKE CONCAT('%',#{dlNumber},'%')
+            </if>
+            <if test="contacts != null and  contacts != ''">
+                AND sl.c_contacts LIKE CONCAT('%',#{contacts},'%')
+            </if>
+            <if test="wname != null and wname != ''">
+                AND ws.wname LIKE CONCAT('%',#{wname},'%')
+            </if>
+            <if test="agentname != null and agentname != ''">
+                AND ag.agent_name LIKE CONCAT('%',#{agentname},'%')
+            </if>
+            <if test="username != null and username != ''">
+                AND su.user_name LIKE CONCAT('%',#{username},'%')
+            </if>
+            <if test="dltypename != null and dltypename != ''">
+                AND dlt.dl_type_name LIKE CONCAT('%',#{dltypename},'%')
+            </if>
+            <if test="dlstatiename != null and dlstatiename != ''">
+                AND dls.dl_statie_name LIKE CONCAT('%',#{dlstatiename},'%')
+            </if>
+            <if test="dlbeizhu != null and dlbeizhu != ''">
+                AND dl.dl_beizhu LIKE CONCAT('%',#{dlbeizhu},'%')
+            </if>
+            <if test="branchname != null and branchname != ''">
+                AND dm.branchname LIKE CONCAT('%',#{branchname},'%')
+            </if>
+        </where>
+    </select>
+
+    <!-- 模糊查询销售单据为待审核的单据 -->
+    <select id="xslikevo" resultMap="DocumentListVOMap">
+        SELECT dl.dl_number,dl.dl_date,sl.c_contacts,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_name,dl.dl_beizhu
+        FROM xsdocument_list dl
+        LEFT JOIN customer sl ON dl.customerid = sl.c_id
+        LEFT JOIN warehouse ws ON dl.wid = ws.wid
+        LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
+        LEFT JOIN sys_user su ON dl.admin = su.user_id
+        LEFT JOIN xsdocument_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
+        LEFT JOIN xsdocument_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
+        where
+        (dl.dl_number LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
+        or (sl.c_contacts LIKE  CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
+        or (ws.wname LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
+
+    </select>
+
+    <!-- 根据俩个时间之间查询销售单据 -->
+    <select id="xsselectdate" resultMap="DocumentListVOMap">
+        SELECT dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dlt.dl_type_name,dl.dl_beizhu
+        FROM xsdocument_list dl
+        LEFT JOIN customer sl ON dl.customerid = sl.c_id
+        LEFT JOIN warehouse ws ON dl.wid = ws.wid
+        LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
+        LEFT JOIN sys_user su ON dl.admin = su.user_id
+        LEFT JOIN xsdocument_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
+        LEFT JOIN xsdocument_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
+        LEFT JOIN branch dm ON dm.branchid = sl.branchid WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 1 ORDER BY dl.dl_date DESC
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.xsdocument_list(dl_number, dl_date, customerid, wid, dl_ysje, dl_ssje, dl_qkje, dl_yhje, agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu)
+        values (#{dlNumber}, #{dlDate}, #{customerid}, #{wid}, #{dlYsje}, #{dlSsje}, #{dlQkje}, #{dlYhje}, #{agentId}, #{admin}, #{dlTypeId}, #{dlStatieId}, #{dlBeizhu})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.xsdocument_list(dl_number, dl_date, customerid, wid, dl_ysje, dl_ssje, dl_qkje, dl_yhje,
+        agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.dlNumber}, #{entity.dlDate}, #{entity.customerid}, #{entity.wid}, #{entity.dlYsje},
+            #{entity.dlSsje}, #{entity.dlQkje}, #{entity.dlYhje}, #{entity.agentId}, #{entity.admin},
+            #{entity.dlTypeId}, #{entity.dlStatieId}, #{entity.dlBeizhu})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.xsdocument_list(dl_number, dl_date, customerid, wid, dl_ysje, dl_ssje, dl_qkje, dl_yhje,
+        agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.dlNumber}, #{entity.dlDate}, #{entity.customerid}, #{entity.wid}, #{entity.dlYsje},
+            #{entity.dlSsje}, #{entity.dlQkje}, #{entity.dlYhje}, #{entity.agentId}, #{entity.admin},
+            #{entity.dlTypeId}, #{entity.dlStatieId}, #{entity.dlBeizhu})
+        </foreach>
+        on duplicate key update
+        dl_number = values(dl_number) , dl_date = values(dl_date) , customerid = values(customerid) , wid = values(wid)
+        , dl_ysje = values(dl_ysje) , dl_ssje = values(dl_ssje) , dl_qkje = values(dl_qkje) , dl_yhje = values(dl_yhje)
+        , agent_id = values(agent_id) , admin = values(admin) , dl_type_id = values(dl_type_id) , dl_statie_id =
+        values(dl_statie_id) , dl_beizhu = values(dl_beizhu)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.xsdocument_list
+        <set>
+            <if test="dlNumber != null and dlNumber != ''">
+                dl_number = #{dlNumber},
+            </if>
+            <if test="dlDate != null">
+                dl_date = #{dlDate},
+            </if>
+            <if test="customerid != null">
+                customerid = #{customerid},
+            </if>
+            <if test="wid != null">
+                wid = #{wid},
+            </if>
+            <if test="dlYsje != null">
+                dl_ysje = #{dlYsje},
+            </if>
+            <if test="dlSsje != null">
+                dl_ssje = #{dlSsje},
+            </if>
+            <if test="dlQkje != null">
+                dl_qkje = #{dlQkje},
+            </if>
+            <if test="dlYhje != null">
+                dl_yhje = #{dlYhje},
+            </if>
+            <if test="agentId != null">
+                agent_id = #{agentId},
+            </if>
+            <if test="admin != null">
+                admin = #{admin},
+            </if>
+            <if test="dlTypeId != null">
+                dl_type_id = #{dlTypeId},
+            </if>
+            <if test="dlStatieId != null">
+                dl_statie_id = #{dlStatieId},
+            </if>
+            <if test="dlBeizhu != null and dlBeizhu != ''">
+                dl_beizhu = #{dlBeizhu},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.xsdocument_list where dl_number = #{number}
+    </delete>
+
+</mapper>
+
