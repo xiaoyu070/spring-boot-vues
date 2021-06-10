@@ -144,4 +144,9 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         return this.establishmentDao.delete(xid);
     }
 
+    @Override
+    public List<Establishment> finAll() {
+        return establishmentDao.selectByAll();
+    }
+
 }

@@ -75,5 +75,7 @@ public interface EstablishmentService {
     Establishment updataEstab(Establishment establishment);
     void delectEstab(Integer xid);
     public Integer delect(Integer[] xid);
+    //查询所有付款账户
+    public List<Establishment> finAll();
 
 }

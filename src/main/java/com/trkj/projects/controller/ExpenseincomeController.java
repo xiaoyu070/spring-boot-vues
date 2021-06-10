@@ -40,4 +40,10 @@ public class ExpenseincomeController {
             log.debug("1111111111111111"+info.toString());
             return AjaxResponse.success(info);
     }
+
+    @PostMapping("/updataExpen")
+    public Expenseincome addExpenseincome(@RequestBody Expenseincome expenseincome){
+        Expenseincome expenseincomes = service.updataExpen(expenseincome);
+        return expenseincomes;
+    }
 }
