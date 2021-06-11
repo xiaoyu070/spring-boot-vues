@@ -49,4 +49,10 @@ public class ExpenseincomeServicelmpl implements ExpenseincomeService {
         System.out.println("--------------"+list);
         return info;
     }
+
+    @Override
+    public Expenseincome updataExpen(Expenseincome expenseincome) {
+        dao.insert(expenseincome);
+        return expenseincome;
+    }
 }

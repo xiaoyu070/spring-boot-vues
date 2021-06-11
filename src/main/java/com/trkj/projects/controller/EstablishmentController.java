@@ -78,5 +78,8 @@ public class EstablishmentController {
         log.debug("11111111111111"+"xid");
         return establishmentService.delect(xid);
     }
-
+    @GetMapping("/findesall")
+    public List<Establishment> findAll(){
+        return establishmentService.finAll();
+    }
 }

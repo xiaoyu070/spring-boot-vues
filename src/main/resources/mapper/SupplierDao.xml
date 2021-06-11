@@ -109,6 +109,11 @@
         </where>
     </select>
 
+    <!-- 单据号审核通过后，该单据中包含的商品根据供应商将采购付款一一对应加入到供货商的初期余额中-->
+    <update id="numbersmoney">
+       UPDATE `supplier` SET money = money + #{param1} WHERE supplierid = #{param2}
+    </update>
+    
     <!--新增所有列-->
     <insert id="insert" keyProperty="sId" useGeneratedKeys="true">
         insert into projects.supplier(supplierid, suppliername, contacts, contactnumber, suptypeid, addressid, payablemoney, companyid, money, static, ismoren, lxaddress, cjtime, beizhu)

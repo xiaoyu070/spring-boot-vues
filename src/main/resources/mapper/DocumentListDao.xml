@@ -273,7 +273,7 @@
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
-        LEFT JOIN branch dm ON dm.branchid = sl.companyid
+        LEFT JOIN branch dm ON dm.branchid = ws.branchid
         <where>
             dl.dl_statie_id = 1
             <if test="dlNumber != null  and dlNumber != ''">

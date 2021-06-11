@@ -110,7 +110,7 @@ public interface EstablishmentDao {
     int updateByPrimaryKey(Establishment record);
 
     List<Establishment> selectByBrachid(Integer branchid);
-
+    //查询所有
     List<Establishment> selectByAll();
 
     Integer delete(@Param("xid")Integer[] xid);

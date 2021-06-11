@@ -51,6 +51,7 @@ public class DocumentShopController {
         Map<String,Object> map=new HashMap<>();
         Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
         List<DocumentShopVo> list= this.documentShopService.selectnumber(number);
+        System.out.println("selectnumber:list:"+list);
         map.put("total",pg.getTotal());
         map.put("rows",list);
         return AjaxResponse.success(map);

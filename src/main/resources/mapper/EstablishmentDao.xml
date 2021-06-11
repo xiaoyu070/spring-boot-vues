@@ -154,6 +154,7 @@
     <sql id="Base_Column_List">
     xid, Bank, Opening, `Enable`, sort, Creationdate, remarks, branchid
   </sql>
+<!--    查询所有-->
     <select id="selectByAll" parameterType="java.lang.Integer" resultMap="EstablishmentMap">
     select
     xid, Bank, Opening, `Enable`, sort, Creationdate, remarks, branchid
