@@ -64,6 +64,10 @@ public class DocumentlistVo {
      */
     private String dltypename;
     /**
+     * 单据类型名称
+     */
+    private Integer dltypeid;
+    /**
      * 备注
      */
     private String dlbeizhu;

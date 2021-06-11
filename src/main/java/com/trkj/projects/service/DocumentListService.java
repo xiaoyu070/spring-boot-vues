@@ -85,6 +85,10 @@ public interface DocumentListService {
     void updatestaticzore(DocumentList documentList);
 
     /**
+     * 将退货未审核的单据状态改为已审核
+     */
+    void updatestatictwo(DocumentList documentList);
+    /**
      * 查询往来账务
      */
     List<DocumentlistVo> selectwlzw();

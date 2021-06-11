@@ -42,6 +42,13 @@ public interface StockDao {
      */
     int updateadd(Stock stock);
 
+    /**
+     * 修改数据
+     *
+     * @param stock 实例对象
+     * @return 影响行数
+     */
+    int updatedelete(Stock stock);
 
     List<StockVov> findallbytypeandlike(@Param("nameandid") String nameandid);
     List<StockVov> queryshopanstock(Integer value);

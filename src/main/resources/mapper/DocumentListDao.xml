@@ -34,6 +34,7 @@
         <result property="dlyhje" column="dl_yhje" jdbcType="NUMERIC"/>
         <result property="agentname" column="agent_name" jdbcType="VARCHAR"/>
         <result property="username" column="user_name" jdbcType="VARCHAR"/>
+        <result property="dltypeid" column="dl_type_id" jdbcType="INTEGER"/>
         <result property="dltypename" column="dl_type_name" jdbcType="VARCHAR"/>
         <result property="dlstatiename" column="dl_statie_name" jdbcType="VARCHAR"/>
         <result property="dlbeizhu" column="dl_beizhu" jdbcType="VARCHAR"/>
@@ -265,7 +266,7 @@
 
     <!-- 查询单据为待审核的数据 -->
     <select id="selectvo" resultMap="DocumentListVOMap">
-        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_name,dl.dl_beizhu
+        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_id,dlt.dl_type_name,dl.dl_beizhu
         FROM document_list dl
         LEFT JOIN supplier sl ON dl.supplierid = sl.supplierid
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
@@ -381,14 +382,19 @@
         or (ws.wname LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 3)
 
     </select>
-    <!-- 将待审核状态的单据改为已审核 -->
+    <!-- 将采购待审核状态的单据改为已审核 -->
     <update id="updatestaticzore">
         update document_list set dl_statie_id = 0,dl_qkje = #{dlQkje},dl_sfje= #{dlSfje},dl_yfje=#{dlYfje} where dl_number = #{dlNumber}
     </update>
 
-    <!-- 查询往来账务中的单据 -->
+    <!-- 将退货待审核状态的单据改为已审核 -->
+    <update id="updatestatictwo">
+        update document_list set dl_statie_id = 2,dl_qkje = #{dlQkje},dl_sfje= #{dlSfje},dl_yfje=#{dlYfje} where dl_number = #{dlNumber}
+    </update>
+
+    <!-- 查询往来账务中的单据 采购已审核和退货已审核的单据 -->
     <select id="selectwlzw" resultMap="DocumentListVOMap">
-        SELECT dl.dl_number,dm.branchname,dl.dl_date,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dlt.dl_type_name,dls.dl_statie_name,dl.dl_beizhu
+        SELECT dl.dl_number,dm.branchname,dl.dl_date,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dlt.dl_type_name,dls.dl_statie_name,dl.dl_beizhu,dls.dl_statie_id,dlt.dl_type_id
         FROM document_list dl
         LEFT JOIN supplier sl ON dl.supplierid = sl.supplierid
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
@@ -396,7 +402,7 @@
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
-        LEFT JOIN branch dm ON dm.branchid = sl.companyid WHERE dl.dl_statie_id = 0 ORDER BY dl.dl_date DESC
+        LEFT JOIN branch dm ON dm.branchid = sl.companyid WHERE dls.dl_statie_id = 0 OR dls.dl_statie_id = 2 ORDER BY dl.dl_date DESC
     </select>
 
     <!-- 根据俩个时间之间查询单据 -->
@@ -409,7 +415,7 @@
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
-        LEFT JOIN branch dm ON dm.branchid = sl.companyid WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 0 ORDER BY dl.dl_date DESC
+        LEFT JOIN branch dm ON dm.branchid = sl.companyid WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') ORDER BY dl.dl_date DESC
     </select>
 
     <!-- 根据时间查询单据为待审核的单据 -->

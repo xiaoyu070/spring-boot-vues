@@ -128,12 +128,23 @@
         SELECT * FROM `establishment` WHERE branchid = #{id} and Enable = 0
     </select>
 
-    <!-- 通过减少银行金额 -->
+    <!-- 通过银行id减少银行金额 -->
     <update id="updateestab">
         update establishment
         <set>
             <if test="opening != null">
                 Opening = Opening - #{opening},
+            </if>
+        </set>
+        where xid = #{xid}
+    </update>
+
+    <!-- 通过银行id增加银行金额 -->
+    <update id="updateestabjia">
+        update establishment
+        <set>
+            <if test="opening != null">
+                Opening = Opening + #{opening},
             </if>
         </set>
         where xid = #{xid}

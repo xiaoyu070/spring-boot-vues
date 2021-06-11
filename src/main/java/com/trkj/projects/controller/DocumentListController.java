@@ -50,7 +50,7 @@ public class DocumentListController {
     //供货商
     @Resource
     private SupplierService supplierService;
-//    //新增单据、入库修改
+    //新增单据、入库修改
     @PostMapping("addDocumentList")
     public AjaxResponse addDocumentList(@RequestBody String www){
         JSONObject jsonObject=JSONObject.parseObject(www);
@@ -77,7 +77,7 @@ public class DocumentListController {
         String vo=jsonObject.getString("DocumentlistVo");
         String ttt = jsonObject.getString("text");
         //json转实体类对象
-        com.trkj.projects.vo.DocumentlistVo documentlistVo=JSON.parseObject(vo, com.trkj.projects.vo.DocumentlistVo.class);
+        DocumentlistVo documentlistVo=JSON.parseObject(vo,DocumentlistVo.class);
         int currenPage = jsonObject.getInteger("currenPage");
         int pageSize = jsonObject.getInteger("pageSize");
         Map<String,Object> map=new HashMap<>();
@@ -187,36 +187,53 @@ public class DocumentListController {
             int xid = jsonObject.getInteger("xid");
             String two = jsonObject.getString("list");
             DocumentlistVo documentlistVo = JSONObject.parseObject(one, DocumentlistVo.class);
-            System.out.println(documentlistVo.getDlyfje()+",,,"+documentlistVo.getDlsfje());
-            System.out.println(documentlistVo);
-            System.out.println(xid);
+            List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
             Establishment establishment = new Establishment();
             establishment.setXid(xid);
             establishment.setOpening(documentlistVo.getDlsfje());
-            //银行余额减去实付金额
-            this.establishmentService.updateestab(establishment);
-            List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
-            //将采购审核通过的商品的价格和对应的供应商一一拿出来，增加供货商的初期余额
-            for(int x=0;x<listshop.size();x++){
-                this.supplierService.numbersmoney(listshop.get(x).getZje(), listshop.get(x).getSupperlierid());
-            }
-            //审核通过后将该单据中包含的商品添加到库存中
-            Stock stock=new Stock();
-            for(int b=0;b<listshop.size();b++){
-                stock.setSkShopid(listshop.get(b).getSpShopid());
-                stock.setSkNumber(listshop.get(b).getNumber());
-                stock.setSkLossnumber(listshop.get(b).getLossNumber());
-                this.stockService.update(stock);
-            }
-            //应付金额减去实付金额得到欠款金额
-            double x = documentlistVo.getDlyfje() - documentlistVo.getDlsfje();
             DocumentList documentList = new DocumentList();
-            documentList.setDlNumber(documentlistVo.getDlNumber());
-            documentList.setDlQkje(x);
-            documentList.setDlYfje(documentlistVo.getDlyfje());
-            documentList.setDlSfje(documentlistVo.getDlsfje());
-            this.documentListService.updatestaticzore(documentList);
-            return AjaxResponse.success("审核通过！");
+            //将库存new出来根据商品id增加商品库存
+            Stock stock=new Stock();
+            String mess = "";
+            if(documentlistVo.getDltypeid() == 0){
+                //银行余额减去实付金额
+                this.establishmentService.updateestab(establishment);
+                //将采购审核通过的商品的价格和对应的供应商一一拿出来，增加供货商的初期余额
+                for(int x=0;x<listshop.size();x++){
+                    this.supplierService.numbersmoney(listshop.get(x).getZje(), listshop.get(x).getSupperlierid());
+                }
+                //审核通过后将该单据中包含的商品添加到库存中
+                for(int b=0;b<listshop.size();b++){
+                    stock.setSkShopid(listshop.get(b).getSpShopid());
+                    stock.setSkNumber(listshop.get(b).getNumber());
+                    stock.setSkLossnumber(listshop.get(b).getLossNumber());
+                    this.stockService.update(stock);
+                }
+                //应付金额减去实付金额得到欠款金额
+                double x = documentlistVo.getDlyfje() - documentlistVo.getDlsfje();
+                documentList.setDlNumber(documentlistVo.getDlNumber());
+                documentList.setDlQkje(x);
+                documentList.setDlYfje(documentlistVo.getDlyfje());
+                documentList.setDlSfje(documentlistVo.getDlsfje());
+                this.documentListService.updatestaticzore(documentList);
+                mess = "采购审核通过！";
+            }else{
+                for(int b=0;b<listshop.size();b++){
+                    stock.setSkShopid(listshop.get(b).getSpShopid());
+                    stock.setSkNumber(listshop.get(b).getNumber());
+                    stock.setSkLossnumber(listshop.get(b).getLossNumber());
+                    this.stockService.updatedelete(stock);
+                }
+                //银行余额加上供货商的实付金额（退货）
+                this.establishmentService.updateestabjia(establishment);
+                documentList.setDlQkje(0.0);
+                documentList.setDlNumber(documentlistVo.getDlNumber());
+                documentList.setDlYfje(documentlistVo.getDlyfje());
+                documentList.setDlSfje(documentlistVo.getDlsfje());
+                this.documentListService.updatestatictwo(documentList);
+                mess = "退货审核通过！";
+            }
+            return AjaxResponse.success(mess);
         }
         //新增已审核单据
         @PostMapping("insertshenhedj")
@@ -232,23 +249,20 @@ public class DocumentListController {
             String two = jsonObject.getString("list");
             //将json对象one转换成实体类
             DocumentList documentlist = JSONObject.parseObject(one, DocumentList.class);
-            System.out.println("documentlist::"+documentlist.getDlNumber());
-            System.out.println(xid);
             //new出银行
             Establishment establishment = new Establishment();
             //将银行id传入
             establishment.setXid(xid);
             //将实付金额传入
             establishment.setOpening(documentlist.getDlSfje());
-            System.out.println("establishment:"+establishment.getOpening()+"xid:"+establishment.getXid());
-            //银行余额减去实付金额
-            this.establishmentService.updateestab(establishment);
             //将json对象two转换成list集合
             List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
-            for(int x=0;x<listshop.size();x++){
-                this.supplierService.numbersmoney(listshop.get(x).getZje(), listshop.get(x).getSupperlierid());
-            }
-            //将库存new出来根据商品id增加商品库存
+            //return的消息
+            String messus = "";
+            if(documentlist.getDlTypeId() == 0){
+                //银行余额减去实付金额
+                this.establishmentService.updateestab(establishment);
+                //将库存new出来根据商品id增加商品库存
                 Stock stock=new Stock();
                 for(int b=0;b<listshop.size();b++){
                     stock.setSkShopid(listshop.get(b).getSpShopid());
@@ -256,16 +270,38 @@ public class DocumentListController {
                     stock.setSkLossnumber(listshop.get(b).getLossNumber());
                     this.stockService.update(stock);
                 }
-            //将list集合中的商品添加到单据商品表中
-            this.documentShopService.insertBatch(listshop);
-
-            //应付金额减去实付金额得到欠款金额
-            double x = documentlist.getDlYfje() - documentlist.getDlSfje();
-            documentlist.setDlDate(new Date());
-            documentlist.setDlQkje(x);
+                //应付金额减去实付金额得到欠款金额
+                double x = documentlist.getDlYfje() - documentlist.getDlSfje();
+                documentlist.setDlDate(new Date());
+                documentlist.setDlQkje(x);
+                for(int z=0;z<listshop.size();z++){
+                    this.supplierService.numbersmoney(listshop.get(z).getZje(), listshop.get(z).getSupperlierid());
+                }
+                messus = "新增采购已审核单成功！";
+            }else{
+                //银行余额加上供货商的实付金额（退货）
+                this.establishmentService.updateestabjia(establishment);
+                //将库存new出来根据商品id增加商品库存
+                Stock stock=new Stock();
+                for(int b=0;b<listshop.size();b++){
+                    stock.setSkShopid(listshop.get(b).getSpShopid());
+                    stock.setSkNumber(listshop.get(b).getNumber());
+                    stock.setSkLossnumber(listshop.get(b).getLossNumber());
+                    this.stockService.updatedelete(stock);
+                }
+                documentlist.setDlDate(new Date());
+                documentlist.setDlQkje(0.0);
+                for(int z=0;z<listshop.size();z++){
+                    this.supplierService.numbersmoneyjian(listshop.get(z).getZje(), listshop.get(z).getSupperlierid());
+                }
+                messus = "新增退货已审核单成功！";
+            }
             //新增一个已审核状态的单据
             this.documentListService.insert(documentlist);
-            return AjaxResponse.success("新增已审核单成功！");
+            System.out.println("establishment:"+establishment.getOpening()+"xid:"+establishment.getXid());
+            //将list集合中的商品添加到单据商品表中
+            this.documentShopService.insertBatch(listshop);
+            return AjaxResponse.success(messus);
         }
         @PostMapping("selectwlzw")
         public AjaxResponse selectwlzw(@RequestBody String a){

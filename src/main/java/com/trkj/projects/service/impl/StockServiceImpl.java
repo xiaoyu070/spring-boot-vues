@@ -47,6 +47,11 @@ public class StockServiceImpl implements StockService {
         return this.stockDao.updateadd(stock);
     }
 
+    @Override
+    public int updatedelete(Stock stock) {
+        return this.stockDao.updatedelete(stock);
+    }
+
     /**
      * 根据商品类型以及关键字查询
      */

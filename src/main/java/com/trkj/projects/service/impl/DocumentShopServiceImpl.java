@@ -92,7 +92,6 @@ public class DocumentShopServiceImpl implements DocumentShopService {
         return this.documentShopDao.selectnumber(number);
     }
 
-
     @Override
     public PageInfo<SpcgmxVo> flcx(SpcgmxVo spcgmxVo, int currentPage, int pageSize) {
         List<SpcgmxVo> list=this.documentShopDao.flcx(spcgmxVo);

@@ -187,7 +187,7 @@
     </delete>
 
     <!-- 通过单据号查询商品 -->
-    <select id="selectnumber" resultMap="DocumentShopMap">
+    <select id="selectnumber" resultMap="DocumentShopVo">
         SELECT dsp.id,ws.wid,dsp.dl_number,dsp.sp_shopid,dsp.sp_name,dsp.sp_Company,dsp.sp_jprice,sk.sk_number,dsp.number,dsp.loss_number,dsp.zje,dsp.sp_Specifications,dsp.sp_color,dsp.beizhu,dsp.supplierid
         FROM document_shop dsp
         LEFT JOIN warehouse ws ON dsp.wid = ws.wid

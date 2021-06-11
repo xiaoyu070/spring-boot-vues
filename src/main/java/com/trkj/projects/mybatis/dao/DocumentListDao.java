@@ -105,9 +105,14 @@ public interface DocumentListDao {
     List<DocumentlistVo> xslikevo(String text);
 
     /**
-     * 将未审核的单据状态改为已审核
+     * 将采购未审核的单据状态改为已审核
      */
     void updatestaticzore(DocumentList documentList);
+
+    /**
+     * 将退货未审核的单据状态改为已审核
+     */
+    void updatestatictwo(DocumentList documentList);
 
     /**
      * 查询往来账务
