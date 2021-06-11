@@ -30,6 +30,13 @@ public interface StockService {
      */
     int update(Stock stock);
 
+    /**
+     * 修改库存数量
+     * @param stock
+     * @return
+     */
+    int xsupdate(Stock stock);
+
     PageInfo<StockVov> findallbytypeandlike(String nameandid, int currentPage, int pageSize);
     /**
      * 根据分店i的外键查询所有

@@ -78,6 +78,13 @@ public interface CustomerDao {
     int update(Customer customer);
 
     /**
+     * 修改客户的我方应收金额
+     * @param money
+     * @param
+     */
+    void updatemoney(@Param("money") double money,@Param("customerid") int customerid);
+
+    /**
      * 通过主键删除数据
      *
      * @param cId 主键

@@ -48,6 +48,16 @@ public class StockServiceImpl implements StockService {
     }
 
     /**
+     * 减库存数量
+     * @param stock
+     * @return
+     */
+    @Override
+    public int xsupdate(Stock stock) {
+        return this.stockDao.xsupdateadd(stock);
+    }
+
+    /**
      * 根据商品类型以及关键字查询
      */
     @Override

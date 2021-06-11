@@ -46,6 +46,8 @@ public interface CustomerService {
      * @return 实例对象
      */
     Customer update(Customer customer);
+    //修改客户我方收款金额
+    void updatemoney(double money,int customerid);
 
     /**
      * 通过主键删除数据

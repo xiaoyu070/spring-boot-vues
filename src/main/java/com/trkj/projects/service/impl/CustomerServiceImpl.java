@@ -75,6 +75,11 @@ public class CustomerServiceImpl implements CustomerService {
         this.customerDao.update(customer);
         return this.queryById(customer.getCId());
     }
+    //修改客户我方应收金额
+    @Override
+    public void updatemoney(double money, int customerid) {
+        this.customerDao.updatemoney(money,customerid);
+    }
 
     /**
      * 通过主键删除数据
