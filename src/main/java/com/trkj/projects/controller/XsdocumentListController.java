@@ -1,14 +1,13 @@
 package com.trkj.projects.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.trkj.projects.mybatis.entity.DocumentList;
-import com.trkj.projects.mybatis.entity.DocumentShop;
-import com.trkj.projects.mybatis.entity.Stock;
-import com.trkj.projects.mybatis.entity.XsdocumentList;
+import com.trkj.projects.mybatis.entity.*;
 import com.trkj.projects.service.DocumentShopService;
+import com.trkj.projects.service.EstablishmentService;
 import com.trkj.projects.service.StockService;
 import com.trkj.projects.service.XsdocumentListService;
 import com.trkj.projects.vo.AjaxResponse;
@@ -41,6 +40,9 @@ public class XsdocumentListController {
     //单据商品
     @Resource
     private DocumentShopService documentShopService;
+    //银行
+    @Resource
+    private EstablishmentService establishmentService;
 
     /**
      * 通过主键查询单条数据
@@ -146,6 +148,43 @@ public class XsdocumentListController {
         this.documentShopService.insertBatch(list2);
 
         return AjaxResponse.success("销售成功");
+    }
+    //审核确认
+    @PostMapping("shenheqr")
+    public AjaxResponse shenheqr(@RequestBody String a){
+        JSONObject jsonObject=JSONObject.parseObject(a);
+        System.out.println("aaaaa:"+jsonObject);
+        String one = jsonObject.getString("ttt");
+        int xid = jsonObject.getInteger("xid");
+        String two = jsonObject.getString("list");
+        XsDocumentlistVo documentlistVo = JSONObject.parseObject(one, XsDocumentlistVo.class);
+        System.out.println(documentlistVo.getDlysje()+",,,"+documentlistVo.getDlssje());
+        System.out.println(documentlistVo);
+        System.out.println(xid);
+        Establishment establishment = new Establishment();
+        establishment.setXid(xid);
+        establishment.setOpening(documentlistVo.getDlssje());
+        List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
+
+        //审核通过后将该单据中包含的商品添加到库存中
+        Stock stock=new Stock();
+        for(int b=0;b<listshop.size();b++){
+            stock.setSkShopid(listshop.get(b).getSpShopid());
+            stock.setSkNumber(listshop.get(b).getNumber());
+            stock.setSkLossnumber(listshop.get(b).getLossNumber());
+            this.stockService.update(stock);
+        }
+        //银行余额减去实付金额
+        this.establishmentService.updateestab(establishment);
+        //应付金额减去实付金额得到欠款金额
+        double x = documentlistVo.getDlysje() - documentlistVo.getDlssje();
+        XsdocumentList documentList = new XsdocumentList();
+        documentList.setDlNumber(documentlistVo.getDlNumber());
+        documentList.setDlQkje(x);
+        documentList.setDlYsje(documentlistVo.getDlysje());
+        documentList.setDlSsje(documentlistVo.getDlssje());
+        this.xsdocumentListService.updatestaticzore(documentList);
+        return AjaxResponse.success("审核通过！");
     }
 
 }

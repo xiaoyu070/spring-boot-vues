@@ -1,5 +1,6 @@
 package com.trkj.projects.mybatis.dao;
 
+import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.mybatis.entity.XsdocumentList;
 import com.trkj.projects.vo.DocumentlistVo;
 import com.trkj.projects.vo.XsDocumentlistVo;
@@ -90,6 +91,11 @@ public interface XsdocumentListDao {
      * @return 影响行数
      */
     int deleteById(String number);
+
+    /**
+     * 将未审核的单据状态改为已审核
+     */
+    void updatestaticzore(XsdocumentList xsdocumentList);
 
 }
 

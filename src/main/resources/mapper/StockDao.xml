@@ -69,6 +69,11 @@
         update projects.stock set sk_number =
          sk_number+#{skNumber},sk_loss_number = sk_loss_number+#{skLossnumber} where sk_shopid = #{skShopid}
     </update>
+    <!--销售通过主键修改数据 修改库存数量-->
+    <update id="xsupdateadd">
+        update projects.stock set sk_number =
+         sk_number - #{skNumber},sk_loss_number = sk_loss_number - #{skLossnumber} where sk_shopid = #{skShopid}
+    </update>
 
 
 <!-- 楷楷的  -->

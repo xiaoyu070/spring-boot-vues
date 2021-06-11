@@ -26,6 +26,10 @@ public class XsDocumentlistVo {
      * 客户名称
      */
     private String contacts;
+    /**
+     * 客户会员折扣id
+     */
+    private double v_type_ck;
 
     /**
      * 仓库名称

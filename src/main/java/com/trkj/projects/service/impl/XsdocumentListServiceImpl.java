@@ -1,5 +1,6 @@
 package com.trkj.projects.service.impl;
 
+import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.mybatis.entity.XsdocumentList;
 import com.trkj.projects.mybatis.dao.XsdocumentListDao;
 import com.trkj.projects.service.XsdocumentListService;
@@ -66,6 +67,15 @@ public class XsdocumentListServiceImpl implements XsdocumentListService {
     public XsdocumentList update(XsdocumentList xsdocumentList) {
         this.xsdocumentListDao.update(xsdocumentList);
         return this.queryById(xsdocumentList.getId());
+    }
+
+    /**
+     * 审核通过更改销售状态为出库
+     * @param xsdocumentList
+     */
+    @Override
+    public void updatestaticzore(XsdocumentList xsdocumentList) {
+        this.xsdocumentListDao.updatestaticzore(xsdocumentList);
     }
 
     /**
