@@ -1,5 +1,7 @@
 package com.trkj.projects.mybatis.entity;
 
+import lombok.Data;
+
 import java.util.Date;
 import java.io.Serializable;
 
@@ -9,16 +11,21 @@ import java.io.Serializable;
  * @author makejava
  * @since 2021-05-31 21:13:22
  */
+@Data
 public class Branch implements Serializable {
     private static final long serialVersionUID = 426367523299193273L;
     /**
-     * 分店id
+     * 店面id
      */
     private Integer branchid;
     /**
-     * 分店名称
+     * 店面名称
      */
     private String branchname;
+    /**
+     * 店面类型id
+     */
+    private Integer branchtypeid;
     /**
      * 联系地址
      */
@@ -40,6 +47,13 @@ public class Branch implements Serializable {
      */
     private Date cjtime;
 
+    public Integer getBranchtypeid() {
+        return branchtypeid;
+    }
+
+    public void setBranchtypeid(Integer branchtypeid) {
+        this.branchtypeid = branchtypeid;
+    }
 
     public Integer getBranchid() {
         return branchid;

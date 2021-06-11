@@ -3,6 +3,7 @@ package com.trkj.projects.service;
 
 import com.trkj.projects.jpa.entity.BranchEntity;
 import com.trkj.projects.mybatis.entity.Branch;
+import com.trkj.projects.vo.BranchVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -63,6 +64,13 @@ public interface BranchService {
     List<Branch> selctall();
 
     public List<Branch> findall();
+
+    /**
+     * 查询总店
+     * 用于采购进货
+     * @return
+     */
+    List<BranchVo> selecttypeidand1();
 
     //-----------------------------------老弟的
     public Page<BranchEntity> findAll(Pageable pageable);

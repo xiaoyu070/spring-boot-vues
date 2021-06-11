@@ -22,4 +22,11 @@ public interface ExpenseincomeService {
      * @return
      */
     public PageInfo<ExpenseincomeVo> selectEntry(int pageSize, int size,String typeName);
+
+    /**
+     * 添加费用及收入
+     * @param expenseincome
+     * @return
+     */
+    Expenseincome updataExpen(Expenseincome expenseincome);
 }

@@ -10,11 +10,9 @@ import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.mybatis.entity.DocumentShop;
 import com.trkj.projects.mybatis.entity.Establishment;
 import com.trkj.projects.mybatis.entity.Stock;
-import com.trkj.projects.service.DocumentListService;
-import com.trkj.projects.service.DocumentShopService;
-import com.trkj.projects.service.EstablishmentService;
-import com.trkj.projects.service.StockService;
+import com.trkj.projects.service.*;
 import com.trkj.projects.vo.AjaxResponse;
+import com.trkj.projects.vo.CgdjVo;
 import com.trkj.projects.vo.DocumentlistVo;
 import com.trkj.projects.vo.SpcgmxVo;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +47,10 @@ public class DocumentListController {
     //银行
     @Resource
     private EstablishmentService establishmentService;
-    //新增单据、入库修改
+    //供货商
+    @Resource
+    private SupplierService supplierService;
+//    //新增单据、入库修改
     @PostMapping("addDocumentList")
     public AjaxResponse addDocumentList(@RequestBody String www){
         JSONObject jsonObject=JSONObject.parseObject(www);
@@ -192,8 +193,13 @@ public class DocumentListController {
             Establishment establishment = new Establishment();
             establishment.setXid(xid);
             establishment.setOpening(documentlistVo.getDlsfje());
+            //银行余额减去实付金额
+            this.establishmentService.updateestab(establishment);
             List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
-
+            //将采购审核通过的商品的价格和对应的供应商一一拿出来，增加供货商的初期余额
+            for(int x=0;x<listshop.size();x++){
+                this.supplierService.numbersmoney(listshop.get(x).getZje(), listshop.get(x).getSupperlierid());
+            }
             //审核通过后将该单据中包含的商品添加到库存中
             Stock stock=new Stock();
             for(int b=0;b<listshop.size();b++){
@@ -202,8 +208,6 @@ public class DocumentListController {
                 stock.setSkLossnumber(listshop.get(b).getLossNumber());
                 this.stockService.update(stock);
             }
-            //银行余额减去实付金额
-            this.establishmentService.updateestab(establishment);
             //应付金额减去实付金额得到欠款金额
             double x = documentlistVo.getDlyfje() - documentlistVo.getDlsfje();
             DocumentList documentList = new DocumentList();
@@ -241,10 +245,9 @@ public class DocumentListController {
             this.establishmentService.updateestab(establishment);
             //将json对象two转换成list集合
             List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
-            for(int xx=0;xx<listshop.size();xx++){
-                System.out.println("listshop:"+listshop.get(xx).getDlNumber());
+            for(int x=0;x<listshop.size();x++){
+                this.supplierService.numbersmoney(listshop.get(x).getZje(), listshop.get(x).getSupperlierid());
             }
-
             //将库存new出来根据商品id增加商品库存
                 Stock stock=new Stock();
                 for(int b=0;b<listshop.size();b++){
@@ -306,6 +309,48 @@ public class DocumentListController {
         AjaxResponse ajaxResponse =null;
         PageInfo<SpcgmxVo> list= this.documentListService.cgdj(currentPage,pageSize);
         return ajaxResponse.success(list);
+    }
+    @GetMapping("djxq")
+    public AjaxResponse selectc1(int currentPage, int pageSize){
+        AjaxResponse ajaxResponse =null;
+        PageInfo<SpcgmxVo> list= this.documentListService.djxq(currentPage,pageSize);
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("spmx")
+    public AjaxResponse selectc2(int currentPage, int pageSize){
+        AjaxResponse ajaxResponse =null;
+        PageInfo<SpcgmxVo> list= this.documentListService.spmx(currentPage,pageSize);
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("ywymc")
+    public AjaxResponse selectcx1(){
+        List<SpcgmxVo> list =this.documentListService.ywymc();
+        System.out.println(list);
+        return AjaxResponse.success(list);
+    }
+    @GetMapping("ywycx")
+    public AjaxResponse selectcx2(String agentName1, int currentPage, int pageSize) {
+        System.out.println("mmm"+agentName1);
+        SpcgmxVo spcgmxVo=new SpcgmxVo();
+        spcgmxVo.setAgentName(agentName1);
+        PageInfo<SpcgmxVo> list= this.documentListService.ywycx(spcgmxVo,currentPage,pageSize);
+        return AjaxResponse.success(list);
+    }
+    //根据时间查询采购审核单中状态为待审核的单据
+    @PostMapping("sjcx")
+    public AjaxResponse sjcx(@RequestBody String b){
+        JSONObject jsonObject=JSONObject.parseObject(b);
+        System.out.println("jsonObject"+jsonObject);
+        int currenPage = jsonObject.getInteger("currenPage");
+        int pageSize = jsonObject.getInteger("pageSize");
+        String data1 = jsonObject.getString("data1");
+        String data2 = jsonObject.getString("data2");
+        Map<String,Object> map=new HashMap<>();
+        Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+        List<SpcgmxVo> list = this.documentListService.sjcx(data1,data2);
+        map.put("total",pg.getTotal());
+        map.put("rows",list);
+        return AjaxResponse.success(map);
     }
 
     /**

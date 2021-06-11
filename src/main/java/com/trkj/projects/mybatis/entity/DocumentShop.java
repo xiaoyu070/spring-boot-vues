@@ -1,5 +1,7 @@
 package com.trkj.projects.mybatis.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -8,6 +10,7 @@ import java.io.Serializable;
  * @author makejava
  * @since 2021-06-04 10:36:18
  */
+@Data
 public class DocumentShop implements Serializable {
     private static final long serialVersionUID = 685057535899346093L;
     /**
@@ -21,7 +24,7 @@ public class DocumentShop implements Serializable {
     /**
      * 供货商外键id
      */
-    private Integer supplierid;
+    private Integer supperlierid;
     /**
      * 所在仓库外键id
      */
@@ -66,118 +69,5 @@ public class DocumentShop implements Serializable {
      * 备注
      */
     private String beizhu;
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getDlNumber() {
-        return dlNumber;
-    }
-
-    public void setDlNumber(String dlNumber) {
-        this.dlNumber = dlNumber;
-    }
-
-    public Integer getSupplierid() {
-        return supplierid;
-    }
-
-    public void setSupplierid(Integer supplierid) {
-        this.supplierid = supplierid;
-    }
-
-    public Integer getWid() {
-        return wid;
-    }
-
-    public void setWid(Integer wid) {
-        this.wid = wid;
-    }
-
-    public Integer getSpShopid() {
-        return spShopid;
-    }
-
-    public void setSpShopid(Integer spShopid) {
-        this.spShopid = spShopid;
-    }
-
-    public String getSpName() {
-        return spName;
-    }
-
-    public void setSpName(String spName) {
-        this.spName = spName;
-    }
-
-    public String getSpCompany() {
-        return spCompany;
-    }
-
-    public void setSpCompany(String spCompany) {
-        this.spCompany = spCompany;
-    }
-
-    public Double getSpJprice() {
-        return spJprice;
-    }
-
-    public void setSpJprice(Double spJprice) {
-        this.spJprice = spJprice;
-    }
-
-    public Integer getNumber() {
-        return number;
-    }
-
-    public void setNumber(Integer number) {
-        this.number = number;
-    }
-
-    public Integer getLossNumber() {
-        return lossNumber;
-    }
-
-    public void setLossNumber(Integer lossNumber) {
-        this.lossNumber = lossNumber;
-    }
-
-    public Double getZje() {
-        return zje;
-    }
-
-    public void setZje(Double zje) {
-        this.zje = zje;
-    }
-
-    public String getSpSpecifications() {
-        return spSpecifications;
-    }
-
-    public void setSpSpecifications(String spSpecifications) {
-        this.spSpecifications = spSpecifications;
-    }
-
-    public String getSpColor() {
-        return spColor;
-    }
-
-    public void setSpColor(String spColor) {
-        this.spColor = spColor;
-    }
-
-    public String getBeizhu() {
-        return beizhu;
-    }
-
-    public void setBeizhu(String beizhu) {
-        this.beizhu = beizhu;
-    }
 
 }
