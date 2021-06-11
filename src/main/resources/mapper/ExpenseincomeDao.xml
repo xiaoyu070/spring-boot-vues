@@ -4,9 +4,6 @@
   <resultMap id="BaseResultMap" type="com.trkj.projects.mybatis.entity.Expenseincome">
     <id column="sid" jdbcType="INTEGER" property="sid" />
     <result column="entryid" jdbcType="INTEGER" property="entryid" />
-    <result column="amount" jdbcType="DECIMAL" property="amount" />
-    <result column="Projecttype" jdbcType="VARCHAR" property="projecttype" />
-    <result column="Additional" jdbcType="VARCHAR" property="additional" />
     <result column="date" jdbcType="TIMESTAMP" property="date" />
     <result column="Agentid" jdbcType="INTEGER" property="agentid" />
     <result column="branchid" jdbcType="INTEGER" property="branchid" />
@@ -33,7 +30,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    sid, entryid, amount, Projecttype, Additional, `date`, Agentid, branchid, accountid, 
+    sid, entryid, amount, `date`, Agentid, branchid, accountid,
     cost, income, `operator`, remarks
   </sql>
   <select id="selectEntry" resultMap="ResultMap">
@@ -61,13 +58,11 @@
     where sid = #{sid,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyColumn="sid" keyProperty="sid" parameterType="com.trkj.projects.mybatis.entity.Expenseincome" useGeneratedKeys="true">
-    insert into expenseincome (entryid, amount, Projecttype, 
-      Additional, `date`, Agentid, 
+    insert into expenseincome (entryid, amount, `date`, Agentid,
       branchid, accountid, cost, 
       income, `operator`, remarks
       )
-    values (#{entryid,jdbcType=INTEGER}, #{amount,jdbcType=DECIMAL}, #{projecttype,jdbcType=VARCHAR}, 
-      #{additional,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, #{agentid,jdbcType=INTEGER}, 
+    values (#{entryid,jdbcType=INTEGER}, #{amount,jdbcType=DECIMAL},  #{date,jdbcType=TIMESTAMP}, #{agentid,jdbcType=INTEGER},
       #{branchid,jdbcType=INTEGER}, #{accountid,jdbcType=INTEGER}, #{cost,jdbcType=DECIMAL}, 
       #{income,jdbcType=DECIMAL}, #{operator,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}
       )
@@ -80,12 +75,6 @@
       </if>
       <if test="amount != null">
         amount,
-      </if>
-      <if test="projecttype != null">
-        Projecttype,
-      </if>
-      <if test="additional != null">
-        Additional,
       </if>
       <if test="date != null">
         `date`,
@@ -118,12 +107,6 @@
       </if>
       <if test="amount != null">
         #{amount,jdbcType=DECIMAL},
-      </if>
-      <if test="projecttype != null">
-        #{projecttype,jdbcType=VARCHAR},
-      </if>
-      <if test="additional != null">
-        #{additional,jdbcType=VARCHAR},
       </if>
       <if test="date != null">
         #{date,jdbcType=TIMESTAMP},
@@ -160,12 +143,6 @@
       <if test="amount != null">
         amount = #{amount,jdbcType=DECIMAL},
       </if>
-      <if test="projecttype != null">
-        Projecttype = #{projecttype,jdbcType=VARCHAR},
-      </if>
-      <if test="additional != null">
-        Additional = #{additional,jdbcType=VARCHAR},
-      </if>
       <if test="date != null">
         `date` = #{date,jdbcType=TIMESTAMP},
       </if>
@@ -197,8 +174,6 @@
     update expenseincome
     set entryid = #{entryid,jdbcType=INTEGER},
       amount = #{amount,jdbcType=DECIMAL},
-      Projecttype = #{projecttype,jdbcType=VARCHAR},
-      Additional = #{additional,jdbcType=VARCHAR},
       `date` = #{date,jdbcType=TIMESTAMP},
       Agentid = #{agentid,jdbcType=INTEGER},
       branchid = #{branchid,jdbcType=INTEGER},

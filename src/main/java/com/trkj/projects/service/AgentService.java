@@ -13,6 +13,12 @@ import java.util.List;
 public interface AgentService {
 
     /**
+     * 查询所有经办人
+     * @return
+     */
+    List<Agent>slectagentname();
+
+    /**
      * 通过ID查询单条数据
      *
      * @param id 主键

@@ -66,6 +66,7 @@
         <result property="cContacts" column="c_contacts" jdbcType="VARCHAR"/>
         <result property="dlTypeName" column="dl_type_name" jdbcType="VARCHAR"/>
     </resultMap>
+
     <resultMap type="com.trkj.projects.vo.CghzVo" id="CghzVo">
         <result property="spShopId" column="sp_shopid" jdbcType="INTEGER"/>
         <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
@@ -288,7 +289,7 @@
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
-        LEFT JOIN branch dm ON dm.branchid = sl.companyid
+        LEFT JOIN branch dm ON dm.branchid = ws.branchid
         <where>
             dl.dl_statie_id = 1
             <if test="dlNumber != null  and dlNumber != ''">
@@ -453,9 +454,8 @@
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
         WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 3 and dl.dl_type_id = 2
     </select>
-
     <!--  小宇子的  -->
-    <select id="cgdj" resultMap="CgdjVo">
+    <select id="cgdj" resultMap="CghzVo">
         SELECT l.dl_date,l.dl_number,l.dl_yfje,l.dl_sfje,l.dl_beizhu,a.agent_name,w.wname,sup.suppliername,un.user_name  FROM document_list l
             LEFT JOIN agent a ON l.agent_id=a.id
             LEFT JOIN warehouse w ON l.wid=w.wid

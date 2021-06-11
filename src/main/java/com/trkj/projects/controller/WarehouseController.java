@@ -95,6 +95,7 @@ public class WarehouseController {
     public AjaxResponse  selectWarehouse(){
         AjaxResponse ajaxResponse=null;
         List<Warehouse> list=this.warehouseService.findAll();
+
         return ajaxResponse.success(list);
     }
 

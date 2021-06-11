@@ -5,12 +5,27 @@
     <resultMap type="com.trkj.projects.mybatis.entity.Branch" id="BranchMap">
         <result property="branchid" column="branchid" jdbcType="INTEGER"/>
         <result property="branchname" column="branchname" jdbcType="VARCHAR"/>
+        <result property="branchtypeid" column="branch_type_id" jdbcType="INTEGER"/>
         <result property="lxaddress" column="lxaddress" jdbcType="VARCHAR"/>
         <result property="lxphone" column="lxphone" jdbcType="VARCHAR"/>
         <result property="zhifu" column="zhifu" jdbcType="VARCHAR"/>
         <result property="shuoming" column="shuoming" jdbcType="VARCHAR"/>
         <result property="cjtime" column="cjtime" jdbcType="TIMESTAMP"/>
     </resultMap>
+
+    <!-- 店面vo类 -->
+    <resultMap type="com.trkj.projects.vo.BranchVo" id="BranchVoMap">
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
+        <result property="branchname" column="branchname" jdbcType="VARCHAR"/>
+        <result property="branchtypeid" column="branch_type_id" jdbcType="INTEGER"/>
+        <result property="branchtypename" column="branch_type_name" jdbcType="VARCHAR"/>
+        <result property="lxaddress" column="lxaddress" jdbcType="VARCHAR"/>
+        <result property="lxphone" column="lxphone" jdbcType="VARCHAR"/>
+        <result property="zhifu" column="zhifu" jdbcType="VARCHAR"/>
+        <result property="shuoming" column="shuoming" jdbcType="VARCHAR"/>
+        <result property="cjtime" column="cjtime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
 
     <!--查询单个-->
     <select id="queryById" resultMap="BranchMap">
@@ -127,6 +142,11 @@
         select * from projects.branch
     </select>
 
+    <!-- 查询总店 -->
+    <select id="selecttypeidand1" resultMap="BranchVoMap">
+        SELECT br.*,bt.`branch_type_name` FROM branch br
+        LEFT JOIN branch_type bt ON br.`branch_type_id` = bt.`branch_type_id` WHERE bt.`branch_type_id` = 1
+    </select>
 
 <!--  老弟的  -->
     <sql id="Base_Column_List">

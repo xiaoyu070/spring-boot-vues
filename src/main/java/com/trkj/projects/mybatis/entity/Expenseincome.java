@@ -3,7 +3,10 @@ package com.trkj.projects.mybatis.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * expenseincome
@@ -26,19 +29,12 @@ public class Expenseincome implements Serializable {
      */
     private BigDecimal amount;
 
-    /**
-     * 项目类型
-     */
-    private String projecttype;
-
-    /**
-     * 附加说明
-     */
-    private String additional;
 
     /**
      * 日期
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date date;
 
     /**

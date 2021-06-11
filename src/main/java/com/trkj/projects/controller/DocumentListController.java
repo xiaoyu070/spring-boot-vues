@@ -15,6 +15,11 @@ import com.trkj.projects.service.DocumentShopService;
 import com.trkj.projects.service.EstablishmentService;
 import com.trkj.projects.service.StockService;
 import com.trkj.projects.vo.*;
+import com.trkj.projects.service.*;
+import com.trkj.projects.vo.AjaxResponse;
+import com.trkj.projects.vo.CgdjVo;
+import com.trkj.projects.vo.DocumentlistVo;
+import com.trkj.projects.vo.SpcgmxVo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -48,6 +53,10 @@ public class DocumentListController {
     @Resource
     private EstablishmentService establishmentService;
     //新增单据、入库修改
+    //供货商
+    @Resource
+    private SupplierService supplierService;
+//    //新增单据、入库修改
     @PostMapping("addDocumentList")
     public AjaxResponse addDocumentList(@RequestBody String www){
         JSONObject jsonObject=JSONObject.parseObject(www);
@@ -190,8 +199,14 @@ public class DocumentListController {
             Establishment establishment = new Establishment();
             establishment.setXid(xid);
             establishment.setOpening(documentlistVo.getDlsfje());
+            //银行余额减去实付金额
+            this.establishmentService.updateestab(establishment);
             List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
 
+            //将采购审核通过的商品的价格和对应的供应商一一拿出来，增加供货商的初期余额
+            for(int x=0;x<listshop.size();x++){
+                this.supplierService.numbersmoney(listshop.get(x).getZje(), listshop.get(x).getSupperlierid());
+            }
             //审核通过后将该单据中包含的商品添加到库存中
             Stock stock=new Stock();
             for(int b=0;b<listshop.size();b++){
@@ -200,8 +215,6 @@ public class DocumentListController {
                 stock.setSkLossnumber(listshop.get(b).getLossNumber());
                 this.stockService.update(stock);
             }
-            //银行余额减去实付金额
-            this.establishmentService.updateestab(establishment);
             //应付金额减去实付金额得到欠款金额
             double x = documentlistVo.getDlyfje() - documentlistVo.getDlsfje();
             DocumentList documentList = new DocumentList();
@@ -239,10 +252,9 @@ public class DocumentListController {
             this.establishmentService.updateestab(establishment);
             //将json对象two转换成list集合
             List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
-            for(int xx=0;xx<listshop.size();xx++){
-                System.out.println("listshop:"+listshop.get(xx).getDlNumber());
+            for(int x=0;x<listshop.size();x++){
+                this.supplierService.numbersmoney(listshop.get(x).getZje(), listshop.get(x).getSupperlierid());
             }
-
             //将库存new出来根据商品id增加商品库存
                 Stock stock=new Stock();
                 for(int b=0;b<listshop.size();b++){
