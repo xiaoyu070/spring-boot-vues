@@ -148,11 +148,24 @@ public class StockController {
         return AjaxResponse.success(info);
     }
 
+    /**
+     * 库存报警修改最低库存数量
+     * @param skid
+     * @param kcbj
+     * @return
+     */
     @GetMapping("Kcbjupdate")
     public int Kcbjupdate(Integer skid,Integer kcbj ){
         Stock stock =new Stock();
         System.out.println("bianhao"+skid+kcbj);
         return  this.stockService.Kcbjupdate(skid,kcbj);
+    }
+
+    @GetMapping("selectbaosunbaoyi")
+    public AjaxResponse selectbaosunbaoyi(int currentPage, int pageSize, int param1, int param2){
+
+        PageInfo<StockVo> info =stockService.baosunbaoyiselect(currentPage,pageSize,param1,param2);
+        return AjaxResponse.success(info);
     }
 
 

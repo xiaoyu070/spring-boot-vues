@@ -3,6 +3,7 @@ package com.trkj.projects.mybatis.dao;
 import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.vo.DocumentlistVo;
 import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.SpxsmxVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -131,8 +132,13 @@ public interface DocumentListDao {
     List<SpcgmxVo> cgdj(int currentPage, int pageSize);
     List<SpcgmxVo> djxq(int currentPage, int pageSize);
     List<SpcgmxVo> spmx(int currentPage, int pageSize);
+    List<SpxsmxVo> ssdj(int currentPage, int pageSize);
     List<SpcgmxVo> ywymc();
+    List<SpxsmxVo> ywymc1();
+    List<SpxsmxVo> fdcx();
+    List<SpxsmxVo> djlx();
     List<SpcgmxVo> ywycx(SpcgmxVo spcgmxVo);
+    List<SpxsmxVo> ssdjcx(SpxsmxVo spxsmxVo);
     /**
      * 查询给定的俩个时间节点之间的单据
      */

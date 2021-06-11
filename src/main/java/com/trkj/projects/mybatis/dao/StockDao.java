@@ -111,6 +111,12 @@ public interface StockDao {
      */
     int Kcbjupdate(@Param("skid") int skid,@Param("kcbj") int kcbj);
 
+    /**
+     * 根据店面和仓库查询库存和商品
+     * @return
+     */
+    List<StockVo>baosunbaoyiselect(int param1, int param2);
+
 
 }
 

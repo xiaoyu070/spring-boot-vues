@@ -225,5 +225,17 @@ public class StockServiceImpl implements StockService {
         return this.stockDao.Kcbjupdate(skid,kcbj);
     }
 
+    /**
+     * 根据店面和仓库查询库存和商品
+       * @return
+     */
+    @Override
+    public PageInfo<StockVo> baosunbaoyiselect(int currentPage, int pageSize,int param1, int param2) {
+       List<StockVo> list=this.stockDao.baosunbaoyiselect(param1,param2);
+       PageInfo<StockVo> info =new PageInfo<>(list);
+       info.setTotal(list.size());
+        return info;
+    }
+
 
 }
