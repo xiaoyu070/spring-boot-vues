@@ -217,6 +217,15 @@
         </where>
     </update>
 
+<!-- 根据店面和仓库查询要添加报损报溢的商品-->
+<select id="baosunbaoyiselect" resultMap="srockvo">
+    SELECT p.`sp_shopid`,p.`sp_name`,p.`sp_color`,p.`sp_Specifications`,p.`sp_Company`,k.`sk_number`,w.`wname`,b.`branchname`
+FROM stock k
+LEFT JOIN shop p ON k.`sk_shopid`=p.`sp_shopid`
+LEFT JOIN warehouse w ON  w.wid =k.sp_warehouse_id
+LEFT JOIN branch b ON b.`branchid` =k.sp_storefront_id
+WHERE w.wid=#{param1} AND b.branchid=#{param2}
+</select>
 
 
 </mapper>

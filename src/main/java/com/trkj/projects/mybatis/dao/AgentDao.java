@@ -15,6 +15,8 @@ import java.util.List;
 @Mapper
 public interface AgentDao {
 
+    List<Agent> slectagentname();
+
     /**
      * 通过ID查询单条数据
      *

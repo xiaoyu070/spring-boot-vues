@@ -107,4 +107,11 @@ public interface StockService {
      * @return
      */
     int Kcbjupdate (int skid,int kcbj);
+
+
+    /**
+     * 根据店面和仓库查询商品和库存
+     * @return
+     */
+    PageInfo<StockVo>baosunbaoyiselect(int currentPage, int pageSize,int param1, int param2);
 }
