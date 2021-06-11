@@ -22,6 +22,7 @@
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
         <result property="dlDate" column="dl_date" jdbcType="TIMESTAMP"/>
         <result property="contacts" column="c_contacts" jdbcType="VARCHAR"/>
+        <result property="v_type_ck" column="v_type_ck" jdbcType="VARCHAR"/>
         <result property="wname" column="wname" jdbcType="VARCHAR"/>
         <result property="dlysje" column="dl_ysje" jdbcType="NUMERIC"/>
         <result property="dlssje" column="dl_ssje" jdbcType="NUMERIC"/>
@@ -55,15 +56,15 @@
 
     <!-- 查询销售单据为待审核和销售出货的数据 -->
     <select id="selectxsvo" resultMap="DocumentListVOMap">
-        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_name,dl.dl_beizhu
+        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,v.`v_type_ck`,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dl.dl_beizhu
         FROM xsdocument_list dl
         LEFT JOIN customer sl ON dl.customerid = sl.c_id
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
         LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN xsdocument_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
-        LEFT JOIN xsdocument_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
         LEFT JOIN branch dm ON dm.branchid = sl.branchid
+        LEFT JOIN vip_type v ON v.`v_type_id` = sl.`v_type_id`
         <where>
             dl.dl_statie_id = 1
             <if test="dlNumber != null  and dlNumber != ''">
@@ -98,14 +99,15 @@
 
     <!-- 模糊查询销售单据为待审核的单据 -->
     <select id="xslikevo" resultMap="DocumentListVOMap">
-        SELECT dl.dl_number,dl.dl_date,sl.c_contacts,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_name,dl.dl_beizhu
+        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,v.`v_type_ck`,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dl.dl_beizhu
         FROM xsdocument_list dl
         LEFT JOIN customer sl ON dl.customerid = sl.c_id
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
         LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN xsdocument_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
-        LEFT JOIN xsdocument_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
+        LEFT JOIN branch dm ON dm.branchid = sl.branchid
+        LEFT JOIN vip_type v ON v.`v_type_id` = sl.`v_type_id`
         where
         (dl.dl_number LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
         or (sl.c_contacts LIKE  CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
@@ -115,15 +117,15 @@
 
     <!-- 根据俩个时间之间查询销售单据 -->
     <select id="xsselectdate" resultMap="DocumentListVOMap">
-        SELECT dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dlt.dl_type_name,dl.dl_beizhu
+        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,v.`v_type_ck`,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dl.dl_beizhu
         FROM xsdocument_list dl
         LEFT JOIN customer sl ON dl.customerid = sl.c_id
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
         LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN xsdocument_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
-        LEFT JOIN xsdocument_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
-        LEFT JOIN branch dm ON dm.branchid = sl.branchid WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 1 ORDER BY dl.dl_date DESC
+        LEFT JOIN branch dm ON dm.branchid = sl.branchid
+        LEFT JOIN vip_type v ON v.`v_type_id` = sl.`v_type_id` WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 1 ORDER BY dl.dl_date DESC
     </select>
 
     <!--新增所有列-->
@@ -210,6 +212,11 @@
     <delete id="deleteById">
         delete from projects.xsdocument_list where dl_number = #{number}
     </delete>
+
+    <!-- 将待审核状态的销售单据改为已审核 -->
+    <update id="updatestaticzore">
+        update xsdocument_list set dl_statie_id = 2,dl_qkje = #{dlQkje},dl_ssje= #{dlSsje},dl_ysje=#{dlYsje} where dl_number = #{dlNumber}
+    </update>
 
 </mapper>
 

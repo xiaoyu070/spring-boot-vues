@@ -10,6 +10,11 @@ import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.mybatis.entity.DocumentShop;
 import com.trkj.projects.mybatis.entity.Establishment;
 import com.trkj.projects.mybatis.entity.Stock;
+import com.trkj.projects.service.DocumentListService;
+import com.trkj.projects.service.DocumentShopService;
+import com.trkj.projects.service.EstablishmentService;
+import com.trkj.projects.service.StockService;
+import com.trkj.projects.vo.*;
 import com.trkj.projects.service.*;
 import com.trkj.projects.vo.AjaxResponse;
 import com.trkj.projects.vo.CgdjVo;
@@ -47,6 +52,7 @@ public class DocumentListController {
     //银行
     @Resource
     private EstablishmentService establishmentService;
+    //新增单据、入库修改
     //供货商
     @Resource
     private SupplierService supplierService;
@@ -193,6 +199,15 @@ public class DocumentListController {
             establishment.setOpening(documentlistVo.getDlsfje());
             DocumentList documentList = new DocumentList();
             //将库存new出来根据商品id增加商品库存
+            //银行余额减去实付金额
+            this.establishmentService.updateestab(establishment);
+            List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
+
+            //将采购审核通过的商品的价格和对应的供应商一一拿出来，增加供货商的初期余额
+            for(int x=0;x<listshop.size();x++){
+                this.supplierService.numbersmoney(listshop.get(x).getZje(), listshop.get(x).getSupperlierid());
+            }
+            //审核通过后将该单据中包含的商品添加到库存中
             Stock stock=new Stock();
             String mess = "";
             if(documentlistVo.getDltypeid() == 0){
@@ -358,9 +373,21 @@ public class DocumentListController {
         PageInfo<SpcgmxVo> list= this.documentListService.spmx(currentPage,pageSize);
         return ajaxResponse.success(list);
     }
+    @GetMapping("ssdj")
+    public AjaxResponse selectc3(int currentPage, int pageSize){
+        AjaxResponse ajaxResponse =null;
+        PageInfo<SpxsmxVo> list= this.documentListService.ssdj(currentPage,pageSize);
+        return ajaxResponse.success(list);
+    }
     @GetMapping("ywymc")
     public AjaxResponse selectcx1(){
         List<SpcgmxVo> list =this.documentListService.ywymc();
+        System.out.println(list);
+        return AjaxResponse.success(list);
+    }
+    @GetMapping("ywymc1")
+    public AjaxResponse selectcx4(){
+        List<SpxsmxVo> list =this.documentListService.ywymc1();
         System.out.println(list);
         return AjaxResponse.success(list);
     }
@@ -372,12 +399,41 @@ public class DocumentListController {
         PageInfo<SpcgmxVo> list= this.documentListService.ywycx(spcgmxVo,currentPage,pageSize);
         return AjaxResponse.success(list);
     }
+    @GetMapping("ssdjcx")
+    public AjaxResponse selectcx3(String agent,String WName1, String dlType, int currentPage, int pageSize) {
+        System.out.println(agent+"mmm"+WName1+"nnn"+dlType);
+        SpxsmxVo spxsmxVo=new SpxsmxVo();
+        if(agent!=""){
+            spxsmxVo.setAgentName(agent);
+        };
+        if(WName1!=""){
+            spxsmxVo.setWName(WName1);
+        }
+        if(dlType!=""){
+            spxsmxVo.setDlTypeName(dlType);
+        }
+        PageInfo<SpxsmxVo> list= this.documentListService.ssdjcx(spxsmxVo,currentPage,pageSize);
+        return AjaxResponse.success(list);
+    }
+    @GetMapping("fdcx")
+    public AjaxResponse selectcx2(){
+        List<SpxsmxVo> list =this.documentListService.fdcx();
+        System.out.println(list);
+        return AjaxResponse.success(list);
+    }
+    @GetMapping("djlx")
+    public AjaxResponse selectcx3(){
+        List<SpxsmxVo> list =this.documentListService.djlx();
+        System.out.println(list);
+        return AjaxResponse.success(list);
+    }
     //根据时间查询采购审核单中状态为待审核的单据
     @PostMapping("sjcx")
     public AjaxResponse sjcx(@RequestBody String b){
         JSONObject jsonObject=JSONObject.parseObject(b);
         System.out.println("jsonObject"+jsonObject);
         int currenPage = jsonObject.getInteger("currenPage");
+        int currenPage = jsonObject.getInteger("currentPage");
         int pageSize = jsonObject.getInteger("pageSize");
         String data1 = jsonObject.getString("data1");
         String data2 = jsonObject.getString("data2");

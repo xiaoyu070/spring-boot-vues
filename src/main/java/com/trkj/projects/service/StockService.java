@@ -37,6 +37,11 @@ public interface StockService {
      * @return 影响行数
      */
     int updatedelete(Stock stock);
+     * 修改库存数量
+     * @param stock
+     * @return
+     */
+    int xsupdate(Stock stock);
 
     PageInfo<StockVov> findallbytypeandlike(String nameandid, int currentPage, int pageSize);
     /**
@@ -115,4 +120,11 @@ public interface StockService {
      * @return
      */
     int Kcbjupdate (int skid,int kcbj);
+
+
+    /**
+     * 根据店面和仓库查询商品和库存
+     * @return
+     */
+    PageInfo<StockVo>baosunbaoyiselect(int currentPage, int pageSize,int param1, int param2);
 }

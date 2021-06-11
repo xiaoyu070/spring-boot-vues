@@ -21,6 +21,15 @@ public class AgentServiceImpl implements AgentService {
     private AgentDao agentDao;
 
     /**
+     * 查询所有经办人
+     * @return
+     */
+    @Override
+    public List<Agent> slectagentname() {
+        return this.agentDao.slectagentname();
+    }
+
+    /**
      * 通过ID查询单条数据
      *
      * @param id 主键

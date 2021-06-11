@@ -53,6 +53,16 @@ public class StockServiceImpl implements StockService {
     }
 
     /**
+     * 减库存数量
+     * @param stock
+     * @return
+     */
+    @Override
+    public int xsupdate(Stock stock) {
+        return this.stockDao.xsupdateadd(stock);
+    }
+
+    /**
      * 根据商品类型以及关键字查询
      */
     @Override
@@ -218,6 +228,18 @@ public class StockServiceImpl implements StockService {
     @Override
     public int Kcbjupdate(int skid, int kcbj) {
         return this.stockDao.Kcbjupdate(skid,kcbj);
+    }
+
+    /**
+     * 根据店面和仓库查询库存和商品
+       * @return
+     */
+    @Override
+    public PageInfo<StockVo> baosunbaoyiselect(int currentPage, int pageSize,int param1, int param2) {
+       List<StockVo> list=this.stockDao.baosunbaoyiselect(param1,param2);
+       PageInfo<StockVo> info =new PageInfo<>(list);
+       info.setTotal(list.size());
+        return info;
     }
 
 

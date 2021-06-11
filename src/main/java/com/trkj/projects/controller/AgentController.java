@@ -41,4 +41,15 @@ public class AgentController {
     }
 
 
+    /**
+     * 查询所有经办人
+     * @return
+     */
+    @GetMapping("selectAgentname")
+    public AjaxResponse selectAgentname(){
+        List<Agent> list=this.agentService.slectagentname();
+        return AjaxResponse.success(list);
+    }
+
+
 }

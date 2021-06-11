@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.vo.DocumentlistVo;
 import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.SpxsmxVo;
 
 import java.util.List;
 
@@ -114,8 +115,13 @@ public interface DocumentListService {
     PageInfo<SpcgmxVo> cgdj(int currentPage, int pageSize);
     PageInfo<SpcgmxVo> djxq(int currentPage, int pageSize);
     PageInfo<SpcgmxVo> spmx(int currentPage, int pageSize);
+    PageInfo<SpxsmxVo> ssdj(int currentPage, int pageSize);
     List<SpcgmxVo> ywymc();
+    List<SpxsmxVo> ywymc1();
+    List<SpxsmxVo> fdcx();
+    List<SpxsmxVo> djlx();
     PageInfo<SpcgmxVo> ywycx(SpcgmxVo spcgmxVo , int currentPage, int pageSize);
+    PageInfo<SpxsmxVo> ssdjcx(SpxsmxVo spxsmxVo , int currentPage, int pageSize);
     /**
      * 查询给定的俩个时间节点之间的单据
      */

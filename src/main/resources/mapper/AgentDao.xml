@@ -160,6 +160,8 @@
         where id = #{id}
     </update>
 
+
+
     <!--通过主键删除-->
     <delete id="deleteById">
         delete from projects.agent where id = #{id}
@@ -174,6 +176,13 @@
         id, agent_id, agent_name, branchid, agent_zw, agent_ticheng, agent_phone, agent_address, agent_bz, purchase_pom, sale_pom, stock_pom, agent_statie
         from projects.agent
         where branchid = #{branchid}
+    </select>
+
+
+
+<!--    文利君  查询所有经办人-->
+    <select id="slectagentname" resultMap="AgentMap">
+        SELECT agent_name FROM agent
     </select>
 
 

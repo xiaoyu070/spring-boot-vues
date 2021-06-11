@@ -1,5 +1,6 @@
 package com.trkj.projects.service;
 
+import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.mybatis.entity.XsdocumentList;
 import com.trkj.projects.vo.DocumentlistVo;
 import com.trkj.projects.vo.XsDocumentlistVo;
@@ -46,6 +47,11 @@ public interface XsdocumentListService {
      * @return 实例对象
      */
     XsdocumentList update(XsdocumentList xsdocumentList);
+
+    /**
+     * 将未审核的销售单据状态改为已审核
+     */
+    void updatestaticzore(XsdocumentList xsdocumentList);
 
     /**
      * 通过主键删除数据

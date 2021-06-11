@@ -6,6 +6,7 @@
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
         <result property="supperlierid" column="supplierid" jdbcType="INTEGER"/>
+        <result property="customerid" column="customerid" jdbcType="INTEGER"/>
         <result property="wid" column="wid" jdbcType="INTEGER"/>
         <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
         <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
@@ -189,6 +190,8 @@
     <!-- 通过单据号查询商品 -->
     <select id="selectnumber" resultMap="DocumentShopVo">
         SELECT dsp.id,ws.wid,dsp.dl_number,dsp.sp_shopid,dsp.sp_name,dsp.sp_Company,dsp.sp_jprice,sk.sk_number,dsp.number,dsp.loss_number,dsp.zje,dsp.sp_Specifications,dsp.sp_color,dsp.beizhu,dsp.supplierid
+    <select id="selectnumber" resultMap="DocumentShopMap">
+        SELECT dsp.id,ws.wid,dsp.dl_number,dsp.sp_shopid,dsp.sp_name,dsp.sp_Company,dsp.sp_jprice,sk.sk_number,dsp.number,dsp.loss_number,dsp.zje,dsp.sp_Specifications,dsp.sp_color,dsp.beizhu,dsp.supplierid,dsp.customerid
         FROM document_shop dsp
         LEFT JOIN warehouse ws ON dsp.wid = ws.wid
         LEFT JOIN stock sk ON sk.sk_shopid = dsp.sp_shopid

@@ -41,6 +41,13 @@ public interface StockDao {
      * @return 影响行数
      */
     int updateadd(Stock stock);
+    /**
+     * 修改数据
+     *
+     * @param stock 实例对象
+     * @return 影响行数xs
+     */
+    int xsupdateadd(Stock stock);
 
     /**
      * 修改数据
@@ -110,6 +117,12 @@ public interface StockDao {
      * @return
      */
     int Kcbjupdate(@Param("skid") int skid,@Param("kcbj") int kcbj);
+
+    /**
+     * 根据店面和仓库查询库存和商品
+     * @return
+     */
+    List<StockVo>baosunbaoyiselect(int param1, int param2);
 
 
 }
