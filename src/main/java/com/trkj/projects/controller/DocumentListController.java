@@ -14,10 +14,7 @@ import com.trkj.projects.service.DocumentListService;
 import com.trkj.projects.service.DocumentShopService;
 import com.trkj.projects.service.EstablishmentService;
 import com.trkj.projects.service.StockService;
-import com.trkj.projects.vo.AjaxResponse;
-import com.trkj.projects.vo.CgdjVo;
-import com.trkj.projects.vo.DocumentlistVo;
-import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -320,9 +317,21 @@ public class DocumentListController {
         PageInfo<SpcgmxVo> list= this.documentListService.spmx(currentPage,pageSize);
         return ajaxResponse.success(list);
     }
+    @GetMapping("ssdj")
+    public AjaxResponse selectc3(int currentPage, int pageSize){
+        AjaxResponse ajaxResponse =null;
+        PageInfo<SpxsmxVo> list= this.documentListService.ssdj(currentPage,pageSize);
+        return ajaxResponse.success(list);
+    }
     @GetMapping("ywymc")
     public AjaxResponse selectcx1(){
         List<SpcgmxVo> list =this.documentListService.ywymc();
+        System.out.println(list);
+        return AjaxResponse.success(list);
+    }
+    @GetMapping("ywymc1")
+    public AjaxResponse selectcx4(){
+        List<SpxsmxVo> list =this.documentListService.ywymc1();
         System.out.println(list);
         return AjaxResponse.success(list);
     }
@@ -334,12 +343,40 @@ public class DocumentListController {
         PageInfo<SpcgmxVo> list= this.documentListService.ywycx(spcgmxVo,currentPage,pageSize);
         return AjaxResponse.success(list);
     }
+    @GetMapping("ssdjcx")
+    public AjaxResponse selectcx3(String agent,String WName1, String dlType, int currentPage, int pageSize) {
+        System.out.println(agent+"mmm"+WName1+"nnn"+dlType);
+        SpxsmxVo spxsmxVo=new SpxsmxVo();
+        if(agent!=""){
+            spxsmxVo.setAgentName(agent);
+        };
+        if(WName1!=""){
+            spxsmxVo.setWName(WName1);
+        }
+        if(dlType!=""){
+            spxsmxVo.setDlTypeName(dlType);
+        }
+        PageInfo<SpxsmxVo> list= this.documentListService.ssdjcx(spxsmxVo,currentPage,pageSize);
+        return AjaxResponse.success(list);
+    }
+    @GetMapping("fdcx")
+    public AjaxResponse selectcx2(){
+        List<SpxsmxVo> list =this.documentListService.fdcx();
+        System.out.println(list);
+        return AjaxResponse.success(list);
+    }
+    @GetMapping("djlx")
+    public AjaxResponse selectcx3(){
+        List<SpxsmxVo> list =this.documentListService.djlx();
+        System.out.println(list);
+        return AjaxResponse.success(list);
+    }
     //根据时间查询采购审核单中状态为待审核的单据
     @PostMapping("sjcx")
     public AjaxResponse sjcx(@RequestBody String b){
         JSONObject jsonObject=JSONObject.parseObject(b);
         System.out.println("jsonObject"+jsonObject);
-        int currenPage = jsonObject.getInteger("currenPage");
+        int currenPage = jsonObject.getInteger("currentPage");
         int pageSize = jsonObject.getInteger("pageSize");
         String data1 = jsonObject.getString("data1");
         String data2 = jsonObject.getString("data2");

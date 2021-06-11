@@ -8,6 +8,7 @@ import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.service.DocumentListService;
 import com.trkj.projects.vo.DocumentlistVo;
 import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.SpxsmxVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -202,8 +203,39 @@ public class DocumentListServiceImpl implements DocumentListService {
     }
 
     @Override
+    public PageInfo<SpxsmxVo> ssdj(int currentPage, int pageSize) {
+        List<SpxsmxVo> list=this.documentListDao.ssdj(currentPage,pageSize);
+        //封装分页插件
+        PageHelper.startPage(currentPage,pageSize,true);
+        //再查所有最终传过去的数据
+        List<SpxsmxVo> list2 = this.documentListDao.ssdj(currentPage,pageSize);
+        //封装到pageinfo再设置总条数获取第一个list的大小size()方法
+        PageInfo<SpxsmxVo> info = new PageInfo<>(list2);
+        info.setTotal(list.size());
+        System.out.println(list);
+        return info;
+    }
+
+    @Override
     public List<SpcgmxVo> ywymc() {
         List<SpcgmxVo> list2 = this.documentListDao.ywymc();
+        return list2;
+    }
+
+    @Override
+    public List<SpxsmxVo> ywymc1() {
+        List<SpxsmxVo> list2 = this.documentListDao.ywymc1();
+        return list2;
+    }
+
+    @Override
+    public List<SpxsmxVo> fdcx() {
+        List<SpxsmxVo> list2 = this.documentListDao.fdcx();
+        return list2;
+    }
+    @Override
+    public List<SpxsmxVo> djlx() {
+        List<SpxsmxVo> list2 = this.documentListDao.djlx();
         return list2;
     }
 
@@ -220,6 +252,21 @@ public class DocumentListServiceImpl implements DocumentListService {
             System.out.println(list);
             return info;
         }
+
+    @Override
+    public PageInfo<SpxsmxVo> ssdjcx(SpxsmxVo spxsmxVo, int currentPage, int pageSize) {
+        List<SpxsmxVo> list=this.documentListDao.ssdjcx(spxsmxVo);
+        //封装分页插件
+        PageHelper.startPage(currentPage,pageSize,true);
+        //再查所有最终传过去的数据
+        List<SpxsmxVo> list2=this.documentListDao.ssdjcx(spxsmxVo);
+        //封装到pageinfo再设置总条数获取第一个list的大小size()方法
+        PageInfo<SpxsmxVo> info = new PageInfo<>(list);
+        info.setTotal(list.size());
+        System.out.println(list);
+        return info;
+    }
+
 
     @Override
     public List<SpcgmxVo> sjcx(String date1, String date2) {
