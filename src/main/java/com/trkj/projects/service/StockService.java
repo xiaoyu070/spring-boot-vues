@@ -37,6 +37,7 @@ public interface StockService {
      * @return 影响行数
      */
     int updatedelete(Stock stock);
+    /**
      * 修改库存数量
      * @param stock
      * @return

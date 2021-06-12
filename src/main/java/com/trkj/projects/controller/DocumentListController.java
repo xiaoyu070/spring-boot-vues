@@ -194,15 +194,13 @@ public class DocumentListController {
             String two = jsonObject.getString("list");
             DocumentlistVo documentlistVo = JSONObject.parseObject(one, DocumentlistVo.class);
             List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
+            //将库存new出来根据商品id增加商品库存
             Establishment establishment = new Establishment();
             establishment.setXid(xid);
             establishment.setOpening(documentlistVo.getDlsfje());
             DocumentList documentList = new DocumentList();
-            //将库存new出来根据商品id增加商品库存
             //银行余额减去实付金额
             this.establishmentService.updateestab(establishment);
-            List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
-
             //将采购审核通过的商品的价格和对应的供应商一一拿出来，增加供货商的初期余额
             for(int x=0;x<listshop.size();x++){
                 this.supplierService.numbersmoney(listshop.get(x).getZje(), listshop.get(x).getSupperlierid());
@@ -432,7 +430,6 @@ public class DocumentListController {
     public AjaxResponse sjcx(@RequestBody String b){
         JSONObject jsonObject=JSONObject.parseObject(b);
         System.out.println("jsonObject"+jsonObject);
-        int currenPage = jsonObject.getInteger("currenPage");
         int currenPage = jsonObject.getInteger("currentPage");
         int pageSize = jsonObject.getInteger("pageSize");
         String data1 = jsonObject.getString("data1");
