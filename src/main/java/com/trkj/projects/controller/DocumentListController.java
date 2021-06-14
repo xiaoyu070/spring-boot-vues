@@ -6,10 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.trkj.projects.mybatis.entity.DocumentList;
-import com.trkj.projects.mybatis.entity.DocumentShop;
-import com.trkj.projects.mybatis.entity.Establishment;
-import com.trkj.projects.mybatis.entity.Stock;
+import com.trkj.projects.mybatis.entity.*;
 import com.trkj.projects.service.DocumentListService;
 import com.trkj.projects.service.DocumentShopService;
 import com.trkj.projects.service.EstablishmentService;
@@ -52,17 +49,19 @@ public class DocumentListController {
     //银行
     @Resource
     private EstablishmentService establishmentService;
-    //新增单据、入库修改
     //供货商
     @Resource
     private SupplierService supplierService;
+
     //新增单据、入库修改
     @PostMapping("addDocumentList")
     public AjaxResponse addDocumentList(@RequestBody String www){
         JSONObject jsonObject=JSONObject.parseObject(www);
         String one = jsonObject.getString("sss");
+        System.out.println("sss::"+jsonObject);
         //json转实体类对象
         DocumentList list = JSON.parseObject(one, DocumentList.class);
+        System.out.println("list::"+list);
         list.setDlDate(new Date());
         //添加到订单中
         this.documentListService.insert(list);
@@ -81,6 +80,7 @@ public class DocumentListController {
     public AjaxResponse selectvo(@RequestBody String DocumentlistVo){
         JSONObject jsonObject=JSONObject.parseObject(DocumentlistVo);
         String vo=jsonObject.getString("DocumentlistVo");
+        System.out.println(vo);
         String ttt = jsonObject.getString("text");
         //json转实体类对象
         DocumentlistVo documentlistVo=JSON.parseObject(vo,DocumentlistVo.class);
@@ -88,7 +88,8 @@ public class DocumentListController {
         int pageSize = jsonObject.getInteger("pageSize");
         Map<String,Object> map=new HashMap<>();
         Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
-        List<com.trkj.projects.vo.DocumentlistVo> list = this.documentListService.selectvo(documentlistVo);
+        List<DocumentlistVo> list = this.documentListService.selectvo(documentlistVo);
+        System.out.println("sekectvo:"+list);
         map.put("total",pg.getTotal());
         map.put("rows",list);
         return AjaxResponse.success(map);
@@ -134,6 +135,7 @@ public class DocumentListController {
             map.put("rows",list);
             return AjaxResponse.success(map);
         }
+
     /**
      * 模糊销售查询单据
      * @param a
@@ -188,8 +190,8 @@ public class DocumentListController {
         @PostMapping("shenheqr")
         public AjaxResponse shenheqr(@RequestBody String a){
             JSONObject jsonObject=JSONObject.parseObject(a);
-            System.out.println("aaaaa:"+jsonObject);
             String one = jsonObject.getString("ttt");
+            //银行id
             int xid = jsonObject.getInteger("xid");
             String two = jsonObject.getString("list");
             DocumentlistVo documentlistVo = JSONObject.parseObject(one, DocumentlistVo.class);
@@ -198,6 +200,7 @@ public class DocumentListController {
             Establishment establishment = new Establishment();
             establishment.setXid(xid);
             establishment.setOpening(documentlistVo.getDlsfje());
+
             DocumentList documentList = new DocumentList();
             //银行余额减去实付金额
             this.establishmentService.updateestab(establishment);
@@ -217,10 +220,30 @@ public class DocumentListController {
                 }
                 //审核通过后将该单据中包含的商品添加到库存中
                 for(int b=0;b<listshop.size();b++){
-                    stock.setSkShopid(listshop.get(b).getSpShopid());
-                    stock.setSkNumber(listshop.get(b).getNumber());
-                    stock.setSkLossnumber(listshop.get(b).getLossNumber());
-                    this.stockService.update(stock);
+                    //单据通过审核后商品入库之前先查询该店面该仓库是否存在该商品
+                    Stock selectstock=new Stock();
+                    selectstock.setSpWarehouseId(listshop.get(b).getWid());
+                    selectstock.setSpStorefrontId(listshop.get(b).getBranchid());
+                    selectstock.setSkShopid(listshop.get(b).getSpShopid());
+                    List<Stock> stockList = this.stockService.findbybranchidandshopidandwid(selectstock);
+                    System.out.println("stockList:"+b+",,,"+stockList);
+                    //如果该仓库查到有商品则库存数量增加，如果该仓库没有商品则新增该商品
+                    if(stockList.size()>0){
+                        stock.setSkShopid(listshop.get(b).getSpShopid());
+                        stock.setSkNumber(listshop.get(b).getNumber());
+                        stock.setSkLossnumber(listshop.get(b).getLossNumber());
+                        stock.setSpWarehouseId(listshop.get(b).getWid());
+                        this.stockService.update(stock);
+                    }else{
+                        Stock stocks=new Stock();
+                        stocks.setSkShopid(listshop.get(b).getSpShopid());
+                        stocks.setSpStorefrontId(listshop.get(b).getBranchid());
+                        stocks.setSpWarehouseId(listshop.get(b).getWid());
+                        stocks.setSkLossnumber(listshop.get(b).getLossNumber());
+                        stocks.setSkNumber(listshop.get(b).getNumber());
+                        stocks.setSpNumber(0);
+                        this.stockService.insert(stocks);
+                    }
                 }
                 //应付金额减去实付金额得到欠款金额
                 double x = documentlistVo.getDlyfje() - documentlistVo.getDlsfje();
@@ -235,6 +258,7 @@ public class DocumentListController {
                     stock.setSkShopid(listshop.get(b).getSpShopid());
                     stock.setSkNumber(listshop.get(b).getNumber());
                     stock.setSkLossnumber(listshop.get(b).getLossNumber());
+                    stock.setSpWarehouseId(listshop.get(b).getWid());
                     this.stockService.updatedelete(stock);
                 }
                 //银行余额加上供货商的实付金额（退货）
@@ -243,10 +267,32 @@ public class DocumentListController {
                 documentList.setDlNumber(documentlistVo.getDlNumber());
                 documentList.setDlYfje(documentlistVo.getDlyfje());
                 documentList.setDlSfje(documentlistVo.getDlsfje());
+                System.out.println("elsedocumentlist::"+documentList);
                 this.documentListService.updatestatictwo(documentList);
                 mess = "退货审核通过！";
             }
             return AjaxResponse.success(mess);
+        }
+        @PostMapping("wlzwecfkqr")
+        public AjaxResponse wlzwecfkqr(@RequestBody String a){
+            JSONObject jsonObject=JSONObject.parseObject(a);
+            int xid = jsonObject.getInteger("xid");
+            String one = jsonObject.getString("dx");
+            DocumentlistVo documentlistVo = JSONObject.parseObject(one, DocumentlistVo.class);
+            //new出单据实体类，根据单据号修改实付金额，清空欠款金额。
+            DocumentList updateecfk=new DocumentList();
+            updateecfk.setDlQkje(0.0);
+            updateecfk.setDlSfje(documentlistVo.getDlsfje()+documentlistVo.getDlqkje());
+            updateecfk.setDlNumber(documentlistVo.getDlNumber());
+            this.documentListService.update(updateecfk);
+            //二次付款成功后扣除选择的银行账户中的余额
+            Establishment establishment=new Establishment();
+            establishment.setXid(xid);
+            establishment.setOpening(documentlistVo.getDlqkje());
+            this.establishmentService.updateestab(establishment);
+            //对应供货商的初期余额增加
+            this.supplierService.numbersmoney(documentlistVo.getDlqkje(),documentlistVo.getSupplierid());
+            return AjaxResponse.success("二次付款成功！");
         }
         //新增已审核单据
         @PostMapping("insertshenhedj")
@@ -262,6 +308,7 @@ public class DocumentListController {
             String two = jsonObject.getString("list");
             //将json对象one转换成实体类
             DocumentList documentlist = JSONObject.parseObject(one, DocumentList.class);
+
             //new出银行
             Establishment establishment = new Establishment();
             //将银行id传入
@@ -270,18 +317,42 @@ public class DocumentListController {
             establishment.setOpening(documentlist.getDlSfje());
             //将json对象two转换成list集合
             List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
+            System.out.println("listshop:"+listshop);
             //return的消息
             String messus = "";
             if(documentlist.getDlTypeId() == 0){
                 //银行余额减去实付金额
                 this.establishmentService.updateestab(establishment);
-                //将库存new出来根据商品id增加商品库存
+                //将库存new出来根据商品id和仓库增加商品库存
                 Stock stock=new Stock();
+                //审核通过后将该单据中包含的商品添加到库存中
                 for(int b=0;b<listshop.size();b++){
-                    stock.setSkShopid(listshop.get(b).getSpShopid());
-                    stock.setSkNumber(listshop.get(b).getNumber());
-                    stock.setSkLossnumber(listshop.get(b).getLossNumber());
-                    this.stockService.update(stock);
+                    //单据通过审核后商品入库之前先查询该店面该仓库是否存在该商品
+                    Stock selectstock=new Stock();
+                    selectstock.setSpWarehouseId(listshop.get(b).getWid());
+                    selectstock.setSpStorefrontId(listshop.get(b).getBranchid());
+                    selectstock.setSkShopid(listshop.get(b).getSpShopid());
+                    List<Stock> stockList = this.stockService.findbybranchidandshopidandwid(selectstock);
+                    System.out.println("stockList:"+b+",,,"+stockList);
+                    //如果该仓库查到有商品则库存数量增加，如果该仓库没有商品则新增该商品
+                    if(stockList.size()>0){
+                        stock.setSkShopid(listshop.get(b).getSpShopid());
+                        stock.setSkNumber(listshop.get(b).getNumber());
+                        stock.setSkLossnumber(listshop.get(b).getLossNumber());
+                        stock.setSpWarehouseId(listshop.get(b).getWid());
+                        this.stockService.update(stock);
+                    }else{
+                        Stock stocks=new Stock();
+                        stocks.setSkShopid(listshop.get(b).getSpShopid());
+                        stocks.setSpStorefrontId(listshop.get(b).getBranchid());
+                        stocks.setSpWarehouseId(listshop.get(b).getWid());
+                        stocks.setSkLossnumber(listshop.get(b).getLossNumber());
+                        stocks.setSkNumber(listshop.get(b).getNumber());
+                        stocks.setSpNumber(0);
+                        System.out.println("新增库存商品id：："+stocks.getSkShopid()
+                                +"新增库存商品库存"+stocks.getSkNumber()+"新增库存商品loss:"+stocks.getSkLossnumber());
+                        this.stockService.insert(stocks);
+                    }
                 }
                 //应付金额减去实付金额得到欠款金额
                 double x = documentlist.getDlYfje() - documentlist.getDlSfje();
@@ -294,12 +365,13 @@ public class DocumentListController {
             }else{
                 //银行余额加上供货商的实付金额（退货）
                 this.establishmentService.updateestabjia(establishment);
-                //将库存new出来根据商品id增加商品库存
+                //将库存new出来根据商品id和仓库减少商品库存
                 Stock stock=new Stock();
                 for(int b=0;b<listshop.size();b++){
                     stock.setSkShopid(listshop.get(b).getSpShopid());
                     stock.setSkNumber(listshop.get(b).getNumber());
                     stock.setSkLossnumber(listshop.get(b).getLossNumber());
+                    stock.setSpWarehouseId(listshop.get(b).getWid());
                     this.stockService.updatedelete(stock);
                 }
                 documentlist.setDlDate(new Date());
@@ -311,24 +383,40 @@ public class DocumentListController {
             }
             //新增一个已审核状态的单据
             this.documentListService.insert(documentlist);
-            System.out.println("establishment:"+establishment.getOpening()+"xid:"+establishment.getXid());
             //将list集合中的商品添加到单据商品表中
             this.documentShopService.insertBatch(listshop);
             return AjaxResponse.success(messus);
         }
+        //查询往来账务（采购已审核和退货已审核）
         @PostMapping("selectwlzw")
         public AjaxResponse selectwlzw(@RequestBody String a){
             JSONObject jsonObject=JSONObject.parseObject(a);
             int currenPage = jsonObject.getInteger("currenPage");
             int pageSize = jsonObject.getInteger("pageSize");
+            String vo=jsonObject.getString("DocumentlistVo");
+            DocumentlistVo documentlistVo=JSON.parseObject(vo,DocumentlistVo.class);
             Map<String,Object> map=new HashMap<>();
             Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
-            List<DocumentlistVo> list = this.documentListService.selectwlzw();
+            List<DocumentlistVo> list = this.documentListService.selectwlzw(documentlistVo);
             map.put("total",pg.getTotal());
             map.put("rows",list);
             return AjaxResponse.success(map);
         }
-
+        //查询往来账务（采购已审核和退货已审核）
+        @PostMapping("selectwlzwlike")
+        public AjaxResponse selectwlzwlike(@RequestBody String txt){
+            JSONObject jsonObject=JSONObject.parseObject(txt);
+            int currenPage = jsonObject.getInteger("currenPage");
+            int pageSize = jsonObject.getInteger("pageSize");
+            String vo=jsonObject.getString("txt");
+            Map<String,Object> map=new HashMap<>();
+            Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+            List<DocumentlistVo> list = this.documentListService.selectwlzwlike(vo);
+            map.put("total",pg.getTotal());
+            map.put("rows",list);
+            return AjaxResponse.success(map);
+        }
+        //查询所选的俩个时间之内的数据
         @PostMapping("selectdates")
         public AjaxResponse selectdates(@RequestBody String a){
             JSONObject jsonObject=JSONObject.parseObject(a);
@@ -343,7 +431,7 @@ public class DocumentListController {
             map.put("rows",list);
             return AjaxResponse.success(map);
         }
-        //根据单据号删除商品
+        //根据单据号删除单据和商品
         @GetMapping("deletelistandshop")
         public AjaxResponse deletelistandshop(String number){
             System.out.println("number:"+number);

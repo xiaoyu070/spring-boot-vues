@@ -92,7 +92,12 @@ public interface DocumentShopDao {
     /**
      * 根据单据号查询商品
      */
-    List<DocumentShopVo> selectnumber(String number);
+    List<DocumentShopVo> selectnumber(String number,int wid,int branchid);
+
+    /**
+     * 通过单据号查询待审核单据中的商品
+     */
+    List<DocumentShopVo> selectstatezreonumber(String number,int wid);
 
     /**
      *模糊查询

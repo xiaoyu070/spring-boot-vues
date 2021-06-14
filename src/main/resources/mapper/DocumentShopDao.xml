@@ -7,6 +7,7 @@
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
         <result property="supperlierid" column="supplierid" jdbcType="INTEGER"/>
         <result property="customerid" column="customerid" jdbcType="INTEGER"/>
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
         <result property="wid" column="wid" jdbcType="INTEGER"/>
         <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
         <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
@@ -24,6 +25,7 @@
         <result property="id" column="id" jdbcType="INTEGER" />
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
         <result property="sk_number" column="sk_number" jdbcType="INTEGER"/>
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
         <result property="supperlierid" column="supplierid" jdbcType="INTEGER"/>
         <result property="customerid" column="customerid" jdbcType="INTEGER"/>
         <result property="wid" column="wid" jdbcType="INTEGER"/>
@@ -192,11 +194,21 @@
 
     <!-- 通过单据号查询商品 -->
     <select id="selectnumber" resultMap="DocumentShopVo">
-        SELECT dsp.id,ws.wid,dsp.dl_number,dsp.sp_shopid,dsp.sp_name,dsp.sp_Company,dsp.sp_jprice,sk.sk_number,dsp.number,dsp.loss_number,dsp.zje,dsp.sp_Specifications,dsp.sp_color,dsp.beizhu,dsp.supplierid,dsp.customerid
+        SELECT dsp.id,dm.branchid,ws.wid,dsp.dl_number,dsp.sp_shopid,dsp.sp_name,dsp.sp_Company,dsp.sp_jprice,sk.sk_number,dsp.number,dsp.loss_number,dsp.zje,dsp.sp_Specifications,dsp.sp_color,dsp.beizhu,dsp.supplierid,dsp.customerid
         FROM document_shop dsp
         LEFT JOIN warehouse ws ON dsp.wid = ws.wid
         LEFT JOIN stock sk ON sk.sk_shopid = dsp.sp_shopid
-        WHERE dsp.dl_number =  #{number}
+        LEFT JOIN `branch` dm ON dm.branchid = ws.branchid
+        WHERE dsp.dl_number =  #{param1} and dsp.wid = #{param2} and sk.sp_Warehouse_id = #{param2}
+    </select>
+    <!-- 通过单据号查询待审核单据中的商品 -->
+    <select id="selectstatezreonumber" resultMap="DocumentShopVo">
+        SELECT dsp.id,dm.branchid,ws.wid,dsp.dl_number,dsp.sp_shopid,dsp.sp_name,dsp.sp_Company,dsp.sp_jprice,sk.sk_number,dsp.number,dsp.loss_number,dsp.zje,dsp.sp_Specifications,dsp.sp_color,dsp.beizhu,dsp.supplierid,dsp.customerid
+        FROM document_shop dsp
+        LEFT JOIN warehouse ws ON dsp.wid = ws.wid
+        LEFT JOIN stock sk ON sk.sk_shopid = dsp.sp_shopid
+        LEFT JOIN `branch` dm ON dm.branchid = ws.branchid
+        WHERE dsp.dl_number =  #{param1} and dsp.wid = #{param2} and sk.sp_Warehouse_id = #{param2}
     </select>
 
     <resultMap id="FltjVo" type="com.trkj.projects.vo.SpcgmxVo">

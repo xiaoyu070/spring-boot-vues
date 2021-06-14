@@ -36,6 +36,11 @@ public class StockServiceImpl implements StockService {
         return stock;
     }
 
+    @Override
+    public List<Stock> findbybranchidandshopidandwid(Stock stock) {
+        return this.stockDao.findbybranchidandshopidandwid(stock);
+    }
+
     /**
      * 修改数据
      *

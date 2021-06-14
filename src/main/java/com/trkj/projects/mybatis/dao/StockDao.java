@@ -33,6 +33,12 @@ public interface StockDao {
      */
     int insertBatch(@Param("entities") List<Stock> entities);
 
+    /**
+     * 单据通过审核后商品入库之前先查询库存中该店面该仓库是否存在该商品
+     * @param stock
+     * @return
+     */
+    List<Stock> findbybranchidandshopidandwid(Stock stock);
 
     /**
      * 修改数据

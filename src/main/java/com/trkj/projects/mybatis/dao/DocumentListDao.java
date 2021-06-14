@@ -118,7 +118,16 @@ public interface DocumentListDao {
     /**
      * 查询往来账务
      */
-    List<DocumentlistVo> selectwlzw();
+    List<DocumentlistVo> selectwlzw(DocumentlistVo documentlistVo);
+
+    /**
+     * 模糊查询往来账务
+     */
+    List<DocumentlistVo> selectwlzwlike(String txt);
+    /**
+     * 根据供货商编号查询往来账务
+     */
+    List<DocumentlistVo> selectwlzwghs(int id);
 
     /**
      * 查询给定的俩个时间节点之间的单据
