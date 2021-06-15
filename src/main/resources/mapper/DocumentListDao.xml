@@ -289,46 +289,46 @@
         SELECT ws.wid,dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_id,dlt.dl_type_name,dl.dl_beizhu
         FROM document_list dl
         LEFT JOIN supplier sl ON dl.supplierid = sl.supplierid
-        LEFT JOIN warehouse ws ON dl.wid = ws.wid
+        LEFT JOIN warehouse ws ON ws.wid = dl.wid
         LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
-        LEFT JOIN branch dm ON dm.branchid = ws.branchid
+        LEFT JOIN branch dm ON dm.branchid = dl.branchid
         <where>
             (dl.dl_statie_id = 1 or dl.dl_statie_id = 3)
             <if test="dlNumber != null  and dlNumber != ''">
-                AND dl.dl_number LIKE CONCAT('%',#{dlNumber},'%')
+              AND dl.dl_number LIKE CONCAT('%',#{dlNumber},'%')
             </if>
             <if test="suppliername != null and  suppliername != ''">
-                AND sl.suppliername LIKE CONCAT('%',#{suppliername},'%')
+              AND sl.suppliername LIKE CONCAT('%',#{suppliername},'%')
             </if>
             <if test="supplierid != null and  supplierid != ''">
-                AND sl.supplierid = #{supplierid}
+              AND sl.supplierid = #{supplierid}
             </if>
             <if test="wname != null and wname != ''">
-                AND ws.wname LIKE CONCAT('%',#{wname},'%')
+              AND ws.wname LIKE CONCAT('%',#{wname},'%')
             </if>
             <if test="agentname != null and agentname != ''">
-                AND ag.agent_name LIKE CONCAT('%',#{agentname},'%')
+              AND ag.agent_name LIKE CONCAT('%',#{agentname},'%')
             </if>
             <if test="username != null and username != ''">
-                AND su.user_name LIKE CONCAT('%',#{username},'%')
+              AND su.user_name LIKE CONCAT('%',#{username},'%')
             </if>
             <if test="dltypename != null and dltypename != ''">
-                AND dlt.dl_type_name LIKE CONCAT('%',#{dltypename},'%')
+              AND dlt.dl_type_name LIKE CONCAT('%',#{dltypename},'%')
             </if>
             <if test="dlstatiename != null and dlstatiename != ''">
-                AND dls.dl_statie_name LIKE CONCAT('%',#{dlstatiename},'%')
+               AND dls.dl_statie_name LIKE CONCAT('%',#{dlstatiename},'%')
             </if>
             <if test="dlbeizhu != null and dlbeizhu != ''">
-                AND dl.dl_beizhu LIKE CONCAT('%',#{dlbeizhu},'%')
+               AND dl.dl_beizhu LIKE CONCAT('%',#{dlbeizhu},'%')
             </if>
             <if test="branchname != null and branchname != ''">
-                AND dm.branchname LIKE CONCAT('%',#{branchname},'%')
+              AND dm.branchname LIKE CONCAT('%',#{branchname},'%')
             </if>
             <if test="branchid != null and branchid != ''">
-                AND dm.branchid = #{branchid}
+               AND dm.branchid = #{branchid}
             </if>
             ORDER BY dl.dl_date DESC
         </where>
@@ -388,15 +388,15 @@
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
         <where>
-            dl.dl_statie_id = 1
+            dl.dl_statie_id = 1 or dl.dl_statie_id = 3
             <if test="text != null || text != ''">
-                or (sl.suppliername LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
+                or (sl.suppliername LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1 or dl.dl_statie_id = 3)
             </if>
             <if test="text != null || text != ''">
-                or (ws.wname LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
+                or (ws.wname LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1 or dl.dl_statie_id = 3)
             </if>
             <if test="text != null || text != ''">
-                or (dl.dl_number LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
+                or (dl.dl_number LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1 or dl.dl_statie_id = 3)
             </if>
         </where>
         ORDER BY dl.dl_date DESC
@@ -527,10 +527,9 @@
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
         LEFT JOIN branch dm ON dm.branchid = dl.branchid
-        where (dls.dl_statie_id = 0 OR dls.dl_statie_id = 2) and
-              (DATE_FORMAT(dl.dl_date,'%Y-%m-%d')
-              BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d')) ORDER BY dl.dl_date DESC
-
+        where  (dls.dl_statie_id = 0 OR dls.dl_statie_id = 2) and
+               (DATE_FORMAT(dl.dl_date,'%Y-%m-%d')
+                BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d')) ORDER BY dl.dl_date DESC
         </select>
 
     <!-- 根据时间查询单据为待审核的单据 -->
@@ -543,7 +542,8 @@
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
-        WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d')  BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') ORDER BY dl.dl_date DESC
+        LEFT JOIN branch dm ON dm.branchid = dl.branchid
+        WHERE  (dls.dl_statie_id = 1 OR dls.dl_statie_id = 3) and DATE_FORMAT(dl.dl_date,'%Y-%m-%d')  BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') ORDER BY dl.dl_date DESC
     </select>
 
 
