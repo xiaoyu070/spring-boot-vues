@@ -3,6 +3,7 @@ package com.trkj.projects.service;
 
 import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.DocumentList;
+import com.trkj.projects.vo.CghzVo;
 import com.trkj.projects.vo.DocumentlistVo;
 import com.trkj.projects.vo.SpcgmxVo;
 import com.trkj.projects.vo.SpxsmxVo;
@@ -107,8 +108,9 @@ public interface DocumentListService {
      * @return
      */
     List<DocumentlistVo> xsselectdatesdanju(String date1, String date2);
-
     PageInfo<SpcgmxVo> cgdj(int currentPage, int pageSize);
+    PageInfo<CghzVo> cghz(int currentPage, int pageSize);
+    PageInfo<CghzVo> fltj(int currentPage, int pageSize);
     PageInfo<SpcgmxVo> djxq(int currentPage, int pageSize);
     PageInfo<SpcgmxVo> spmx(int currentPage, int pageSize);
     PageInfo<SpxsmxVo> ssdj(int currentPage, int pageSize);

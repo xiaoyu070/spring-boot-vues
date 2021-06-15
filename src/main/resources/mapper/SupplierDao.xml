@@ -239,14 +239,13 @@
         LEFT JOIN
         branch b ON b.branchid=su.companyid
     </select>
-
     <delete id="pildelsup" >
         delete from projects.supplier
         <where>
-            <if test="sid != null">
+            <if test="sId != null">
                 and s_id in
-                <foreach collection="sid" item="sid" index="index" open="(" close=")" separator=",">
-                    #{sid}
+                <foreach collection="sId" item="sId" index="index" open="(" close=")" separator=",">
+                    #{sId}
                 </foreach>
             </if>
         </where>

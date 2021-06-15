@@ -317,6 +317,18 @@ public class DocumentListController {
         PageInfo<SpcgmxVo> list= this.documentListService.cgdj(currentPage,pageSize);
         return ajaxResponse.success(list);
     }
+    @GetMapping("cghz")
+    public AjaxResponse selectcx2(int currentPage, int pageSize){
+        AjaxResponse ajaxResponse =null;
+        PageInfo<CghzVo> list= this.documentListService.cghz(currentPage,pageSize);
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("fltj")
+    public AjaxResponse selectcx23(int currentPage, int pageSize){
+        AjaxResponse ajaxResponse =null;
+        PageInfo<CghzVo> list= this.documentListService.fltj(currentPage,pageSize);
+        return ajaxResponse.success(list);
+    }
     @GetMapping("djxq")
     public AjaxResponse selectc1(int currentPage, int pageSize){
         AjaxResponse ajaxResponse =null;

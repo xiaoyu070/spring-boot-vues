@@ -208,7 +208,7 @@
         LEFT JOIN shop s ON sp.sp_shopid=s.sp_shopid
         LEFT JOIN warehouse w ON sp.wid=w.wid
         LEFT JOIN document_list l ON sp.dl_number=l.dl_number
-        LEFT JOIN supplier sup ON sp.supplierid=sup.supplierid
+        LEFT JOIN supplier sup ON sp.supplierid=sup.s_id
         LEFT JOIN shop_type lb ON s.sp_type_id=lb.sp_type_id
         LEFT JOIN agent a ON l.agent_id=a.id
         <where>
@@ -225,7 +225,7 @@
         LEFT JOIN shop s ON sp.sp_shopid=s.sp_shopid
         LEFT JOIN warehouse w ON sp.wid=w.wid
         LEFT JOIN document_list l ON sp.dl_number=l.dl_number
-        LEFT JOIN supplier sup ON sp.supplierid=sup.supplierid
+        LEFT JOIN supplier sup ON sp.supplierid=sup.s_id
         LEFT JOIN shop_type lb ON s.sp_type_id=lb.sp_type_id
         LEFT JOIN agent a ON l.agent_id=a.id
     </select>

@@ -1,6 +1,7 @@
 package com.trkj.projects.mybatis.dao;
 
 import com.trkj.projects.mybatis.entity.DocumentList;
+import com.trkj.projects.vo.CghzVo;
 import com.trkj.projects.vo.DocumentlistVo;
 import com.trkj.projects.vo.SpcgmxVo;
 import com.trkj.projects.vo.SpxsmxVo;
@@ -128,8 +129,9 @@ public interface DocumentListDao {
      * 根据给定的时间节点查询状态为待审核的销售单据
      */
     List<DocumentlistVo> xsselectdatesdanju(String date1, String date2);
-
     List<SpcgmxVo> cgdj(int currentPage, int pageSize);
+    List<CghzVo> cghz(int currentPage, int pageSize);
+    List<CghzVo> fltj(int currentPage, int pageSize);
     List<SpcgmxVo> djxq(int currentPage, int pageSize);
     List<SpcgmxVo> spmx(int currentPage, int pageSize);
     List<SpxsmxVo> ssdj(int currentPage, int pageSize);
