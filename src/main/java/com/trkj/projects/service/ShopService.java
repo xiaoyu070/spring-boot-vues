@@ -5,6 +5,7 @@ import com.trkj.projects.mybatis.entity.Shop;
 import com.trkj.projects.mybatis.entity.Shops;
 import com.trkj.projects.vo.ShopVo;
 import com.trkj.projects.vo.Shopandstock;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -60,6 +61,11 @@ public interface ShopService {
      * 查询老商品添加中的所有商品信息
      */
     List<Shopandstock> queryshopanstock(int value);
+
+    /**
+     * 查询库存中剩余数量不为0的商品（退货）
+     */
+    List<Shopandstock> queryshopanstocktuihuo(int value);
 
     /**
      * 模糊查询

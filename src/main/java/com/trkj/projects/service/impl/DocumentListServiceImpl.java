@@ -140,8 +140,18 @@ public class DocumentListServiceImpl implements DocumentListService {
     }
 
     @Override
-    public List<DocumentlistVo> selectwlzw() {
-        return this.documentListDao.selectwlzw();
+    public void updatestatictwo(DocumentList documentList) {
+        this.documentListDao.updatestatictwo(documentList);
+    }
+
+    @Override
+    public List<DocumentlistVo> selectwlzw(DocumentlistVo documentlistVo) {
+        return this.documentListDao.selectwlzw(documentlistVo);
+    }
+
+    @Override
+    public List<DocumentlistVo> selectwlzwlike(String txt) {
+        return this.documentListDao.selectwlzwlike(txt);
     }
 
 

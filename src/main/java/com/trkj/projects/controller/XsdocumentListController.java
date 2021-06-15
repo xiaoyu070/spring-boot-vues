@@ -6,10 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.trkj.projects.mybatis.entity.*;
-import com.trkj.projects.service.DocumentShopService;
-import com.trkj.projects.service.EstablishmentService;
-import com.trkj.projects.service.StockService;
-import com.trkj.projects.service.XsdocumentListService;
+import com.trkj.projects.service.*;
 import com.trkj.projects.vo.AjaxResponse;
 import com.trkj.projects.vo.DocumentlistVo;
 import com.trkj.projects.vo.XsDocumentlistVo;
@@ -43,6 +40,8 @@ public class XsdocumentListController {
     //银行
     @Resource
     private EstablishmentService establishmentService;
+    @Resource
+    private CustomerService customerService;
 
     /**
      * 通过主键查询单条数据
@@ -172,17 +171,25 @@ public class XsdocumentListController {
             stock.setSkShopid(listshop.get(b).getSpShopid());
             stock.setSkNumber(listshop.get(b).getNumber());
             stock.setSkLossnumber(listshop.get(b).getLossNumber());
-            this.stockService.update(stock);
+            this.stockService.xsupdate(stock);
         }
         //银行余额减去实付金额
         this.establishmentService.updateestab(establishment);
         //应付金额减去实付金额得到欠款金额
         double x = documentlistVo.getDlysje() - documentlistVo.getDlssje();
+        //优惠金额等于应收金额-实收金额*打折率
+//        double y = documentlistVo.getDlysje() - documentlistVo.getDlssje() * documentlistVo.getV_type_ck();
+        //获取销售商品里的客户和单价加到客户的我方应收里
+        for (int i =0;i<listshop.size();i++){
+            this.customerService.updatemoney(listshop.get(i).getSpJprice(),listshop.get(i).getCustomerid());
+        }
         XsdocumentList documentList = new XsdocumentList();
         documentList.setDlNumber(documentlistVo.getDlNumber());
         documentList.setDlQkje(x);
+       // documentList.setDlYhje(y);
         documentList.setDlYsje(documentlistVo.getDlysje());
         documentList.setDlSsje(documentlistVo.getDlssje());
+        System.out.println("单据信息："+documentList.toString());
         this.xsdocumentListService.updatestaticzore(documentList);
         return AjaxResponse.success("审核通过！");
     }

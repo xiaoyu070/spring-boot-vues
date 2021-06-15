@@ -5,6 +5,8 @@ import com.trkj.projects.mybatis.entity.Stock;
 import com.trkj.projects.vo.StockVo;
 import com.trkj.projects.vo.StockVov;
 
+import java.util.List;
+
 /**
  * (Stock)表服务接口
  *
@@ -23,12 +25,33 @@ public interface StockService {
     Stock insert(Stock stock);
 
     /**
-     * 修改数据
-     *
+     * 单据通过审核后商品入库之前先查询库存中该店面该仓库是否存在该商品
+     * @param stock
+     * @return
+     */
+    List<Stock> findbybranchidandshopidandwid(Stock stock);
+
+    /**
+     * 修改数据（已用）
+     * 采购已审核的商品单据中的商品添加到库存
      * @param stock 实例对象
      * @return 实例对象
      */
     int update(Stock stock);
+
+    /**
+     * 修改数据（已用）
+     *退货已审核的商品单据中的商品减少库存
+     * @param stock 实例对象
+     * @return 影响行数
+     */
+    int updatedelete(Stock stock);
+    /**
+     * 修改库存数量
+     * @param stock
+     * @return
+     */
+    int xsupdate(Stock stock);
 
     PageInfo<StockVov> findallbytypeandlike(String nameandid, int currentPage, int pageSize);
     /**

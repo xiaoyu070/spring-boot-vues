@@ -44,6 +44,10 @@ public class DocumentList implements Serializable {
      */
     private Integer wid;
     /**
+     * 所属仓库外键id
+     */
+    private Integer branchid;
+    /**
      * 应付金额
      */
     private Double dlYfje;

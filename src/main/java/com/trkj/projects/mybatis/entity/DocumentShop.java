@@ -26,6 +26,15 @@ public class DocumentShop implements Serializable {
      */
     private Integer supperlierid;
     /**
+     * 所在店面外键id
+     */
+    private Integer branchid;
+    /**
+     * 客户外键
+     */
+    private Integer customerid;
+
+    /**
      * 所在仓库外键id
      */
     private Integer wid;

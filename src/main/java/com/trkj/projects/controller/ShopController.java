@@ -42,12 +42,24 @@ public class ShopController {
 //        this.shopService.insert(shop);
 //        return ajaxResponse;
 //    }
+    //老商品添加中的商品信息查询
     @GetMapping("shopandstockvo")
     public AjaxResponse shopandstockvo(Integer currenPage,Integer pageSize,int value){
-        System.out.println("currenPage:"+currenPage+",,"+"pageSize:"+pageSize+",,"+value);
         Map<String,Object> map=new HashMap<>();
         Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
         List<Shopandstock> list=this.shopService.queryshopanstock(value);
+        System.out.println(list);
+        map.put("total",pg.getTotal());
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
+
+    //退货中老商品添加中的商品信息查询
+    @GetMapping("shopandstockvotuihuo")
+    public AjaxResponse shopandstockvotuihuo(Integer currenPage,Integer pageSize,int value){
+        Map<String,Object> map=new HashMap<>();
+        Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+        List<Shopandstock> list=this.shopService.queryshopanstocktuihuo(value);
         map.put("total",pg.getTotal());
         map.put("rows",list);
         return AjaxResponse.success(map);
