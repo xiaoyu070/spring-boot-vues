@@ -2,7 +2,9 @@ package com.trkj.projects.controller;
 
 
 import com.trkj.projects.mybatis.entity.Customer;
+import com.trkj.projects.mybatis.entity.Supplier;
 import com.trkj.projects.service.CustomerService;
+import com.trkj.projects.service.impl.CustomerServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -47,6 +49,12 @@ public class CustomerController {
     public List<Customer> findall(){
         return customerService.findall();
     }
-
-
+/**
+ * 新增
+ */
+    @PostMapping("addcustomer")
+    public Integer addcustomer(@RequestBody Customer customer){
+        System.out.println(customer.toString());
+        return customerService.addcustomer(customer);
+}
 }

@@ -110,10 +110,14 @@ public class DocumentShopServiceImpl implements DocumentShopService {
     }
 
     @Override
-    public List<DocumentShopVo> selectnumber(String number) {
-        return this.documentShopDao.selectnumber(number);
+    public List<DocumentShopVo> selectnumber(String number,int wid,int branchid) {
+        return this.documentShopDao.selectnumber(number,wid,branchid);
     }
 
+    @Override
+    public List<DocumentShopVo> selectstatezreonumber(String number, int wid) {
+        return this.documentShopDao.selectstatezreonumber(number,wid);
+    }
 
     @Override
     public PageInfo<SpcgmxVo> flcx(SpcgmxVo spcgmxVo, int currentPage, int pageSize) {

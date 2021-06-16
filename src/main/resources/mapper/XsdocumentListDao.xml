@@ -25,6 +25,7 @@
         <result property="dlDate" column="dl_date" jdbcType="TIMESTAMP"/>
         <result property="contacts" column="c_contacts" jdbcType="VARCHAR"/>
         <result property="v_type_ck" column="v_type_ck" jdbcType="VARCHAR"/>
+        <result property="wid" column="wid" jdbcType="NUMERIC"/>
         <result property="wname" column="wname" jdbcType="VARCHAR"/>
         <result property="dlzonje" column="dl_zonje" jdbcType="NUMERIC"/>
         <result property="dlysje" column="dl_ysje" jdbcType="NUMERIC"/>
@@ -69,7 +70,7 @@
 
     <!-- 查询销售单据为待审核的数据 -->
     <select id="selectxsvo" resultMap="DocumentListVOMap">
-        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,v.`v_type_ck`,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,dl.dl_zonje,ag.agent_name,su.user_name,dls.dl_statie_name,dl.dl_beizhu
+        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,v.`v_type_ck`,ws.wid,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,dl.dl_zonje,ag.agent_name,su.user_name,dls.dl_statie_name,dl.dl_beizhu
         FROM xsdocument_list dl
         LEFT JOIN customer sl ON dl.customerid = sl.c_id
         LEFT JOIN warehouse ws ON dl.wid = ws.wid

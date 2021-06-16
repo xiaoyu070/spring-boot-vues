@@ -21,6 +21,7 @@
     </resultMap>
 
     <resultMap type="com.trkj.projects.vo.Shopandstock" id="ShopandstockVo">
+        <result property="wid" column="sp_Warehouse_id" jdbcType="INTEGER"/>
         <result property="spShopId" column="sp_shopid" jdbcType="INTEGER"/>
         <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
         <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
@@ -224,9 +225,12 @@
         delete from projects.shop where sp_id = #{spId}
     </delete>
 
+
+
     <!-- 查询所有商品 -->
     <select id="queryshopanstock" resultMap="ShopandstockVo">
-        SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,sk.`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`,s.s_id FROM shop s
+        SELECT sk.sp_Warehouse_id,s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`,s.s_id
+        FROM shop s
         LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
         LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid
             <where>
@@ -234,11 +238,26 @@
                     tp.sp_type_id = #{value}
                 </if>
             </where>
+        GROUP BY s.`sp_shopid`
+    </select>
+
+    <!-- 查询库存中剩余数量不为0的商品（退货） -->
+    <select id="queryshopanstocktuihuo" resultMap="ShopandstockVo">
+        SELECT sk.sp_Warehouse_id,s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`,s.s_id FROM shop s
+        LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid
+        <where>
+        sk.`sk_number`>0
+            <if test="value != 0">
+                tp.sp_type_id = #{value}
+            </if>
+        </where>
+        GROUP BY s.`sp_shopid`
     </select>
 
     <!-- 模糊查询 -->
     <select id="likeselect" resultMap="ShopandstockVo">
-        SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,sk.`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code` FROM shop s
+        SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code` FROM shop s
         LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
         LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid WHERE s.sp_name LIKE CONCAT('%',#{test},'%') OR s.sp_shopid like CONCAT('%',#{test},'%')
     </select>
@@ -248,7 +267,7 @@
         SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,sk.`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code` FROM shop s
         LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
         LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid
-        LEFT JOIN supplier sp ON sp.supplierid=s.s_id WHERE sp.supplierid = #{test} AND s.sp_state = 0
+        LEFT JOIN supplier sp ON sp.supplierid=s.s_id WHERE sp.supplierid = #{test} AND s.sp_state = 0 GROUP BY s.`sp_shopid`
     </select>
 
 

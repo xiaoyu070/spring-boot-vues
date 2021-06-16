@@ -2,6 +2,7 @@ package com.trkj.projects.service;
 
 
 import com.trkj.projects.mybatis.entity.Customer;
+import com.trkj.projects.mybatis.entity.Supplier;
 
 import java.util.List;
 
@@ -56,5 +57,5 @@ public interface CustomerService {
      * @return 是否成功
      */
     boolean deleteById(Integer cId);
-
+    Integer addcustomer(Customer customer);
 }

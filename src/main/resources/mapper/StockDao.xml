@@ -48,28 +48,45 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="" useGeneratedKeys="true">
-        insert into projects.stock(sk_shopid, sp_storefront_id, sp_Warehouse_id, sk_number, sp_number)
-        values (#{skShopid}, #{spStorefrontId}, #{spWarehouseId}, #{skNumber}, #{spNumber})
+        insert into projects.stock(sk_shopid, sp_storefront_id, sp_Warehouse_id, sk_number, sp_number,sk_loss_number)
+        values (#{skShopid}, #{spStorefrontId}, #{spWarehouseId}, #{skNumber}, #{spNumber},#{skLossnumber})
     </insert>
 
     <insert id="insertBatch" keyProperty="" useGeneratedKeys="true">
-        insert into projects.stock(sk_shopid, sp_storefront_id, sp_Warehouse_id, sk_number, sp_number)
+        insert into projects.stock(sk_shopid, sp_storefront_id, sp_Warehouse_id, sk_number, sp_number,sk_loss_number)
         values
         <foreach collection="entities" item="entity" separator=",">
             (#{entity.skShopid}, #{entity.spStorefrontId}, #{entity.spWarehouseId}, #{entity.skNumber},
-            #{entity.spNumber})
+            #{entity.spNumber},#{skLossnumber})
         </foreach>
     </insert>
 
+    <!-- 单据通过审核后商品入库之前先查询库存中该店面该仓库是否存在该商品 -->
+    <select id="findbybranchidandshopidandwid" resultMap="StockMap">
+        	SELECT * FROM stock sk
+        	WHERE sk.sk_shopid = #{skShopid} AND
+        	sk.sp_Warehouse_id = #{spWarehouseId} AND
+        	sk.sp_storefront_id = #{spStorefrontId}
+    </select>
+
     <!--通过主键修改数据 修改库存数量-->
     <update id="updateadd">
-        update projects.stock set sk_number =
-         sk_number+#{skNumber},sk_loss_number = sk_loss_number+#{skLossnumber} where sk_shopid = #{skShopid}
+        update projects.stock set
+        sk_number = sk_number+#{skNumber},
+        sk_loss_number = sk_loss_number+#{skLossnumber}
+        where sk_shopid = #{skShopid} and sp_Warehouse_id = #{spWarehouseId}
     </update>
     <!--销售通过主键修改数据 修改库存数量-->
     <update id="xsupdateadd">
         update projects.stock set sk_number =
          sk_number - #{skNumber},sk_loss_number = sk_loss_number - #{skLossnumber} where sk_shopid = #{skShopid}
+    </update>
+
+    <!--通过商品编号和所在仓库修改库存数量-->
+    <update id="updatedelete">
+        UPDATE projects.stock SET sk_number =
+        sk_number-#{skNumber},sk_loss_number = sk_loss_number-#{skLossnumber}
+        where sk_shopid = #{skShopid} and sp_Warehouse_id = #{spWarehouseId}
     </update>
 
 <!-- 楷楷的  -->

@@ -17,6 +17,10 @@ public class DocumentShopVo {
      */
     private Integer supperlierid;
     /**
+     * 所在店面外键id
+     */
+    private Integer branchid;
+    /**
      * 客户外键
      */
     private Integer customerid;

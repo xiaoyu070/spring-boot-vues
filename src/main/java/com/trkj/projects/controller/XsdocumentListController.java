@@ -73,12 +73,12 @@ public class XsdocumentListController {
         String vo=jsonObject.getString("DocumentlistVo");
         String ttt = jsonObject.getString("text");
         //json转实体类对象
-        com.trkj.projects.vo.XsDocumentlistVo documentlistVo= JSON.parseObject(vo, com.trkj.projects.vo.XsDocumentlistVo.class);
+        XsDocumentlistVo documentlistVo= JSON.parseObject(vo, XsDocumentlistVo.class);
         int currenPage = jsonObject.getInteger("currenPage");
         int pageSize = jsonObject.getInteger("pageSize");
         Map<String,Object> map=new HashMap<>();
         Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
-        List<com.trkj.projects.vo.XsDocumentlistVo> list = this.xsdocumentListService.selectxsvo(documentlistVo);
+        List<XsDocumentlistVo> list = this.xsdocumentListService.selectxsvo(documentlistVo);
         map.put("total",pg.getTotal());
         map.put("rows",list);
         return AjaxResponse.success(map);
@@ -165,6 +165,8 @@ public class XsdocumentListController {
         Establishment establishment = new Establishment();
         establishment.setXid(xid);
         establishment.setOpening(documentlistVo.getDlssje());
+        //银行余额减去实付金额
+        this.establishmentService.updateestab(establishment);
         List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
 
         //审核通过后将该单据中包含的商品从库存减库存量
@@ -175,9 +177,6 @@ public class XsdocumentListController {
             stock.setSkLossnumber(listshop.get(b).getLossNumber());
             this.stockService.xsupdate(stock);
         }
-        //银行余额减去实付金额
-        this.establishmentService.updateestab(establishment);
-
         double x = documentlistVo.getDlysje() - documentlistVo.getDlssje();
 
         //获取销售商品里的客户和单价加到客户的我方应收里
@@ -187,6 +186,7 @@ public class XsdocumentListController {
         XsdocumentList documentList = new XsdocumentList();
         documentList.setDlNumber(documentlistVo.getDlNumber());
         documentList.setDlQkje(x);
+        documentList.setDlzonje(documentlistVo.getDlzonje());
         documentList.setDlYhje(documentlistVo.getDlyhje());
         documentList.setDlYsje(documentlistVo.getDlysje());
         documentList.setDlSsje(documentlistVo.getDlssje());

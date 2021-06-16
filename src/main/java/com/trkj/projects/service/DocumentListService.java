@@ -3,6 +3,7 @@ package com.trkj.projects.service;
 
 import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.DocumentList;
+import com.trkj.projects.vo.CghzVo;
 import com.trkj.projects.vo.DocumentlistVo;
 import com.trkj.projects.vo.SpcgmxVo;
 import com.trkj.projects.vo.SpxsmxVo;
@@ -71,6 +72,7 @@ public interface DocumentListService {
      */
     List<DocumentlistVo> selectxsvo(DocumentlistVo documentShopVo);
 
+
     /**
      * 模糊查询单据状态为待审核的单据
      */
@@ -86,9 +88,18 @@ public interface DocumentListService {
     void updatestaticzore(DocumentList documentList);
 
     /**
+     * 将退货未审核的单据状态改为已审核
+     */
+    void updatestatictwo(DocumentList documentList);
+    /**
      * 查询往来账务
      */
-    List<DocumentlistVo> selectwlzw();
+    List<DocumentlistVo> selectwlzw(DocumentlistVo documentlistVo);
+
+    /**
+     * 模糊查询往来账务
+     */
+    List<DocumentlistVo> selectwlzwlike(String txt);
 
     /**
      * 查询给定的俩个时间节点之间的单据
@@ -107,8 +118,9 @@ public interface DocumentListService {
      * @return
      */
     List<DocumentlistVo> xsselectdatesdanju(String date1, String date2);
-
     PageInfo<SpcgmxVo> cgdj(int currentPage, int pageSize);
+    PageInfo<CghzVo> cghz(int currentPage, int pageSize);
+    PageInfo<CghzVo> fltj(int currentPage, int pageSize);
     PageInfo<SpcgmxVo> djxq(int currentPage, int pageSize);
     PageInfo<SpcgmxVo> spmx(int currentPage, int pageSize);
     PageInfo<SpxsmxVo> ssdj(int currentPage, int pageSize);

@@ -113,6 +113,11 @@
     <update id="numbersmoney">
        UPDATE `supplier` SET money = money + #{param1} WHERE supplierid = #{param2}
     </update>
+
+    <!-- 退货单据审核通过后，该单据中包含的商品根据提供的供应商id将退货实际收款一一对应并减少供货商的初期余额-->
+    <update id="numbersmoneyjian">
+       UPDATE `supplier` SET money = money - #{param1} WHERE supplierid = #{param2}
+    </update>
     
     <!--新增所有列-->
     <insert id="insert" keyProperty="sId" useGeneratedKeys="true">
@@ -239,7 +244,6 @@
         LEFT JOIN
         branch b ON b.branchid=su.companyid
     </select>
-
     <delete id="pildelsup" >
         delete from projects.supplier
         <where>

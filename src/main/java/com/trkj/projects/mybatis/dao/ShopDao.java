@@ -83,6 +83,11 @@ public interface ShopDao {
     List<Shopandstock> queryshopanstock(int value);
 
     /**
+     * 查询库存中剩余数量不为0的商品（退货）
+     */
+    List<Shopandstock> queryshopanstocktuihuo(int value);
+
+    /**
      * 模糊查询
      */
     List<Shopandstock> likeselect(String test);

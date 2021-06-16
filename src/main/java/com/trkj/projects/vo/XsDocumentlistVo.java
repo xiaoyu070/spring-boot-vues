@@ -30,7 +30,10 @@ public class XsDocumentlistVo {
      * 客户会员折扣id
      */
     private double v_type_ck;
-
+    /**
+     * 仓库id
+     */
+    private Integer wid;
     /**
      * 仓库名称
      */
