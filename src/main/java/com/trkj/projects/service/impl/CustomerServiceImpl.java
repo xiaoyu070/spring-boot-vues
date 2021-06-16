@@ -2,6 +2,7 @@ package com.trkj.projects.service.impl;
 
 import com.trkj.projects.mybatis.dao.CustomerDao;
 import com.trkj.projects.mybatis.entity.Customer;
+import com.trkj.projects.mybatis.entity.Supplier;
 import com.trkj.projects.service.CustomerService;
 import org.springframework.stereotype.Service;
 
@@ -91,6 +92,15 @@ public class CustomerServiceImpl implements CustomerService {
     public boolean deleteById(Integer cId) {
         return this.customerDao.deleteById(cId) > 0;
     }
+
+    @Override
+    public Integer addcustomer(Customer customer) {
+        return this.customerDao.insert(customer);
+    }
+
+    /**
+     * 新增客户
+     */
 
     /**
      * 楷楷的

@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Data
 public class SupplierVo {
-    private Integer sid;
+    private Integer sId;
 
     private Integer supplierid;
     /**

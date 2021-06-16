@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.dao.DocumentListDao;
 import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.service.DocumentListService;
+import com.trkj.projects.vo.CghzVo;
 import com.trkj.projects.vo.DocumentlistVo;
 import com.trkj.projects.vo.SpcgmxVo;
 import com.trkj.projects.vo.SpxsmxVo;
@@ -183,6 +184,35 @@ public class DocumentListServiceImpl implements DocumentListService {
         System.out.println(list);
         return info;
     }
+
+    @Override
+    public PageInfo<CghzVo> cghz(int currentPage, int pageSize) {
+        List<CghzVo> list=this.documentListDao.cghz(currentPage,pageSize);
+        //封装分页插件
+        PageHelper.startPage(currentPage,pageSize,true);
+        //再查所有最终传过去的数据
+        List<CghzVo> list2 = this.documentListDao.cghz(currentPage,pageSize);
+        //封装到pageinfo再设置总条数获取第一个list的大小size()方法
+        PageInfo<CghzVo> info = new PageInfo<>(list2);
+        info.setTotal(list.size());
+        System.out.println(list);
+        return info;
+    }
+
+    @Override
+    public PageInfo<CghzVo> fltj(int currentPage, int pageSize) {
+        List<CghzVo> list=this.documentListDao.fltj(currentPage,pageSize);
+        //封装分页插件
+        PageHelper.startPage(currentPage,pageSize,true);
+        //再查所有最终传过去的数据
+        List<CghzVo> list2 = this.documentListDao.fltj(currentPage,pageSize);
+        //封装到pageinfo再设置总条数获取第一个list的大小size()方法
+        PageInfo<CghzVo> info = new PageInfo<>(list2);
+        info.setTotal(list.size());
+        System.out.println(list);
+        return info;
+    }
+
 
     @Override
     public PageInfo<SpcgmxVo> djxq(int currentPage, int pageSize) {

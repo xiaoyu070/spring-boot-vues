@@ -1,5 +1,6 @@
 package com.trkj.projects.service.impl;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.dao.DocumentShopDao;
@@ -7,10 +8,12 @@ import com.trkj.projects.mybatis.entity.DocumentShop;
 import com.trkj.projects.service.DocumentShopService;
 import com.trkj.projects.vo.CgdjVo;
 import com.trkj.projects.vo.DocumentShopVo;
+import com.trkj.projects.vo.ShopVo;
 import com.trkj.projects.vo.SpcgmxVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +26,25 @@ import java.util.List;
 public class DocumentShopServiceImpl implements DocumentShopService {
     @Resource
     private DocumentShopDao documentShopDao;
+
+    /**
+     * j根据分店id查询销售
+     * @param cid
+     * @param data1
+     * @param data2
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageInfo<DocumentShop> selectbycid(Integer cid, String data1, String data2,Integer currentPage, Integer pageSize) {
+        List<DocumentShop> list = documentShopDao.querybycustomeridanddata(cid,data1,data2);
+        Page<DocumentShop> page = PageHelper.startPage(currentPage,pageSize,true);
+        List<DocumentShop> list2 = documentShopDao.querybycustomeridanddata(cid,data1,data2);
+        PageInfo<DocumentShop> info = new PageInfo<>(list2);
+        info.setTotal(list.size());
+        return info;
+    }
 
     /**
      * 通过ID查询单条数据

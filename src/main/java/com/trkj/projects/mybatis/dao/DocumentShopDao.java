@@ -17,7 +17,14 @@ import java.util.List;
  */
 @Mapper
 public interface DocumentShopDao {
-
+    /**
+     * 根据客户id查询销售商品以及时间查询
+     * @param customerid
+     * @param data1
+     * @param data2
+     * @return
+     */
+    List<DocumentShop> querybycustomeridanddata(@Param("customerid") Integer customerid,String data1,String data2);
     /**
      * 通过ID查询单条数据
      *
