@@ -8,6 +8,8 @@
         <result property="dlDate" column="dl_date" jdbcType="TIMESTAMP"/>
         <result property="customerid" column="customerid" jdbcType="INTEGER"/>
         <result property="wid" column="wid" jdbcType="INTEGER"/>
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
+        <result property="dlzonje" column="dl_zonje" jdbcType="NUMERIC"/>
         <result property="dlYsje" column="dl_ysje" jdbcType="NUMERIC"/>
         <result property="dlSsje" column="dl_ssje" jdbcType="NUMERIC"/>
         <result property="dlQkje" column="dl_qkje" jdbcType="NUMERIC"/>
@@ -24,6 +26,7 @@
         <result property="contacts" column="c_contacts" jdbcType="VARCHAR"/>
         <result property="v_type_ck" column="v_type_ck" jdbcType="VARCHAR"/>
         <result property="wname" column="wname" jdbcType="VARCHAR"/>
+        <result property="dlzonje" column="dl_zonje" jdbcType="NUMERIC"/>
         <result property="dlysje" column="dl_ysje" jdbcType="NUMERIC"/>
         <result property="dlssje" column="dl_ssje" jdbcType="NUMERIC"/>
         <result property="dlqkje" column="dl_qkje" jdbcType="NUMERIC"/>
@@ -39,12 +42,22 @@
 
 
     <!--查询单个-->
-    <select id="queryById" resultMap="XsdocumentListMap">
+    <select id="queryById" resultMap="DocumentListVOMap">
         select
-          id, dl_number, dl_date, customerid, wid, dl_ysje, dl_ssje, dl_qkje, dl_yhje, agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu
+          id, dl_number, dl_date, customerid, wid, dl_ysje, dl_ssje, dl_qkje,dl_zonje, dl_yhje, agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu
         from projects.xsdocument_list
         where id = #{id}
     </select>
+<!--    //根据单据号查询单据-->
+    <select id="queryBydlnumber" resultMap="DocumentListVOMap">
+         SELECT
+          id, dl_number, dl_date, customerid, wid, dl_ysje, dl_ssje, dl_qkje,dl_zonje, dl_yhje,v.`v_type_ck`, agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu
+        FROM projects.xsdocument_list dl
+        LEFT JOIN customer c ON dl.`customerid` = c.c_id
+        LEFT JOIN vip_type v ON c.v_type_id = v.v_type_id
+        WHERE dl_number = #{dlnumber}
+    </select>
+
 
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="XsdocumentListMap">
@@ -54,9 +67,9 @@
         limit #{offset}, #{limit}
     </select>
 
-    <!-- 查询销售单据为待审核和销售出货的数据 -->
+    <!-- 查询销售单据为待审核的数据 -->
     <select id="selectxsvo" resultMap="DocumentListVOMap">
-        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,v.`v_type_ck`,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dl.dl_beizhu
+        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,v.`v_type_ck`,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,dl.dl_zonje,ag.agent_name,su.user_name,dls.dl_statie_name,dl.dl_beizhu
         FROM xsdocument_list dl
         LEFT JOIN customer sl ON dl.customerid = sl.c_id
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
@@ -95,11 +108,12 @@
                 AND dm.branchname LIKE CONCAT('%',#{branchname},'%')
             </if>
         </where>
+        ORDER BY dl.dl_date DESC
     </select>
 
     <!-- 模糊查询销售单据为待审核的单据 -->
     <select id="xslikevo" resultMap="DocumentListVOMap">
-        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,v.`v_type_ck`,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dl.dl_beizhu
+        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,v.`v_type_ck`,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,dl.dl_zonje,ag.agent_name,su.user_name,dls.dl_statie_name,dl.dl_beizhu
         FROM xsdocument_list dl
         LEFT JOIN customer sl ON dl.customerid = sl.c_id
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
@@ -117,7 +131,7 @@
 
     <!-- 根据俩个时间之间查询销售单据 -->
     <select id="xsselectdate" resultMap="DocumentListVOMap">
-        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,v.`v_type_ck`,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dl.dl_beizhu
+        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,v.`v_type_ck`,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,dl.dl_zonje,ag.agent_name,su.user_name,dls.dl_statie_name,dl.dl_beizhu
         FROM xsdocument_list dl
         LEFT JOIN customer sl ON dl.customerid = sl.c_id
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
@@ -130,8 +144,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into projects.xsdocument_list(dl_number, dl_date, customerid, wid, dl_ysje, dl_ssje, dl_qkje, dl_yhje, agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu)
-        values (#{dlNumber}, #{dlDate}, #{customerid}, #{wid}, #{dlYsje}, #{dlSsje}, #{dlQkje}, #{dlYhje}, #{agentId}, #{admin}, #{dlTypeId}, #{dlStatieId}, #{dlBeizhu})
+        insert into projects.xsdocument_list(dl_number, dl_date, customerid, wid,branchid, dl_ysje, dl_ssje, dl_qkje, dl_yhje,dl_zonje, agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu)
+        values (#{dlNumber}, #{dlDate}, #{customerid}, #{wid},#{branchid}, #{dlYsje}, #{dlSsje}, #{dlQkje}, #{dlYhje},#{dlzonje}, #{agentId}, #{admin}, #{dlTypeId}, #{dlStatieId}, #{dlBeizhu})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
@@ -177,6 +191,9 @@
             <if test="wid != null">
                 wid = #{wid},
             </if>
+            <if test="branchid != null">
+                branchid = #{branchid},
+            </if>
             <if test="dlYsje != null">
                 dl_ysje = #{dlYsje},
             </if>
@@ -188,6 +205,9 @@
             </if>
             <if test="dlYhje != null">
                 dl_yhje = #{dlYhje},
+            </if>
+            <if test="dlzonje != null">
+                 dl_zonje = #{dlzonje},
             </if>
             <if test="agentId != null">
                 agent_id = #{agentId},
@@ -205,7 +225,7 @@
                 dl_beizhu = #{dlBeizhu},
             </if>
         </set>
-        where id = #{id}
+        where dl_number = #{dlNumber}
     </update>
 
     <!--通过主键删除-->
@@ -215,7 +235,7 @@
 
     <!-- 将待审核状态的销售单据改为已审核 -->
     <update id="updatestaticzore">
-        update xsdocument_list set dl_statie_id = 2,dl_qkje = #{dlQkje},dl_ssje= #{dlSsje},dl_ysje=#{dlYsje} where dl_number = #{dlNumber}
+        update xsdocument_list set,dl_type_id = 1, dl_statie_id = 2,dl_qkje = #{dlQkje},dl_ssje= #{dlSsje},dl_ysje=#{dlYsje},dl_zonje=#{dlzonje} where dl_number = #{dlNumber}
     </update>
 
 </mapper>

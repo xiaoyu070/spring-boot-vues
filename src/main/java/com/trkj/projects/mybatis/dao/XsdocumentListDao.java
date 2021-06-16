@@ -26,6 +26,8 @@ public interface XsdocumentListDao {
      */
     XsdocumentList queryById(Integer id);
 
+    XsDocumentlistVo queryBydlnumber(String dlnumber);
+
     /**
      * 查询指定行数据
      *

@@ -52,6 +52,10 @@ public class XsDocumentlistVo {
      */
     private double dlyhje;
     /**
+     * 总金额
+     */
+    private double dlzonje;
+    /**
      * 员工名称
      */
     private String agentname;

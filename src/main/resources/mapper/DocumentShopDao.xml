@@ -24,6 +24,9 @@
         <result property="id" column="id" jdbcType="INTEGER" />
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
         <result property="sk_number" column="sk_number" jdbcType="INTEGER"/>
+        <result property="supperlierid" column="supplierid" jdbcType="INTEGER"/>
+        <result property="customerid" column="customerid" jdbcType="INTEGER"/>
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
         <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
         <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
         <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
@@ -35,7 +38,6 @@
         <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
         <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
     </resultMap>
-
 <!--  小宇子的  -->
     <resultMap type="com.trkj.projects.vo.SpcgmxVo" id="SpcgmxVo">
         <result property="number" column="number" jdbcType="INTEGER"/>
@@ -54,6 +56,17 @@
         <result property="agentName" column="agent_name" jdbcType="VARCHAR"/>
         <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
     </resultMap>
+<!--    根据客户id查询改客户的买的商品-->
+    <select id="querybycustomeridanddata">
+        SELECT id,dl_number ,customerid,wid,sp_shopid,sp_name,sp_Company,sp_jprice,number,loss_number,zje,sp_Specifications,sp_color,beizhu
+        FROM document_shop
+        <where>
+            customerid = #{customerid}
+            <if test="param1 != null and param1 != '' and param2 != null and param2 != ''">
+                DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{data1},'%Y-%m-%d') and DATE_FORMAT(#{data2},'%Y-%m-%d')
+            </if>
+        </where>
+    </select>
     <!--查询单个-->
     <select id="queryById" resultMap="DocumentShopMap">
         select
@@ -133,11 +146,11 @@
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into projects.document_shop(dl_number, supplierid, wid, sp_shopid, sp_name, sp_Company, sp_jprice,
+        insert into projects.document_shop(dl_number, supplierid,customerid, wid, sp_shopid, sp_name, sp_Company, sp_jprice,
         number, loss_number, zje, sp_Specifications, sp_color, beizhu)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.dlNumber}, #{entity.supperlierid}, #{entity.wid}, #{entity.spShopid}, #{entity.spName},
+            (#{entity.dlNumber}, #{entity.supperlierid},#{entity.customerid}, #{entity.wid}, #{entity.spShopid}, #{entity.spName},
             #{entity.spCompany}, #{entity.spJprice}, #{entity.number}, #{entity.lossNumber}, #{entity.zje},
             #{entity.spSpecifications}, #{entity.spColor}, #{entity.beizhu})
         </foreach>
@@ -188,7 +201,7 @@
     </delete>
 
     <!-- 通过单据号查询商品 -->
-    <select id="selectnumber" resultMap="DocumentShopMap">
+    <select id="selectnumber" resultMap="DocumentShopVo">
         SELECT dsp.id,ws.wid,dsp.dl_number,dsp.sp_shopid,dsp.sp_name,dsp.sp_Company,dsp.sp_jprice,sk.sk_number,dsp.number,dsp.loss_number,dsp.zje,dsp.sp_Specifications,dsp.sp_color,dsp.beizhu,dsp.supplierid,dsp.customerid
         FROM document_shop dsp
         LEFT JOIN warehouse ws ON dsp.wid = ws.wid
@@ -235,6 +248,7 @@
             SELECT sp_type_name
             FROM shop_type
     </select>
+
 
 </mapper>
 
