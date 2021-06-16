@@ -10,10 +10,16 @@ import com.trkj.projects.vo.AjaxResponse;
 import com.trkj.projects.vo.SysUserVo;
 import com.trkj.projects.vo.SysUser_roles;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +46,8 @@ public class SysUserController {
     private SysMenuService sysMenuService;
     @Autowired
     JwtTokenUtil jwtTokenUtil;
+
+
     private List<SysMenu> getChildrens(SysMenu root, List<SysMenu> all) {
         List<SysMenu> children = all.stream().filter(m -> {
             return Objects.equals(m.getParentId(), root.getMenuId());
@@ -54,9 +62,15 @@ public class SysUserController {
 
     @PostMapping("Login")
     private AjaxResponse getChildrens(@RequestBody SysUser sysUser) {
+        HttpServletRequest request =
+                ((ServletRequestAttributes) RequestContextHolder.
+                        getRequestAttributes()).getRequest();
+        HttpSession session=request.getSession();
+
+
         SysUser sysUser1=sysUserService.findByNames(sysUser.getUserName(),sysUser.getUserPass());
         SysUserVo sysUserVo=new SysUserVo();
-        System.out.println(sysUser.getUserName()+"");
+
         if(!sysUser1.equals(null)){
             if(sysUser1.getUserstate()==0){
                 //获取父菜单
@@ -73,6 +87,8 @@ public class SysUserController {
                 sysUserVo.setSysUser(sysUser1);
                 sysUserVo.setVatedata(true);
                 sysUserVo.setSysMenu(treemenu);
+                System.out.println("ssss::"+sysUser1.getUserName());
+                session.setAttribute("username",sysUser1.getUserName());
             }else{
                 return AjaxResponse.success("该用户已禁用，请联系管理员后进行登录！");
             }
@@ -100,6 +116,11 @@ public class SysUserController {
 
     @GetMapping("LoginGo")
     public AjaxResponse queryByPhoneandCode(String phone,String code){
+        HttpServletRequest request =
+                ((ServletRequestAttributes) RequestContextHolder.
+                        getRequestAttributes()).getRequest();
+        HttpSession session=request.getSession();
+
         System.out.println("phone:"+phone+"mmmm"+"code"+code);
         Map<String,String> mapyz=yan.mm();
         System.out.println("mapyz:"+mapyz.get("phone")+","+mapyz.get("code"));
@@ -119,11 +140,13 @@ public class SysUserController {
                     ).collect(Collectors.toList());
                     System.out.println(treemenu);
                     String Token = jwtTokenUtil.generateToken(list.getUserName(), list.getUserId() + "");
+                    session.setAttribute("username",list.getUserName());
                     sysUserVo.setToken(Token);
                     sysUserVo.setSysUser(list);
                     sysUserVo.setVatedata(true);
                     sysUserVo.setSysMenu(treemenu);
                     map.put("vo",sysUserVo);
+                    System.out.println("sys::"+session.getAttribute("username"));
                 }
             } else {
                 map.put("success","没有该用户！");
@@ -131,12 +154,20 @@ public class SysUserController {
         }else{
             map.put("success","该手机号与验证码不匹配！");
         }
+
         return AjaxResponse.success(map);
     }
-
+    //根据当前登录的用户查询该用户的角色
     @GetMapping("findByUser_roles")
     public AjaxResponse findByUser_roles(int uid){
         SysUser_roles list=this.sysUserService.findByUser_roles(uid);
         return AjaxResponse.success(list);
     }
+    //查询所有用户
+    @GetMapping("selectuserall")
+    public AjaxResponse selectuserall(){
+        List<SysUser_roles> list = this.sysUserService.selectuserall();
+        return AjaxResponse.success(list);
+    }
+
 }

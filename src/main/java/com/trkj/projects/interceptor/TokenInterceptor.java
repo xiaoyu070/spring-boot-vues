@@ -23,7 +23,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
                              Object handler) throws SignatureException {
         /** 地址过滤 */
         String uri = request.getRequestURI() ;
-        System.out.println(uri);
+        System.out.println("请求地址："+uri);
         if (uri.contains("/Login")){
             return true;
         }

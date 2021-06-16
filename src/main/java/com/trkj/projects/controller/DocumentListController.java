@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.trkj.projects.anntation.Log;
 import com.trkj.projects.mybatis.entity.*;
 import com.trkj.projects.service.DocumentListService;
 import com.trkj.projects.service.DocumentShopService;
@@ -74,6 +75,7 @@ public class DocumentListController {
      * @param DocumentlistVo
      * @return
      */
+    @Log("查询单据vo")
     @PostMapping("selectvo")
     public AjaxResponse selectvo(@RequestBody String DocumentlistVo){
         JSONObject jsonObject=JSONObject.parseObject(DocumentlistVo);

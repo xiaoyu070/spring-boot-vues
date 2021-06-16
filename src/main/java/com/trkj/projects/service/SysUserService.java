@@ -28,5 +28,9 @@ public interface SysUserService {
      * @return
      */
     SysUser_roles findByUser_roles(int uid);
-
+    /**
+     * 查询所有用户
+     * @return
+     */
+    List<SysUser_roles> selectuserall();
 }
