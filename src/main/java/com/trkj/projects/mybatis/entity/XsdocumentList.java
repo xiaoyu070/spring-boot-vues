@@ -35,6 +35,10 @@ public class XsdocumentList implements Serializable {
      */
     private Integer wid;
     /**
+     * 所在店面id
+     */
+    private Integer branchid;
+    /**
      * 应收金额
      */
     private Double dlYsje;
@@ -50,6 +54,10 @@ public class XsdocumentList implements Serializable {
      * 优惠金额
      */
     private Double dlYhje;
+    /**
+     * 总金额
+     */
+    private Double dlzonje;
     /**
      * 员工外键id（经办人）
      */

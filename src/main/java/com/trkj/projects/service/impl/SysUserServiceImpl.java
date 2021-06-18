@@ -35,4 +35,9 @@ public class SysUserServiceImpl implements SysUserService {
     public SysUser_roles findByUser_roles(int uid) {
         return this.sysUserDao.findByUser_roles(uid);
     }
+
+    @Override
+    public List<SysUser_roles> selectuserall() {
+        return this.sysUserDao.selectuserall();
+    }
 }

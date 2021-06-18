@@ -34,6 +34,16 @@ public class XsdocumentListServiceImpl implements XsdocumentListService {
     }
 
     /**
+     * 根据单据查询单据信息
+     * @param dlnumber
+     * @return
+     */
+    @Override
+    public XsDocumentlistVo queryBydlnumber(String dlnumber) {
+        return this.xsdocumentListDao.queryBydlnumber(dlnumber);
+    }
+
+    /**
      * 查询多条数据
      *
      * @param offset 查询起始位置

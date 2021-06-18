@@ -5,6 +5,7 @@
     <resultMap type="com.trkj.projects.mybatis.entity.Customer" id="CustomerMap">
         <result property="cId" column="c_id" jdbcType="INTEGER"/>
         <result property="cTypeid" column="c_typeid" jdbcType="INTEGER"/>
+        <result property="vtypeid" column="v_type_id" jdbcType="INTEGER"/>
         <result property="cContacts" column="c_contacts" jdbcType="VARCHAR"/>
         <result property="addressid" column="addressid" jdbcType="INTEGER"/>
         <result property="cPhone" column="c_phone" jdbcType="VARCHAR"/>
@@ -29,14 +30,32 @@
             <result property="branchname" column="branchname"/>
         </association>
     </resultMap>
+    <resultMap type="com.trkj.projects.mybatis.entity.Customer" id="CustomerMapVo">
+        <result property="cId" column="c_id" jdbcType="INTEGER"/>
+        <result property="cTypeid" column="c_typeid" jdbcType="INTEGER"/>
+        <result property="vtypeid" column="v_type_id" jdbcType="INTEGER"/>
+        <result property="vtypeck" column="v_type_ck" jdbcType="NUMERIC"/>
+        <result property="cContacts" column="c_contacts" jdbcType="VARCHAR"/>
+        <result property="addressid" column="addressid" jdbcType="INTEGER"/>
+        <result property="cPhone" column="c_phone" jdbcType="VARCHAR"/>
+        <result property="cMoney" column="c_money" jdbcType="NUMERIC"/>
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
+        <result property="userid" column="userid" jdbcType="INTEGER"/>
+        <result property="cLxaddress" column="c_lxaddress" jdbcType="VARCHAR"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+        <result property="cTime" column="c_time" jdbcType="TIMESTAMP"/>
+        <result property="cState" column="c_state" jdbcType="INTEGER"/>
+        <result property="cIsmoren" column="c_ismoren" jdbcType="INTEGER"/>
+    </resultMap>
+
     <select id="findall" resultMap="CustomerMap">
         select  c_id, c_typeid, c_contacts, addressid, c_phone, c_money, branchid, userid, c_lxaddress, beizhu, c_time, c_state, c_ismoren
         from projects.customer
     </select>
-    <select id="selectBybranchid" resultMap="CustomerMap">
-        select
-         c_id, c_typeid, c_contacts, addressid, c_phone, c_money, branchid, userid, c_lxaddress, beizhu, c_time, c_state, c_ismoren
-        from projects.customer
+    <select id="selectBybranchid" resultMap="CustomerMapVo">
+        SELECT c_id, c_typeid, c_contacts, addressid, c_phone, c_money, branchid, userid, c_lxaddress, beizhu, c_time, c_state, c_ismoren,v.v_type_ck
+         FROM customer c
+        LEFT JOIN vip_type v ON c.v_type_id = v.v_type_id
         where branchid = #{branchid}
     </select>
     <!--查询单个-->

@@ -18,6 +18,7 @@ import java.util.List;
  */
 public interface DocumentShopService {
 
+    PageInfo<DocumentShopVo> selectbycid(Integer cid,String data1,String data2,Integer currentPage, Integer pageSize,String name);
     /**
      * 通过ID查询单条数据
      *

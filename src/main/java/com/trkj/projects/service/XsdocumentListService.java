@@ -23,6 +23,8 @@ public interface XsdocumentListService {
      */
     XsdocumentList queryById(Integer id);
 
+    XsDocumentlistVo queryBydlnumber(String dlnumber);
+
     /**
      * 查询多条数据
      *

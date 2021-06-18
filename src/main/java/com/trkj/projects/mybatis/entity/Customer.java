@@ -22,6 +22,9 @@ public class Customer implements Serializable {
      * 客户类型外键
      */
     private Integer cTypeid;
+
+    private Integer vtypeid;
+    private double vtypeck;
     /**
      * 联系人
      */

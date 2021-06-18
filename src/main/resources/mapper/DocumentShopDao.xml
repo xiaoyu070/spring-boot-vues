@@ -26,6 +26,7 @@
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
         <result property="sk_number" column="sk_number" jdbcType="INTEGER"/>
         <result property="branchid" column="branchid" jdbcType="INTEGER"/>
+        <result property="branchname" column="branchname" jdbcType="VARCHAR"/>
         <result property="supperlierid" column="supplierid" jdbcType="INTEGER"/>
         <result property="customerid" column="customerid" jdbcType="INTEGER"/>
         <result property="wid" column="wid" jdbcType="INTEGER"/>
@@ -39,8 +40,8 @@
         <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
         <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
         <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+        <result property="dlDate" column="dl_date" jdbcType="TIMESTAMP"/>
     </resultMap>
-
 <!--  小宇子的  -->
     <resultMap type="com.trkj.projects.vo.SpcgmxVo" id="SpcgmxVo">
         <result property="number" column="number" jdbcType="INTEGER"/>
@@ -59,6 +60,24 @@
         <result property="agentName" column="agent_name" jdbcType="VARCHAR"/>
         <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
     </resultMap>
+<!--    根据客户id查询改客户的买的商品-->
+    <select id="querybycustomeridanddata" resultMap="DocumentShopVo">
+        SELECT s.id,s.dl_number ,s.customerid,s.branchid,b.branchname,s.wid,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_jprice,s.number,s.loss_number,k.sk_number,s.zje,s.sp_Specifications,s.sp_color,s.beizhu,xs.dl_date
+        FROM document_shop s
+        LEFT JOIN xsdocument_list xs ON s.dl_number=xs.dl_number
+        LEFT JOIN branch b ON s.branchid=b.branchid
+        LEFT JOIN stock k ON s.sp_shopid=k.sk_shopid
+        <where>
+            s.customerid = #{customerid}
+            <if test="data1 != null and data1 != '' and data2 != null and data2 != ''">
+                and DATE_FORMAT(xs.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{data1},'%Y-%m-%d') and DATE_FORMAT(#{data2},'%Y-%m-%d')
+            </if>
+            <if test="name != null and name != ''">
+                and s.sp_shopid = #{name}
+                or s.sp_name like CONCAT('%',#{name},'%')
+            </if>
+        </where>
+    </select>
     <!--查询单个-->
     <select id="queryById" resultMap="DocumentShopMap">
         select
@@ -138,11 +157,11 @@
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into projects.document_shop(dl_number, supplierid, wid, sp_shopid, sp_name, sp_Company, sp_jprice,
+        insert into projects.document_shop(dl_number, supplierid,customerid, wid, sp_shopid, sp_name, sp_Company, sp_jprice,
         number, loss_number, zje, sp_Specifications, sp_color, beizhu)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.dlNumber}, #{entity.supperlierid}, #{entity.wid}, #{entity.spShopid}, #{entity.spName},
+            (#{entity.dlNumber}, #{entity.supperlierid},#{entity.customerid}, #{entity.wid}, #{entity.spShopid}, #{entity.spName},
             #{entity.spCompany}, #{entity.spJprice}, #{entity.number}, #{entity.lossNumber}, #{entity.zje},
             #{entity.spSpecifications}, #{entity.spColor}, #{entity.beizhu})
         </foreach>
@@ -194,6 +213,7 @@
 
     <!-- 通过单据号查询商品 -->
     <select id="selectnumber" resultMap="DocumentShopVo">
+
         SELECT dsp.id,dm.branchid,ws.wid,dsp.dl_number,dsp.sp_shopid,dsp.sp_name,dsp.sp_Company,dsp.sp_jprice,sk.sk_number,dsp.number,dsp.loss_number,dsp.zje,dsp.sp_Specifications,dsp.sp_color,dsp.beizhu,dsp.supplierid,dsp.customerid
         FROM document_shop dsp
         LEFT JOIN warehouse ws ON dsp.wid = ws.wid
@@ -250,6 +270,7 @@
             SELECT sp_type_name
             FROM shop_type
     </select>
+
 
 </mapper>
 

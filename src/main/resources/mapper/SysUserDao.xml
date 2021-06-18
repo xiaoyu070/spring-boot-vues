@@ -17,7 +17,11 @@
     </resultMap>
 
     <resultMap id="Rosle_vo" type="com.trkj.projects.vo.SysUser_roles">
-
+        <result property="user_id" column="user_id" jdbcType="INTEGER"></result>
+        <result property="user_name" column="user_name" jdbcType="VARCHAR"></result>
+        <result property="roles_lv" column="roles_lv" jdbcType="INTEGER"></result>
+        <result property="roles_name" column="roles_name" jdbcType="VARCHAR"></result>
+        <result property="user_state" column="user_state" jdbcType="INTEGER"></result>
     </resultMap>
 
     <select id="findByNames" resultMap="SysUserMap">
@@ -30,13 +34,18 @@
     <select id="findByPhone" resultMap="SysUserMap">
         SELECT * FROM `sys_user` WHERE `user_phone` = #{phone}
     </select>
-
+<!--  根据当前登录的用户查询他的角色  -->
     <select id="findByUser_roles" resultMap="Rosle_vo">
-        SELECT sr.roles_lv,sr.roles_name FROM sys_user su
+        SELECT su.user_id,su.user_name,sr.roles_name,su.user_state,roles_lv FROM sys_user su
         LEFT JOIN sys_user_roles sur ON su.user_id = sur.user_id
         LEFT JOIN sys_roles sr ON sr.roles_id = sur.roles_id
         WHERE su.user_id=#{uid}
     </select>
-
+<!-- 查询所有用户 -->
+    <select id="selectuserall" resultMap="Rosle_vo">
+        SELECT su.user_id,su.user_name,sr.roles_name,su.user_state,roles_lv FROM sys_user su
+		LEFT JOIN sys_user_roles sur ON su.user_id = sur.user_id
+		LEFT JOIN sys_roles sr ON sr.roles_id = sur.roles_id
+    </select>
 </mapper>
 
