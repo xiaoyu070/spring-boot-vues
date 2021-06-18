@@ -24,7 +24,7 @@ public interface DocumentShopDao {
      * @param data2
      * @return
      */
-    List<DocumentShop> querybycustomeridanddata(@Param("customerid") Integer customerid,String data1,String data2);
+    List<DocumentShopVo> querybycustomeridanddata(@Param("customerid") Integer customerid,@Param("data1") String data1,@Param("data2") String data2,@Param("name") String name);
     /**
      * 通过ID查询单条数据
      *

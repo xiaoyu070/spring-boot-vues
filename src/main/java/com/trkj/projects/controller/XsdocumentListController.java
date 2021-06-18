@@ -150,6 +150,28 @@ public class XsdocumentListController {
 
         return AjaxResponse.success("销售成功");
     }
+
+    /**
+     * 添加退货销售单据和商品
+     * @param
+     * @return
+     */
+    @PostMapping("addxtdocument")
+    public AjaxResponse addxtdocument(@RequestBody String aa){
+        JSONObject jsonObject = JSONObject.parseObject(aa);
+        String ss = jsonObject.getString("aa");
+        String bb = jsonObject.getString("list");
+        XsdocumentList xsdocumentList = JSON.parseObject(ss,XsdocumentList.class);
+        System.out.println("退货信息："+xsdocumentList);
+       // this.xsdocumentListService.insert(xsdocumentList);
+
+        List<DocumentShop> list = JSON.parseArray(bb,DocumentShop.class);
+        System.out.println("商品信息："+list.toString());
+       // this.documentShopService.insertBatch(list);
+        return AjaxResponse.success("退货成功");
+
+    }
+
     //审核确认
     @PostMapping("shenheqr")
     public AjaxResponse shenheqr(@RequestBody String a){
