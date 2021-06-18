@@ -1,12 +1,22 @@
 package com.trkj.projects.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.dao.CustomerDao;
 import com.trkj.projects.mybatis.entity.Customer;
 import com.trkj.projects.mybatis.entity.Supplier;
 import com.trkj.projects.service.CustomerService;
+import com.trkj.projects.util.BeanTools;
+import com.trkj.projects.vo.CghzVo;
+import com.trkj.projects.vo.CustomerVo;
+import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.SupplierVo;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -92,10 +102,33 @@ public class CustomerServiceImpl implements CustomerService {
     public boolean deleteById(Integer cId) {
         return this.customerDao.deleteById(cId) > 0;
     }
+    @Override
+    public Integer deletepl(Integer[] supplierid) {
+
+        return customerDao.pildelsup(supplierid);
+    }
 
     @Override
     public Integer addcustomer(Customer customer) {
         return this.customerDao.insert(customer);
+    }
+
+    @Override
+    public PageInfo<CustomerVo> khcx(Integer branchid, String cContacts, Integer currentPage, Integer pageSize) {
+        List<Customer> list = customerDao.khcx(branchid,cContacts);
+        PageHelper.startPage(currentPage,pageSize);
+        List<Customer> list2 = customerDao.khcx(branchid,cContacts);
+        List<CustomerVo> vos = new ArrayList<>();
+        BeanTools.copyList(list2,vos,CustomerVo.class);
+        PageInfo<CustomerVo> page = new PageInfo<>(vos);
+        page.setTotal((long)list.size());
+        System.out.println("分页："+page);
+        return page;
+    }
+
+    @Override
+    public Boolean upsupplier(Customer customer) {
+        return customerDao.update(customer);
     }
 
     /**
