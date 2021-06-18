@@ -1,19 +1,14 @@
-package com.trkj.projects.mybatis.entity;
+package com.trkj.projects.vo;
 
+import com.trkj.projects.mybatis.entity.Address;
+import com.trkj.projects.mybatis.entity.Branch;
+import com.trkj.projects.mybatis.entity.CustomerType;
 import lombok.Data;
 
 import java.util.Date;
-import java.io.Serializable;
 
-/**
- * (Customer)实体类
- *
- * @author makejava
- * @since 2021-06-05 21:45:21
- */
 @Data
-public class Customer implements Serializable {
-    private static final long serialVersionUID = 380705243512913607L;
+public class CustomerVo {
     /**
      * 主键
      */
@@ -22,9 +17,6 @@ public class Customer implements Serializable {
      * 客户类型外键
      */
     private Integer cTypeid;
-
-    private Integer vtypeid;
-    private double vtypeck;
     /**
      * 联系人
      */
@@ -73,5 +65,4 @@ public class Customer implements Serializable {
     private Address address;
     private CustomerType customerType;
     private Branch branch;
-
 }

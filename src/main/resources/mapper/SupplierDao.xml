@@ -135,7 +135,6 @@
             #{entity.state}, #{entity.ismoren}, #{entity.lxaddress}, #{entity.cjtime}, #{entity.beizhu})
         </foreach>
     </insert>
-
     <insert id="insertOrUpdateBatch" keyProperty="sId" useGeneratedKeys="true">
         insert into projects.supplier(supplierid, suppliername, contacts, contactnumber, suptypeid, addressid,
         payablemoney, companyid, money, static, ismoren, lxaddress, cjtime, beizhu)
