@@ -19,6 +19,7 @@
         <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
         <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
         <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+        <result property="xsspstate" column="xs_sp_state" jdbcType="INTEGER"/>
     </resultMap>
 
     <resultMap id="DocumentShopVo" type="com.trkj.projects.vo.DocumentShopVo">
@@ -60,6 +61,13 @@
         <result property="agentName" column="agent_name" jdbcType="VARCHAR"/>
         <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
     </resultMap>
+    <update id="uptxsshopstate">
+        update document_shop
+        set xs_sp_state = 1
+        <where>
+             id = #{id}
+        </where>
+    </update>
 <!--    根据客户id查询改客户的买的商品-->
     <select id="querybycustomeridanddata" resultMap="DocumentShopVo">
         SELECT s.id,s.dl_number ,s.customerid,s.branchid,b.branchname,s.wid,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_jprice,s.number,s.loss_number,k.sk_number,s.zje,s.sp_Specifications,s.sp_color,s.beizhu,xs.dl_date

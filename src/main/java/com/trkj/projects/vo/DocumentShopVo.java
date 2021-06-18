@@ -52,6 +52,10 @@ public class DocumentShopVo {
      */
     private Double spJprice;
     /**
+     * 售价
+     */
+    private Double spPresetPrice;
+    /**
      * 当前库存
      */
     private Integer sk_number;

@@ -18,6 +18,7 @@
         <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
         <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
         <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
+        <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
         <result property="spManufacturer" column="sp_Manufacturer" jdbcType="VARCHAR"/>
         <result property="spBeizhu" column="sp_beizhu" jdbcType="VARCHAR"/>
         <result property="number" column="sk_number" javaType="INTEGER"/>
@@ -72,14 +73,15 @@
     <!--通过主键修改数据 修改库存数量-->
     <update id="updateadd">
         update projects.stock set
-        sk_number = sk_number+#{skNumber},
-        sk_loss_number = sk_loss_number+#{skLossnumber}
+        sk_number = sk_number + #{skNumber},
+        sk_loss_number = sk_loss_number + #{skLossnumber}
         where sk_shopid = #{skShopid} and sp_Warehouse_id = #{spWarehouseId}
     </update>
     <!--销售通过主键修改数据 修改库存数量-->
     <update id="xsupdateadd">
-        update projects.stock set sk_number =
-         sk_number - #{skNumber},sk_loss_number = sk_loss_number - #{skLossnumber} where sk_shopid = #{skShopid}
+        update projects.stock set
+        sk_number = sk_number - #{skNumber},sk_loss_number = sk_loss_number - #{skLossnumber}
+        where sk_shopid = #{skShopid}
     </update>
 
     <!--通过商品编号和所在仓库修改库存数量-->
@@ -92,7 +94,7 @@
 <!-- 楷楷的  -->
     <!-- 查询所有商品 -->
     <select id="queryshopanstock" resultMap="StockMapVov">
-        SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,sk.`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`
+        SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,s.sp_Preset_price,sk.`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`
         FROM shop s
         LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
         LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid
@@ -103,7 +105,7 @@
         </where>
     </select>
     <select id="findallbytypeandlike" resultMap="StockMapVov">
-        SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,sk.`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`
+        SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,s.sp_Preset_price,sk.`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`
         FROM shop s
         LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
         LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid
@@ -114,6 +116,7 @@
             </if>
         </where>
     </select>
+
 
 <!-- 一哥的 -->
     <!--库存所有库存报警查询-->

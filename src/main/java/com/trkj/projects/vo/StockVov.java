@@ -19,6 +19,7 @@ public class StockVov {
     private String spSpecifications;//商品规格
     private String spColor;//商品颜色
     private Double spJprice;//商品进价
+    private Double spPresetPrice;//商品售价
     private Integer number;//商品库存
     private String spBarCode;//商品条码
     private String spManufacturer;//生产厂商

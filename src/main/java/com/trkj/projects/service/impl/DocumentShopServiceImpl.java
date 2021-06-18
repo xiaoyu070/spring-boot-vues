@@ -27,6 +27,12 @@ public class DocumentShopServiceImpl implements DocumentShopService {
     @Resource
     private DocumentShopDao documentShopDao;
 
+    @Override
+    public Integer uptshopstate(Integer id) {
+
+        return this.documentShopDao.uptxsshopstate(id);
+    }
+
     /**
      * j根据分店id查询销售
      * @param cid

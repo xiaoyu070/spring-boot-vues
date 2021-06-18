@@ -18,6 +18,12 @@ import java.util.List;
 @Mapper
 public interface DocumentShopDao {
     /**
+     * 根据销售id修改销售商品状态为退货商品
+     * @param id
+     * @return
+     */
+    Integer uptxsshopstate(Integer id);
+    /**
      * 根据客户id查询销售商品以及时间查询
      * @param customerid
      * @param data1
