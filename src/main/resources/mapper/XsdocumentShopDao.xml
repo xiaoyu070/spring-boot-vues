@@ -20,7 +20,6 @@
         <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
         <result property="xsSpState" column="xs_sp_state" jdbcType="INTEGER"/>
     </resultMap>
-<<<<<<< HEAD
         <resultMap id="SpxstjVo" type="com.trkj.projects.vo.SpxstjVo">
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
         <result property="dlDate" column="dl_date" jdbcType="VARCHAR"/>
@@ -42,7 +41,6 @@
         <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
     </resultMap>
 
-=======
     <resultMap id="DocumentShopVo" type="com.trkj.projects.vo.DocumentShopVo">
         <result property="id" column="id" jdbcType="INTEGER" />
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
@@ -103,7 +101,6 @@
         LEFT JOIN `branch` dm ON dm.branchid = ws.branchid
         WHERE dsp.dl_number =  #{param1} and dsp.wid = #{param2} and sk.sp_Warehouse_id = #{param2}
     </select>
->>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
     <!--查询单个-->
     <select id="queryById" resultMap="XsdocumentShopMap">
         select
@@ -269,7 +266,6 @@
     <delete id="deleteById">
         delete from projects.xsdocument_shop where id = #{id}
     </delete>
-<<<<<<< HEAD
     <select id="xsspmx" resultMap="SpxstjVo">
         SELECT l.dl_number,l.dl_date,lt.dl_type_name,c.c_contacts,sp.sp_shopid,sp.sp_name,sp.sp_Company,s.sp_Preset_price,
          v.v_type_ck,s.number,s.zje,a.agent_name,w.wname,sp.sp_Specifications,sp.sp_color,st.sp_type_name,s.beizhu
@@ -305,8 +301,5 @@
          SELECT wname
             FROM warehouse
     </select>
-=======
-
->>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
 </mapper>
 

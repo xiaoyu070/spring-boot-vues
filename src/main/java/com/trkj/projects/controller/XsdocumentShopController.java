@@ -1,6 +1,5 @@
 package com.trkj.projects.controller;
 
-<<<<<<< HEAD
 import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.XsdocumentShop;
 import com.trkj.projects.service.XsdocumentShopService;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
-=======
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -29,8 +27,6 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
->>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
-
 /**
  * (XsdocumentShop)表控制层
  *
@@ -50,12 +46,9 @@ public class XsdocumentShopController {
     @Resource
     private XsdocumentShopService xsdocumentShopService;
 
-<<<<<<< HEAD
-=======
     @Resource
     private XsdocumentListService xsdocumentListService;
 
->>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
     /**
      * 通过主键查询单条数据
      *
@@ -66,7 +59,6 @@ public class XsdocumentShopController {
     public XsdocumentShop selectOne(Integer id) {
         return this.xsdocumentShopService.queryById(id);
     }
-<<<<<<< HEAD
 
     /**
      * 商品销售明细表查询
@@ -99,7 +91,6 @@ public class XsdocumentShopController {
         return ajaxResponse.success(list);
 
     }
-=======
     /**
      * 根据分店id查询销售商品
      * @return
@@ -209,5 +200,4 @@ public class XsdocumentShopController {
         }
     }
 
->>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
 }

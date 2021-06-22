@@ -1,12 +1,9 @@
 package com.trkj.projects.mybatis.dao;
 
 import com.trkj.projects.mybatis.entity.XsdocumentShop;
-<<<<<<< HEAD
 import com.trkj.projects.vo.SpcgmxVo;
 import com.trkj.projects.vo.SpxstjVo;
-=======
 import com.trkj.projects.vo.DocumentShopVo;
->>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,14 +13,7 @@ import java.util.List;
  * (XsdocumentShop)表数据库访问层
  *
  * @author makejava
-<<<<<<< HEAD
  * @since 2021-06-18 17:06:59
- */
-@Mapper
-public interface XsdocumentShopDao {
-
-=======
- * @since 2021-06-18 15:46:51
  */
 @Mapper
 public interface XsdocumentShopDao {
@@ -46,7 +36,6 @@ public interface XsdocumentShopDao {
      */
     void deleteshoplist(String number);
     List<DocumentShopVo> selectnumber(String number, int wid, int branchid);
->>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
     /**
      * 通过ID查询单条数据
      *
@@ -113,7 +102,6 @@ public interface XsdocumentShopDao {
      */
     int deleteById(Integer id);
 
-<<<<<<< HEAD
     /**
      * 商品销售统计查询
      */
@@ -121,7 +109,5 @@ public interface XsdocumentShopDao {
     List<SpxstjVo> xssphz();
     List<SpxstjVo> xsspfltj();
     List<SpxstjVo> ckcx();
-=======
->>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
 }
 
