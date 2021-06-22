@@ -48,6 +48,15 @@ public class DocumentShopController {
         return this.documentShopService.queryById(id);
     }
 
+    /**
+     * 根据单价号查询商品
+     * @param currenPage
+     * @param pageSize
+     * @param number
+     * @param wid
+     * @param branchid
+     * @return
+     */
     @GetMapping("selectnumber")
     public AjaxResponse selectnumber(Integer currenPage,Integer pageSize,String number,int wid,int branchid){
         Map<String,Object> map=new HashMap<>();
@@ -58,6 +67,7 @@ public class DocumentShopController {
         map.put("rows",list);
         return AjaxResponse.success(map);
     }
+
     @GetMapping("selectstatezreonumber")
     public AjaxResponse selectstatezreonumber(Integer currenPage,Integer pageSize,String number,int wid){
         System.out.println("审核查询！！！");

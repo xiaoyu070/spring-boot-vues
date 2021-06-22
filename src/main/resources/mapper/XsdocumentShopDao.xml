@@ -20,6 +20,7 @@
         <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
         <result property="xsSpState" column="xs_sp_state" jdbcType="INTEGER"/>
     </resultMap>
+<<<<<<< HEAD
         <resultMap id="SpxstjVo" type="com.trkj.projects.vo.SpxstjVo">
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
         <result property="dlDate" column="dl_date" jdbcType="VARCHAR"/>
@@ -41,6 +42,68 @@
         <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
     </resultMap>
 
+=======
+    <resultMap id="DocumentShopVo" type="com.trkj.projects.vo.DocumentShopVo">
+        <result property="id" column="id" jdbcType="INTEGER" />
+        <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
+        <result property="sk_number" column="sk_number" jdbcType="INTEGER"/>
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
+        <result property="branchname" column="branchname" jdbcType="VARCHAR"/>
+        <result property="supperlierid" column="supplierid" jdbcType="INTEGER"/>
+        <result property="customerid" column="customerid" jdbcType="INTEGER"/>
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
+        <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="lossNumber" column="loss_number" jdbcType="INTEGER"/>
+        <result property="zje" column="zje" jdbcType="NUMERIC"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+        <result property="dlDate" column="dl_date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <update id="uptxsshopstate">
+        update xsdocument_shop
+        set xs_sp_state = 1
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    <!--    根据客户id查询改客户的买的商品-->
+    <select id="querybycustomeridanddata" resultMap="DocumentShopVo">
+        SELECT s.id,s.dl_number ,s.customerid,s.branchid,b.branchname,s.wid,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Preset_price,s.number,s.loss_number,k.sk_number,s.zje,s.sp_Specifications,s.sp_color,s.beizhu,xs.dl_date
+        FROM xsdocument_shop s
+        LEFT JOIN xsdocument_list xs ON s.dl_number=xs.dl_number
+        LEFT JOIN branch b ON s.branchid=b.branchid
+        LEFT JOIN stock k ON s.sp_shopid=k.sk_shopid
+        <where>
+            s.customerid = #{customerid}
+            <if test="data1 != null and data1 != '' and data2 != null and data2 != ''">
+                and DATE_FORMAT(xs.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{data1},'%Y-%m-%d') and DATE_FORMAT(#{data2},'%Y-%m-%d')
+            </if>
+            <if test="name != null and name != ''">
+                and s.sp_shopid = #{name}
+                or s.sp_name like CONCAT('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+    <!-- 根据商品单据号删除商品 -->
+    <delete id="deleteshoplist" >
+        delete from projects.xsdocument_shop where dl_number = #{number}
+    </delete>
+    <!-- 通过单据号查询商品 -->
+    <select id="selectnumber" resultMap="DocumentShopVo">
+        SELECT dsp.id,dm.branchid,ws.wid,dsp.dl_number,dsp.sp_shopid,dsp.sp_name,dsp.sp_Company,dsp.sp_Preset_price,sk.sk_number,dsp.number,dsp.loss_number,dsp.zje,dsp.sp_Specifications,dsp.sp_color,dsp.beizhu,dsp.customerid
+        FROM xsdocument_shop dsp
+        LEFT JOIN warehouse ws ON dsp.wid = ws.wid
+        LEFT JOIN stock sk ON sk.sk_shopid = dsp.sp_shopid
+        LEFT JOIN `branch` dm ON dm.branchid = ws.branchid
+        WHERE dsp.dl_number =  #{param1} and dsp.wid = #{param2} and sk.sp_Warehouse_id = #{param2}
+    </select>
+>>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
     <!--查询单个-->
     <select id="queryById" resultMap="XsdocumentShopMap">
         select
@@ -206,6 +269,7 @@
     <delete id="deleteById">
         delete from projects.xsdocument_shop where id = #{id}
     </delete>
+<<<<<<< HEAD
     <select id="xsspmx" resultMap="SpxstjVo">
         SELECT l.dl_number,l.dl_date,lt.dl_type_name,c.c_contacts,sp.sp_shopid,sp.sp_name,sp.sp_Company,s.sp_Preset_price,
          v.v_type_ck,s.number,s.zje,a.agent_name,w.wname,sp.sp_Specifications,sp.sp_color,st.sp_type_name,s.beizhu
@@ -241,5 +305,8 @@
          SELECT wname
             FROM warehouse
     </select>
+=======
+
+>>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
 </mapper>
 

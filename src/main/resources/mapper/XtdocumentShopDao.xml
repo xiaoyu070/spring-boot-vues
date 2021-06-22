@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.XtdocumentShopDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.XtdocumentShop" id="XtdocumentShopMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
+        <result property="customerid" column="customerid" jdbcType="INTEGER"/>
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
+        <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="spJprice" column="sp_jprice" jdbcType="VARCHAR"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="lossNumber" column="loss_number" jdbcType="INTEGER"/>
+        <result property="zje" column="zje" jdbcType="NUMERIC"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+        <result property="ysDlNumber" column="ys_dl_number" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="XtdocumentShopMap">
+        select
+          id, dl_number, branchid, customerid, wid, sp_shopid, sp_name, sp_Company, sp_jprice, number, loss_number, zje, sp_Specifications, sp_color, beizhu, ys_dl_number
+        from projects.xtdocument_shop
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="XtdocumentShopMap">
+        select
+          id, dl_number, branchid, customerid, wid, sp_shopid, sp_name, sp_Company, sp_jprice, number, loss_number, zje, sp_Specifications, sp_color, beizhu, ys_dl_number
+        from projects.xtdocument_shop
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="XtdocumentShopMap">
+        select
+        id, dl_number, branchid, customerid, wid, sp_shopid, sp_name, sp_Company, sp_jprice, number, loss_number, zje,
+        sp_Specifications, sp_color, beizhu, ys_dl_number
+        from projects.xtdocument_shop
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="dlNumber != null and dlNumber != ''">
+                and dl_number = #{dlNumber}
+            </if>
+            <if test="branchid != null">
+                and branchid = #{branchid}
+            </if>
+            <if test="customerid != null">
+                and customerid = #{customerid}
+            </if>
+            <if test="wid != null">
+                and wid = #{wid}
+            </if>
+            <if test="spShopid != null">
+                and sp_shopid = #{spShopid}
+            </if>
+            <if test="spName != null">
+                and sp_name = #{spName}
+            </if>
+            <if test="spCompany != null and spCompany != ''">
+                and sp_Company = #{spCompany}
+            </if>
+            <if test="spJprice != null and spJprice != ''">
+                and sp_jprice = #{spJprice}
+            </if>
+            <if test="number != null">
+                and number = #{number}
+            </if>
+            <if test="lossNumber != null">
+                and loss_number = #{lossNumber}
+            </if>
+            <if test="zje != null">
+                and zje = #{zje}
+            </if>
+            <if test="spSpecifications != null and spSpecifications != ''">
+                and sp_Specifications = #{spSpecifications}
+            </if>
+            <if test="spColor != null and spColor != ''">
+                and sp_color = #{spColor}
+            </if>
+            <if test="beizhu != null and beizhu != ''">
+                and beizhu = #{beizhu}
+            </if>
+            <if test="ysDlNumber != null and ysDlNumber != ''">
+                and ys_dl_number = #{ysDlNumber}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.xtdocument_shop(dl_number, branchid, customerid, wid, sp_shopid, sp_name, sp_Company, sp_jprice, number, loss_number, zje, sp_Specifications, sp_color, beizhu, ys_dl_number)
+        values (#{dlNumber}, #{branchid}, #{customerid}, #{wid}, #{spShopid}, #{spName}, #{spCompany}, #{spJprice}, #{number}, #{lossNumber}, #{zje}, #{spSpecifications}, #{spColor}, #{beizhu}, #{ysDlNumber})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.xtdocument_shop(id,dl_number, branchid, customerid, wid, sp_shopid, sp_name, sp_Company,
+        sp_jprice, number, loss_number, zje, sp_Specifications, sp_color, beizhu, ys_dl_number)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id},#{entity.dlNumber}, #{entity.branchid}, #{entity.customerid}, #{entity.wid}, #{entity.spShopid},
+            #{entity.spName}, #{entity.spCompany}, #{entity.spJprice}, #{entity.number}, #{entity.lossNumber},
+            #{entity.zje}, #{entity.spSpecifications}, #{entity.spColor}, #{entity.beizhu}, #{entity.ysDlNumber})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.xtdocument_shop(dl_number, branchid, customerid, wid, sp_shopid, sp_name, sp_Company,
+        sp_jprice, number, loss_number, zje, sp_Specifications, sp_color, beizhu, ys_dl_number)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.dlNumber}, #{entity.branchid}, #{entity.customerid}, #{entity.wid}, #{entity.spShopid},
+            #{entity.spName}, #{entity.spCompany}, #{entity.spJprice}, #{entity.number}, #{entity.lossNumber},
+            #{entity.zje}, #{entity.spSpecifications}, #{entity.spColor}, #{entity.beizhu}, #{entity.ysDlNumber})
+        </foreach>
+        on duplicate key update
+        dl_number = values(dl_number) , branchid = values(branchid) , customerid = values(customerid) , wid =
+        values(wid) , sp_shopid = values(sp_shopid) , sp_name = values(sp_name) , sp_Company = values(sp_Company) ,
+        sp_jprice = values(sp_jprice) , number = values(number) , loss_number = values(loss_number) , zje = values(zje)
+        , sp_Specifications = values(sp_Specifications) , sp_color = values(sp_color) , beizhu = values(beizhu) ,
+        ys_dl_number = values(ys_dl_number)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.xtdocument_shop
+        <set>
+            <if test="dlNumber != null and dlNumber != ''">
+                dl_number = #{dlNumber},
+            </if>
+            <if test="branchid != null">
+                branchid = #{branchid},
+            </if>
+            <if test="customerid != null">
+                customerid = #{customerid},
+            </if>
+            <if test="wid != null">
+                wid = #{wid},
+            </if>
+            <if test="spShopid != null">
+                sp_shopid = #{spShopid},
+            </if>
+            <if test="spName != null">
+                sp_name = #{spName},
+            </if>
+            <if test="spCompany != null and spCompany != ''">
+                sp_Company = #{spCompany},
+            </if>
+            <if test="spJprice != null and spJprice != ''">
+                sp_jprice = #{spJprice},
+            </if>
+            <if test="number != null">
+                number = #{number},
+            </if>
+            <if test="lossNumber != null">
+                loss_number = #{lossNumber},
+            </if>
+            <if test="zje != null">
+                zje = #{zje},
+            </if>
+            <if test="spSpecifications != null and spSpecifications != ''">
+                sp_Specifications = #{spSpecifications},
+            </if>
+            <if test="spColor != null and spColor != ''">
+                sp_color = #{spColor},
+            </if>
+            <if test="beizhu != null and beizhu != ''">
+                beizhu = #{beizhu},
+            </if>
+            <if test="ysDlNumber != null and ysDlNumber != ''">
+                ys_dl_number = #{ysDlNumber},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.xtdocument_shop where id = #{id}
+    </delete>
+
+</mapper>
+

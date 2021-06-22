@@ -1,15 +1,28 @@
 package com.trkj.projects.mybatis.entity;
 
+<<<<<<< HEAD
+=======
+import lombok.Data;
+
+>>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
 import java.io.Serializable;
 
 /**
  * (XsdocumentShop)实体类
  *
  * @author makejava
+<<<<<<< HEAD
  * @since 2021-06-18 17:06:58
  */
 public class XsdocumentShop implements Serializable {
     private static final long serialVersionUID = -31515895454076459L;
+=======
+ * @since 2021-06-18 15:46:50
+ */
+@Data
+public class XsdocumentShop implements Serializable {
+    private static final long serialVersionUID = 682222646721732923L;
+>>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
     /**
      * 自增id
      */

@@ -1,8 +1,12 @@
 package com.trkj.projects.mybatis.dao;
 
 import com.trkj.projects.mybatis.entity.XsdocumentShop;
+<<<<<<< HEAD
 import com.trkj.projects.vo.SpcgmxVo;
 import com.trkj.projects.vo.SpxstjVo;
+=======
+import com.trkj.projects.vo.DocumentShopVo;
+>>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -12,11 +16,37 @@ import java.util.List;
  * (XsdocumentShop)表数据库访问层
  *
  * @author makejava
+<<<<<<< HEAD
  * @since 2021-06-18 17:06:59
  */
 @Mapper
 public interface XsdocumentShopDao {
 
+=======
+ * @since 2021-06-18 15:46:51
+ */
+@Mapper
+public interface XsdocumentShopDao {
+    /**
+     * 根据销售id修改销售商品状态为退货商品
+     * @param id
+     * @return
+     */
+    Integer uptxsshopstate(Integer id);
+    /**
+     * 根据客户id查询销售商品以及时间查询
+     * @param customerid
+     * @param data1
+     * @param data2
+     * @return
+     */
+    List<DocumentShopVo> querybycustomeridanddata(@Param("customerid") Integer customerid,@Param("data1") String data1,@Param("data2") String data2,@Param("name") String name);
+    /**
+     * 根据单据号删除商品
+     */
+    void deleteshoplist(String number);
+    List<DocumentShopVo> selectnumber(String number, int wid, int branchid);
+>>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
     /**
      * 通过ID查询单条数据
      *
@@ -83,6 +113,7 @@ public interface XsdocumentShopDao {
      */
     int deleteById(Integer id);
 
+<<<<<<< HEAD
     /**
      * 商品销售统计查询
      */
@@ -90,5 +121,7 @@ public interface XsdocumentShopDao {
     List<SpxstjVo> xssphz();
     List<SpxstjVo> xsspfltj();
     List<SpxstjVo> ckcx();
+=======
+>>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
 }
 

@@ -1,5 +1,6 @@
 package com.trkj.projects.service.impl;
 
+<<<<<<< HEAD
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.XsdocumentShop;
@@ -8,6 +9,16 @@ import com.trkj.projects.service.XsdocumentShopService;
 import com.trkj.projects.vo.CgdjVo;
 import com.trkj.projects.vo.SpcgmxVo;
 import com.trkj.projects.vo.SpxstjVo;
+=======
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.trkj.projects.mybatis.entity.DocumentShop;
+import com.trkj.projects.mybatis.entity.XsdocumentShop;
+import com.trkj.projects.mybatis.dao.XsdocumentShopDao;
+import com.trkj.projects.service.XsdocumentShopService;
+import com.trkj.projects.vo.DocumentShopVo;
+>>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,13 +28,55 @@ import java.util.List;
  * (XsdocumentShop)表服务实现类
  *
  * @author makejava
+<<<<<<< HEAD
  * @since 2021-06-18 17:07:15
+=======
+ * @since 2021-06-18 15:47:03
+>>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
  */
 @Service("xsdocumentShopService")
 public class XsdocumentShopServiceImpl implements XsdocumentShopService {
     @Resource
     private XsdocumentShopDao xsdocumentShopDao;
 
+<<<<<<< HEAD
+=======
+    @Override
+    public void deleteshoplist(String number) {
+        this.xsdocumentShopDao.deleteshoplist(number);
+    }
+    @Override
+    public List<DocumentShopVo> selectnumber(String number,int wid,int branchid) {
+        return this.xsdocumentShopDao.selectnumber(number,wid,branchid);
+    }
+    @Override
+    public int insertBatch(List<XsdocumentShop> entities) {
+        return this.xsdocumentShopDao.insertBatch(entities);
+    }
+    /**
+     * j根据分店id查询销售
+     * @param cid
+     * @param data1
+     * @param data2
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageInfo<DocumentShopVo> selectbycid(Integer cid, String data1, String data2, Integer currentPage, Integer pageSize, String name) {
+        List<DocumentShopVo> list = xsdocumentShopDao.querybycustomeridanddata(cid,data1,data2,name);
+        Page<DocumentShopVo> page = PageHelper.startPage(currentPage,pageSize,true);
+        List<DocumentShopVo> list2 = xsdocumentShopDao.querybycustomeridanddata(cid,data1,data2,name);
+        PageInfo<DocumentShopVo> info = new PageInfo<>(list2);
+        info.setTotal(list.size());
+        return info;
+    }
+    @Override
+    public Integer uptshopstate(Integer id) {
+
+        return this.xsdocumentShopDao.uptxsshopstate(id);
+    }
+>>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
     /**
      * 通过ID查询单条数据
      *
@@ -81,6 +134,7 @@ public class XsdocumentShopServiceImpl implements XsdocumentShopService {
     public boolean deleteById(Integer id) {
         return this.xsdocumentShopDao.deleteById(id) > 0;
     }
+<<<<<<< HEAD
 
     @Override
     public PageInfo<SpxstjVo> xsspmx(int currentPage, int pageSize) {
@@ -112,4 +166,6 @@ public class XsdocumentShopServiceImpl implements XsdocumentShopService {
         List<SpxstjVo> list2 = this.xsdocumentShopDao.ckcx();
         return list2;
     }
+=======
+>>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
 }
