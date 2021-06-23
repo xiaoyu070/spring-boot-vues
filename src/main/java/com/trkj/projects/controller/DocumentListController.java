@@ -391,6 +391,7 @@ public class DocumentListController {
             List<DocumentlistVo> list = this.documentListService.selectwlzw(documentlistVo);
             map.put("total",pg.getTotal());
             map.put("rows",list);
+            System.out.println("selectwlzw:::"+list);
             return AjaxResponse.success(map);
         }
         //查询往来账务（采购已审核和退货已审核）

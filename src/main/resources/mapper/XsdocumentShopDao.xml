@@ -301,5 +301,34 @@
          SELECT wname
             FROM warehouse
     </select>
+    <select id="lbcx" resultMap="SpxstjVo">
+         SELECT sp_type_name
+            FROM shop_type
+    </select>
+    <select id="xsmxcx" resultMap="SpxstjVo">
+        SELECT l.dl_number,l.dl_date,lt.dl_type_name,c.c_contacts,sp.sp_shopid,sp.sp_name,sp.sp_Company,s.sp_Preset_price,
+         v.v_type_ck,s.number,s.zje,a.agent_name,w.wname,sp.sp_Specifications,sp.sp_color,st.sp_type_name,s.beizhu
+        FROM xsdocument_shop s
+        LEFT JOIN xsdocument_list l ON s.dl_number=l.dl_number
+        LEFT JOIN xsdocument_list_type lt ON l.dl_type_id=lt.dl_type_id
+        LEFT JOIN customer c ON l.customerid=c.c_id
+        LEFT JOIN shop sp ON s.sp_shopid=sp.sp_shopid
+        LEFT JOIN vip_type v ON c.v_type_id=v.v_type_id
+        LEFT JOIN agent a ON c.v_type_id=v.v_type_id
+        LEFT JOIN warehouse w ON w.wid=s.wid
+        LEFT JOIN shop_type st ON sp.sp_type_id=st.sp_type_id
+        <where>
+            <if test="spName != null">
+                sp.sp_name LIKE CONCAT('%',#{spName},'%')
+            </if>
+            <if test="spTypeName != null">
+                and st.sp_type_name = #{spTypeName}
+            </if>
+            <if test="WName != null">
+                and w.wname = #{WName}
+            </if>
+        </where>
+    </select>
+
 </mapper>
 
