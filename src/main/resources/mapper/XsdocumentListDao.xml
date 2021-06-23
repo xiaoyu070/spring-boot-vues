@@ -140,7 +140,8 @@
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN xsdocument_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN branch dm ON dm.branchid = sl.branchid
-        LEFT JOIN vip_type v ON v.`v_type_id` = sl.`v_type_id` WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 1 ORDER BY dl.dl_date DESC
+        LEFT JOIN vip_type v ON v.`v_type_id` = sl.`v_type_id`
+        WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 1 ORDER BY dl.dl_date DESC
     </select>
 
     <!--新增所有列-->

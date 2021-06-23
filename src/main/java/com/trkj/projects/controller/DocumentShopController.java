@@ -50,6 +50,16 @@ public class DocumentShopController {
     }
 
     @Log("selectnumberselectnumber")
+=======
+    /**
+     * 根据单价号查询商品
+     * @param currenPage
+     * @param pageSize
+     * @param number
+     * @param wid
+     * @param branchid
+     * @return
+     */
     @GetMapping("selectnumber")
     public AjaxResponse selectnumber(Integer currenPage,Integer pageSize,String number,int wid,int branchid){
         Map<String,Object> map=new HashMap<>();
@@ -208,6 +218,9 @@ public class DocumentShopController {
     @GetMapping("selectBycid")
     public AjaxResponse selectBycid(Integer cid,String data1,String data2,Integer currentPage, Integer pageSize){
         PageInfo<DocumentShop> page = documentShopService.selectbycid(cid,data1,data2,currentPage,pageSize);
+    public AjaxResponse selectBycid(Integer cid,String data1,String data2,Integer currentPage, Integer pageSize,String name){
+        PageInfo<DocumentShopVo> page = documentShopService.selectbycid(cid,data1,data2,currentPage,pageSize,name);
+        System.out.println("商品信息："+page);
         return AjaxResponse.success(page);
     }
 

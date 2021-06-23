@@ -5,41 +5,36 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * (DocumentShop)实体类
+ * (XtdocumentShop)实体类
  *
  * @author makejava
- * @since 2021-06-04 10:36:18
+ * @since 2021-06-18 10:41:10
  */
 @Data
-public class DocumentShop implements Serializable {
-    private static final long serialVersionUID = 685057535899346093L;
+public class XtdocumentShop implements Serializable {
+    private static final long serialVersionUID = -75965457628788454L;
     /**
-     * 自增id
+     * 销售退货商品表id
      */
     private Integer id;
     /**
-     * 单据表外键单据号
+     * 单据号
      */
     private String dlNumber;
     /**
-     * 供货商外键id
-     */
-    private Integer supperlierid;
-    /**
-     * 所在店面外键id
+     * 分店id
      */
     private Integer branchid;
     /**
-     * 客户外键
+     * 客户id
      */
     private Integer customerid;
-
     /**
-     * 所在仓库外键id
+     * 仓库id
      */
     private Integer wid;
     /**
-     * 商品编号外键id
+     * 商品id
      */
     private Integer spShopid;
     /**
@@ -53,7 +48,7 @@ public class DocumentShop implements Serializable {
     /**
      * 单价
      */
-    private Double spJprice;
+    private String spJprice;
     /**
      * 数量
      */
@@ -79,8 +74,11 @@ public class DocumentShop implements Serializable {
      */
     private String beizhu;
     /**
-     * 销售退货状态为1就是已退回的销售商品
+     * 原始单号
      */
-    private Integer xsspstate;
+    private String ysDlNumber;
+
+
+
 
 }

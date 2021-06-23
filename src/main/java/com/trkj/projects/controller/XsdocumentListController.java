@@ -37,12 +37,13 @@ public class XsdocumentListController {
     private StockService stockService;
     //单据商品
     @Resource
-    private DocumentShopService documentShopService;
+    private XsdocumentShopService xsdocumentShopService;
     //银行
     @Resource
     private EstablishmentService establishmentService;
     @Resource
     private CustomerService customerService;
+
 
     /**
      * 通过主键查询单条数据
@@ -59,7 +60,7 @@ public class XsdocumentListController {
     public AjaxResponse deletelistandshop(String number){
         System.out.println("number:"+number);
         this.xsdocumentListService.deleteById(number);
-        this.documentShopService.deleteshoplist(number);
+        this.xsdocumentShopService.deleteshoplist(number);
         return AjaxResponse.success("删除成功");
     }
     /**
@@ -135,7 +136,7 @@ public class XsdocumentListController {
         System.out.println(list);
         this.xsdocumentListService.insert(list);
         String ss = jsonObject.getString("list");
-        List<DocumentShop> list2 = JSON.parseArray(ss,DocumentShop.class);
+        List<XsdocumentShop> list2 = JSON.parseArray(ss,XsdocumentShop.class);
         System.out.println(list2.toString());
         if(i == 1){
             Stock stock = new Stock();
@@ -143,13 +144,40 @@ public class XsdocumentListController {
                 stock.setSkShopid(list2.get(a).getSpShopid());
                 stock.setSkNumber(list2.get(a).getNumber());
                 stock.setSkLossnumber(list2.get(a).getLossNumber());
-                this.stockService.update(stock);
+                this.stockService.xsupdate(stock);
             }
         }
-        this.documentShopService.insertBatch(list2);
+        this.xsdocumentShopService.insertBatch(list2);
 
         return AjaxResponse.success("销售成功");
     }
+
+    /**
+     * 添加退货销售单据和商品
+     * @param
+     * @return
+     */
+    @PostMapping("addxtdocument")
+    public AjaxResponse addxtdocument(@RequestBody String aa){
+        JSONObject jsonObject = JSONObject.parseObject(aa);
+        String ss = jsonObject.getString("aa");
+        String bb = jsonObject.getString("list");
+        XsdocumentList xsdocumentList = JSON.parseObject(ss,XsdocumentList.class);
+        System.out.println("退货信息："+xsdocumentList);
+        //this.xsdocumentListService.insert(xsdocumentList);
+
+        List<XtdocumentShop> list = JSON.parseArray(bb,XtdocumentShop.class);
+        System.out.println("商品信息："+list.toString());
+        //this.xtdocumentShopService.plinsert(list);
+        //循环获取销售商品id去修改状态
+//        for(int a=0;a<list.size();a++){
+//            this.documentShopService.uptshopstate(list.get(a).getId());
+//        }
+
+        return AjaxResponse.success("退货成功");
+
+    }
+
     //审核确认
     @PostMapping("shenheqr")
     public AjaxResponse shenheqr(@RequestBody String a){
@@ -214,8 +242,8 @@ public class XsdocumentListController {
         //银行余额减去实付金额
         this.establishmentService.updateestab(establishment);
         //单据下的所有商品进行循环添加
-        List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
-        this.documentShopService.insertBatch(listshop);
+        List<XsdocumentShop> listshop = JSONArray.parseArray(two, XsdocumentShop.class);
+        this.xsdocumentShopService.insertBatch(listshop);
         //审核通过后将该单据中包含的商品从库存减库存量
         Stock stock=new Stock();
         for(int b=0;b<listshop.size();b++){

@@ -2,6 +2,8 @@ package com.trkj.projects.vo;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class DocumentShopVo {
     /**
@@ -20,6 +22,10 @@ public class DocumentShopVo {
      * 所在店面外键id
      */
     private Integer branchid;
+    /**
+     * 分店名称
+     */
+    private String branchname;
     /**
      * 客户外键
      */
@@ -45,6 +51,10 @@ public class DocumentShopVo {
      * 单价
      */
     private Double spJprice;
+    /**
+     * 售价
+     */
+    private Double spPresetPrice;
     /**
      * 当前库存
      */
@@ -73,4 +83,8 @@ public class DocumentShopVo {
      * 备注
      */
     private String beizhu;
+    /**
+     * 单据时间
+     */
+    private Date dlDate;
 }

@@ -50,6 +50,7 @@ public class DocumentListController {
     //银行
     @Resource
     private EstablishmentService establishmentService;
+    //新增单据、入库修改
     //供货商
     @Resource
     private SupplierService supplierService;
@@ -134,7 +135,6 @@ public class DocumentListController {
             map.put("rows",list);
             return AjaxResponse.success(map);
         }
-
     /**
      * 模糊销售查询单据
      * @param a

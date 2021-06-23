@@ -18,13 +18,19 @@ import java.util.List;
 @Mapper
 public interface DocumentShopDao {
     /**
+     * 根据销售id修改销售商品状态为退货商品
+     * @param id
+     * @return
+     */
+    Integer uptxsshopstate(Integer id);
+    /**
      * 根据客户id查询销售商品以及时间查询
      * @param customerid
      * @param data1
      * @param data2
      * @return
      */
-    List<DocumentShop> querybycustomeridanddata(@Param("customerid") Integer customerid,String data1,String data2);
+    List<DocumentShopVo> querybycustomeridanddata(@Param("customerid") Integer customerid,@Param("data1") String data1,@Param("data2") String data2,@Param("name") String name);
     /**
      * 通过ID查询单条数据
      *

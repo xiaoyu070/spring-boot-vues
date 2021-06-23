@@ -27,6 +27,12 @@ public class DocumentShopServiceImpl implements DocumentShopService {
     @Resource
     private DocumentShopDao documentShopDao;
 
+    @Override
+    public Integer uptshopstate(Integer id) {
+
+        return this.documentShopDao.uptxsshopstate(id);
+    }
+
     /**
      * j根据分店id查询销售
      * @param cid
@@ -37,11 +43,11 @@ public class DocumentShopServiceImpl implements DocumentShopService {
      * @return
      */
     @Override
-    public PageInfo<DocumentShop> selectbycid(Integer cid, String data1, String data2,Integer currentPage, Integer pageSize) {
-        List<DocumentShop> list = documentShopDao.querybycustomeridanddata(cid,data1,data2);
-        Page<DocumentShop> page = PageHelper.startPage(currentPage,pageSize,true);
-        List<DocumentShop> list2 = documentShopDao.querybycustomeridanddata(cid,data1,data2);
-        PageInfo<DocumentShop> info = new PageInfo<>(list2);
+    public PageInfo<DocumentShopVo> selectbycid(Integer cid, String data1, String data2,Integer currentPage, Integer pageSize,String name) {
+        List<DocumentShopVo> list = documentShopDao.querybycustomeridanddata(cid,data1,data2,name);
+        Page<DocumentShopVo> page = PageHelper.startPage(currentPage,pageSize,true);
+        List<DocumentShopVo> list2 = documentShopDao.querybycustomeridanddata(cid,data1,data2,name);
+        PageInfo<DocumentShopVo> info = new PageInfo<>(list2);
         info.setTotal(list.size());
         return info;
     }

@@ -17,6 +17,18 @@
         <result property="cTime" column="c_time" jdbcType="TIMESTAMP"/>
         <result property="cState" column="c_state" jdbcType="INTEGER"/>
         <result property="cIsmoren" column="c_ismoren" jdbcType="INTEGER"/>
+    <association property="customerType" javaType="com.trkj.projects.mybatis.entity.CustomerType">
+        <result property="typeid" column="typeid" />
+        <result property="typeName" column="type_name" />
+    </association>
+    <association property="address" javaType="com.trkj.projects.mybatis.entity.Address">
+        <result property="addressid" column="addressid"/>
+        <result property="address" column="address"/>
+    </association>
+        <association property="branch" javaType="com.trkj.projects.mybatis.entity.Branch">
+            <result property="branchid" column="branchid"/>
+            <result property="branchname" column="branchname"/>
+        </association>
     </resultMap>
     <resultMap type="com.trkj.projects.mybatis.entity.Customer" id="CustomerMapVo">
         <result property="cId" column="c_id" jdbcType="INTEGER"/>
@@ -196,6 +208,34 @@
     <delete id="deleteById">
         delete from projects.customer where c_id = #{cId}
     </delete>
-
+    <select id="khcx" resultMap="CustomerMap">
+        SELECT c.c_id,c.c_contacts,c.c_phone,a.addressid,c.userid,a.address,ty.type_name,c.c_money,c.c_lxaddress,c.branchid,b.branchname,c.c_state,c.c_ismoren,c.beizhu
+        FROM customer c
+        LEFT JOIN
+        customer_type ty ON c.c_typeid=ty.typeid
+        LEFT JOIN
+        address a ON a.addressid=c.addressid
+        INNER JOIN
+        branch b ON b.branchid=c.branchid
+        <where>
+            <if test="branchid != null and branchid != 0">
+                and c.branchid = #{branchid}
+            </if>
+            <if test="cContacts != null and cContacts != '' ">
+                and c.c_contacts like concat('%',#{cContacts},'%')
+            </if>
+        </where>
+    </select>
+    <delete id="pildelsup" >
+        delete from projects.customer
+        <where>
+            <if test="cid != null">
+                and c_id in
+                <foreach collection="cid" item="cid" index="index" open="(" close=")" separator=",">
+                    #{cid}
+                </foreach>
+            </if>
+        </where>
+    </delete>
 </mapper>
 
