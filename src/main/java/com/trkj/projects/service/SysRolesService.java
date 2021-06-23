@@ -1,6 +1,7 @@
 package com.trkj.projects.service;
 
 import com.trkj.projects.mybatis.entity.SysRoles;
+import com.trkj.projects.mybatis.entity.SysUserRoles;
 
 import java.util.List;
 
@@ -11,7 +12,11 @@ import java.util.List;
  * @since 2021-05-25 08:55:23
  */
 public interface SysRolesService {
-
+    /**
+     * 查询所有
+     * @return
+     */
+    List<SysRoles> selectall();
     /**
      * 通过ID查询单条数据
      *
@@ -52,5 +57,11 @@ public interface SysRolesService {
      * @return 是否成功
      */
     boolean deleteById(Integer rolesId);
+    //新增角色
+    void insertroles(SysRoles sysRoles);
+    //删除角色前先查询该角色下是否存在用户
+    List<SysUserRoles> selectuseranroles(Integer rolesId);
 
+    //模糊查询角色
+    List<SysRoles> likeroles(String rolestext);
 }

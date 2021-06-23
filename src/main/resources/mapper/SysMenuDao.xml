@@ -15,13 +15,85 @@
         <result property="component" column="component" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <resultMap type="com.trkj.projects.vo.MenusVo" id="MenusVO">
+        <result property="menuId" column="menu_id" jdbcType="INTEGER"/>
+        <result property="label" column="menu_name" jdbcType="VARCHAR"/>
+        <result property="menuPathname" column="menu_pathname" jdbcType="VARCHAR"/>
+        <result property="menuPath" column="menu_path" jdbcType="VARCHAR"/>
+        <result property="menuIcon" column="menu_icon" jdbcType="VARCHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+        <result property="orderNum" column="order_num" jdbcType="INTEGER"/>
+        <result property="menuType" column="menu_type" jdbcType="VARCHAR"/>
+        <result property="visible" column="visible" jdbcType="INTEGER"/>
+        <result property="component" column="component" jdbcType="VARCHAR"/>
+    </resultMap>
 
+<!--  角色菜单中间表  -->
+    <resultMap id="sysrolesmenus" type="com.trkj.projects.mybatis.entity.SysRolesMenu">
+        <result property="sysRolesId" column="sys_roles_id" jdbcType="INTEGER"></result>
+        <result property="sysMenuId" column="sys_menu_id" jdbcType="INTEGER"></result>
+    </resultMap>
+    <!-- 根据角色id查询该角色是否存在该菜单id -->
+    <select id="selectrolesidandmenusid" resultMap="sysrolesmenus">
+        SELECT * FROM `sys_roles_menu` WHERE sys_roles_id = #{sysRolesId} AND sys_menu_id = #{sysMenuId}
+    </select>
+    <!-- 根据角色id新增菜单id的中间表 -->
+    <insert id="inserrolesidandmenusid">
+        insert into sys_roles_menu(sys_roles_id,sys_menu_id) values(#{sysRolesId},#{sysMenuId})
+    </insert>
+    <!-- 根据角色id和对应菜单id删除该角色的指定菜单权限 -->
+    <delete id="deleterolesidandmenusid">
+        delete FROM sys_roles_menu where sys_roles_id = #{sysRolesId} and sys_menu_id = #{sysMenuId}
+    </delete>
+    <!-- 根据登录的用户查询他对应的菜单 -->
     <select id="findListById" resultMap="SysMenuMap">
         SELECT d.* FROM sys_user a
-        LEFT JOIN sys_user_roles b ON a.user_id=b.user_id
-        LEFT JOIN sys_roles_menu c ON b.roles_id=c.sys_roles_id
-        LEFT JOIN sys_menu d ON c.sys_menu_id=d.menu_id
-				WHERE a.user_id=#{userid}
+        LEFT JOIN sys_user_roles b ON b.user_id = a.user_id
+        LEFT JOIN sys_roles_menu c ON c.sys_roles_id = b.roles_id
+        LEFT JOIN sys_menu d ON d.menu_id = c.sys_menu_id
+		WHERE a.user_id=#{userid} AND d.visible = 0 ORDER BY d.order_num
     </select>
+<!--  查询菜单vo  -->
+    <select id="queryMenus" resultMap="MenusVO">
+        select * from sys_menu
+    </select>
+    <!--  查询菜单  -->
+    <select id="selectMenusall" resultMap="SysMenuMap">
+        select * from sys_menu
+    </select>
+    <!-- 根据角色查询对应的菜单权限 -->
+    <select id="findListByRolesId" resultMap="SysMenuMap">
+        SELECT * FROM sys_menu a
+        LEFT JOIN `sys_roles_menu` b ON a.menu_id = b.sys_menu_id
+	    WHERE b.sys_roles_id = #{rolesId} ORDER BY a.order_num
+    </select>
+
+    <update id="updateMenus">
+        update projects.sys_menu
+        <set>
+            <if test="menuName != null">
+                menu_name = #{menuName},
+            </if>
+            <if test="menuPathname != null">
+                menu_pathname = #{menuPathname},
+            </if>
+            <if test="menuPath != null">
+                menu_path = #{menuPath},
+            </if>
+            <if test="menuIcon != null">
+                menu_icon = #{menuIcon},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="orderNum != null">
+                order_num = #{orderNum},
+            </if>
+            <if test="menuType != null">
+                menu_type = #{menuType}
+            </if>
+            where menu_id = #{menuId}
+        </set>
+    </update>
 </mapper>
 

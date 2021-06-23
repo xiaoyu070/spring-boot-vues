@@ -6,17 +6,31 @@
         <result property="rolesId" column="roles_id" jdbcType="INTEGER"/>
         <result property="rolesLv" column="roles_lv" jdbcType="INTEGER"/>
         <result property="rolesName" column="roles_name" jdbcType="VARCHAR"/>
-        <result property="menuId" column="menu_id" jdbcType="INTEGER"/>
+        <result property="roles_beizhu" column="roles_beizhu" jdbcType="VARCHAR"/>
     </resultMap>
 
+<!--  用户角色中间表  -->
+    <resultMap id="userandroles" type="com.trkj.projects.mybatis.entity.SysUserRoles">
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="rolesId" column="roles_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--  新增角色  -->
+    <insert id="insertroles" keyProperty="rolesId" useGeneratedKeys="true">
+        insert into sys_roles(roles_lv,roles_name, roles_beizhu) values (#{rolesLv},#{rolesName},#{roles_beizhu})
+    </insert>
+    <!--  修改角色  -->
+
+     <select id="selectall" resultMap="SysRolesMap">
+         select * from sys_roles
+     </select>
     <!--查询单个-->
     <select id="queryById" resultMap="SysRolesMap">
         select
-          roles_id, roles_lv, roles_name, menu_id
+          roles_id, roles_lv, roles_name
         from projects.sys_roles
         where roles_id = #{rolesId}
     </select>
-
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="SysRolesMap">
         select
@@ -24,11 +38,10 @@
         from projects.sys_roles
         limit #{offset}, #{limit}
     </select>
-
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="SysRolesMap">
         select
-        roles_id, roles_lv, roles_name, menu_id
+        roles_id, roles_lv, roles_name
         from projects.sys_roles
         <where>
             <if test="rolesId != null">
@@ -48,26 +61,26 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="rolesId" useGeneratedKeys="true">
-        insert into projects.sys_roles(roles_lv, roles_name, menu_id)
-        values (#{rolesLv}, #{rolesName}, #{menuId})
+        insert into projects.sys_roles(roles_lv, roles_name)
+        values (#{rolesLv}, #{rolesName})
     </insert>
 
     <insert id="insertBatch" keyProperty="rolesId" useGeneratedKeys="true">
-        insert into projects.sys_roles(roles_lv, roles_name, menu_id)
+        insert into projects.sys_roles(roles_lv, roles_name)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.rolesLv}, #{entity.rolesName}, #{entity.menuId})
+            (#{entity.rolesLv}, #{entity.rolesName})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="rolesId" useGeneratedKeys="true">
-        insert into projects.sys_roles(roles_lv, roles_name, menu_id)
+        insert into projects.sys_roles(roles_lv, roles_name)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.rolesLv}, #{entity.rolesName}, #{entity.menuId})
+            (#{entity.rolesLv}, #{entity.rolesName})
         </foreach>
         on duplicate key update
-        roles_lv = values(roles_lv) , roles_name = values(roles_name) , menu_id = values(menu_id)
+        roles_lv = values(roles_lv) , roles_name = values(roles_name)
     </insert>
 
     <!--通过主键修改数据-->
@@ -80,8 +93,8 @@
             <if test="rolesName != null and rolesName != ''">
                 roles_name = #{rolesName},
             </if>
-            <if test="menuId != null">
-                menu_id = #{menuId},
+            <if test="roles_beizhu != null">
+                roles_beizhu = #{roles_beizhu},
             </if>
         </set>
         where roles_id = #{rolesId}
@@ -92,5 +105,13 @@
         delete from projects.sys_roles where roles_id = #{rolesId}
     </delete>
 
+<!--  删除角色前先查询该角色下是否存在用户  -->
+    <select id="selectuseranroles" resultMap="userandroles">
+        SELECT * FROM `sys_user_roles` WHERE roles_id = #{rolesId}
+    </select>
+<!--  模糊查询角色  -->
+    <select id="likeroles" resultMap="SysRolesMap">
+        select * from sys_roles where roles_name like CONCAT('%',#{rolestext},'%') or roles_beizhu like CONCAT('%',#{rolestext},'%')
+    </select>
 </mapper>
 

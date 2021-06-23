@@ -2,6 +2,7 @@ package com.trkj.projects.service;
 
 
 import com.github.pagehelper.PageInfo;
+import com.trkj.projects.anntation.Log;
 import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.vo.CghzVo;
 import com.trkj.projects.vo.DocumentlistVo;
@@ -31,7 +32,6 @@ public interface DocumentListService {
 
     /**
      * 查询多条数据
-     *
      * @param offset 查询起始位置
      * @param limit  查询条数
      * @return 对象列表

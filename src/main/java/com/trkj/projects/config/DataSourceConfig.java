@@ -29,12 +29,12 @@ public class DataSourceConfig {
     public ServletRegistrationBean statViewServlet() {
         ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(new StatViewServlet(), "/druid/*");
         // 添加IP白名单
-        servletRegistrationBean.addInitParameter("allow", "127.0.0.1");
+        servletRegistrationBean.addInitParameter("allow", "39.105.189.229");
         // 添加IP黑名单，当白名单和黑名单重复时，黑名单优先级更高
         //servletRegistrationBean.addInitParameter("deny", "127.0.0.1");
         // 添加控制台管理用户
         servletRegistrationBean.addInitParameter("loginUsername", "root");
-        servletRegistrationBean.addInitParameter("loginPassword", "123456");
+        servletRegistrationBean.addInitParameter("loginPassword", "Root!!2018");
         // 是否能够重置数据
         servletRegistrationBean.addInitParameter("resetEnable", "false");
         return servletRegistrationBean;

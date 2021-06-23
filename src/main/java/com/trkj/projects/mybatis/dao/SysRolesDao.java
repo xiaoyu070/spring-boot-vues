@@ -1,6 +1,7 @@
 package com.trkj.projects.mybatis.dao;
 
 import com.trkj.projects.mybatis.entity.SysRoles;
+import com.trkj.projects.mybatis.entity.SysUserRoles;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,6 +16,13 @@ import java.util.List;
 @Mapper
 public interface SysRolesDao {
 
+    //新增角色
+    void insertroles(SysRoles sysRoles);
+    /**
+     * 查询所有
+     * @return
+     */
+    List<SysRoles> selectall();
     /**
      * 通过ID查询单条数据
      *
@@ -81,5 +89,10 @@ public interface SysRolesDao {
      */
     int deleteById(Integer rolesId);
 
+    //删除角色前先查询该角色下是否存在用户
+    List<SysUserRoles> selectuseranroles(Integer rolesId);
+
+    //模糊查询角色
+    List<SysRoles> likeroles(String rolestext);
 }
 

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.trkj.projects.anntation.Log;
 import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.mybatis.entity.DocumentShop;
 import com.trkj.projects.mybatis.entity.XsdocumentList;
@@ -48,6 +49,7 @@ public class DocumentShopController {
         return this.documentShopService.queryById(id);
     }
 
+    @Log("selectnumberselectnumber")
     @GetMapping("selectnumber")
     public AjaxResponse selectnumber(Integer currenPage,Integer pageSize,String number,int wid,int branchid){
         Map<String,Object> map=new HashMap<>();

@@ -4,6 +4,8 @@ import com.trkj.projects.util.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.annotation.Resource;
@@ -21,8 +23,13 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
                              Object handler) throws SignatureException {
+
         /** 地址过滤 */
         String uri = request.getRequestURI() ;
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest requests = attributes.getRequest();
+        String tokens=requests.getHeader("Token");
+        System.out.println("token:::"+tokens);
         System.out.println("请求地址："+uri);
         if (uri.contains("/Login")){
             return true;
