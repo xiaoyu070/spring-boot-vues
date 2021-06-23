@@ -3,6 +3,7 @@ package com.trkj.projects.service;
 import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.XsdocumentShop;
 import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.SpxsmxVo;
 import com.trkj.projects.vo.SpxstjVo;
 import com.trkj.projects.mybatis.entity.DocumentShop;
 import com.trkj.projects.mybatis.entity.XsdocumentShop;
@@ -83,5 +84,7 @@ public interface XsdocumentShopService {
     List<SpxstjVo> xssphz();
     List<SpxstjVo> xsspfltj();
     List<SpxstjVo> ckcx();
+    List<SpxstjVo> lbcx();
+    PageInfo<SpxstjVo> xsmxcx(SpxstjVo spxstjVo , int currentPage, int pageSize);
 
 }

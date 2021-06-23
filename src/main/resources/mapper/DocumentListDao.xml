@@ -572,8 +572,10 @@
             LEFT JOIN sys_user un ON l.admin=un.user_id
     </select>
     <select id="djxq" resultMap="CghzVo">
-        SELECT s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Preset_price,s.sp_Specifications,s.sp_color,kc.sk_number,kc.sk_loss  FROM shop s
+        SELECT l.dl_number,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Preset_price,s.sp_Specifications,s.sp_color,kc.sk_number,kc.sk_loss  FROM shop s
             LEFT JOIN stock kc ON s.sp_shopid=kc.sk_shopid
+            LEFT JOIN document_shop sp ON sp.sp_shopid=s.sp_shopid
+            LEFT JOIN document_list l ON  sp.dl_number=l.dl_number
     </select>
     <select id="spmx" resultMap="SpcgmxVo">
         SELECT sp.number,sp.loss_number,sp.zje,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Specifications,s.sp_color,l.dl_number,l.dl_date, lb.sp_type_name, w.wname,a.agent_name,sup.suppliername FROM document_shop sp

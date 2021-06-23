@@ -3,9 +3,7 @@ package com.trkj.projects.controller;
 import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.XsdocumentShop;
 import com.trkj.projects.service.XsdocumentShopService;
-import com.trkj.projects.vo.AjaxResponse;
-import com.trkj.projects.vo.SpcgmxVo;
-import com.trkj.projects.vo.SpxstjVo;
+import com.trkj.projects.vo.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -19,8 +17,6 @@ import com.trkj.projects.mybatis.entity.XsdocumentShop;
 import com.trkj.projects.service.XsdocumentListService;
 import com.trkj.projects.service.XsdocumentShopService;
 import com.trkj.projects.vo.AjaxResponse;
-import com.trkj.projects.vo.DocumentShopVo;
-import com.trkj.projects.vo.XsDocumentlistVo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -91,6 +87,29 @@ public class XsdocumentShopController {
         return ajaxResponse.success(list);
 
     }
+    @GetMapping("lbcx")
+    public AjaxResponse selectcx4() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.lbcx();
+        return ajaxResponse.success(list);
+
+    }
+
+    @GetMapping("xsmxcx")
+    public AjaxResponse selectcx5(String input1, String spTypeName1,String WName1,int currentPage, int pageSize) {
+        SpxstjVo spxstjVo=new SpxstjVo();
+        if(input1!=null){
+            spxstjVo.setSpName(input1);
+        };
+        if(spTypeName1!=""){
+            spxstjVo.setSpTypeName(spTypeName1);
+        };
+        if(WName1!=""){
+            spxstjVo.setWName(WName1);
+        }
+        PageInfo<SpxstjVo> list = this.xsdocumentShopService.xsmxcx(spxstjVo,currentPage,pageSize);
+        return AjaxResponse.success(list);
+    }
     /**
      * 根据分店id查询销售商品
      * @return
@@ -124,7 +143,7 @@ public class XsdocumentShopController {
     /**
      *
      * 修改商品更新该单据的金额
-     * @param a
+     * @param
      * @return
      */
     @PostMapping("xsupdateshop")
