@@ -1,18 +1,18 @@
 package com.trkj.projects.aspect;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import com.trkj.projects.anntation.Log;
 import com.trkj.projects.mybatis.entity.Journal;
+import com.trkj.projects.mybatis.entity.SysUser;
 import com.trkj.projects.service.JournalService;
+import com.trkj.projects.service.SysUserService;
 import com.trkj.projects.util.JacksonUtil;
 import com.trkj.projects.util.JwtTokenUtil;
-
-
-
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,7 +21,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -38,20 +37,55 @@ public class LogAspect {
     @Autowired
     private JournalService journalService;
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private SysUserService sysUserService;
     @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    private static String username;
+    //.service.SysUserService.findByNames
+    @Pointcut("execution(public * com.trkj.projects.controller.SysUserController.getChildrens(..))")
+    public void webLog(){
+        // this.
+    }
+    @Before("webLog()")
+    public void doBefore(JoinPoint joinPoint){
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        // 记录下请求内容
+        String xx=JSONObject.toJSONString(joinPoint.getArgs());
+        Object[] str = joinPoint.getArgs();
+        int index=xx.indexOf("userName");
+        int index2=xx.indexOf('"'+","+'"'+"userPass");
+        String cha=xx.substring(index+11,index2);
+        username = cha;
+    }
+
+
+    @Pointcut("execution(public * com.trkj.projects.controller.SysUserController.queryByPhoneandCode(..))")
+    public void webLog1(){
+        // this.
+    }
+    @Before("webLog1()")
+    public void doBefore1(JoinPoint joinPoint){
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        // 记录下请求内容
+        String xx=JSONObject.toJSONString(joinPoint.getArgs());
+        Object[] str = joinPoint.getArgs();
+        SysUser sysUser=this.sysUserService.findByPhone(str[0].toString());
+        username = sysUser.getUserName();
+    }
+
     //定义切点 @Pointcut
     //在注解的位置切入代码
     @Pointcut("@annotation(com.trkj.projects.anntation.Log)")
     public void logPoinCut() {
+
     }
     //切面 配置通知
     @AfterReturning("logPoinCut()")
     public void saveSysLog(JoinPoint joinPoint) throws UnknownHostException {
-        HttpServletRequest request =
-                ((ServletRequestAttributes) RequestContextHolder.
-                        getRequestAttributes()).getRequest();
-        HttpSession session=request.getSession();
+        System.out.println("切面。。。。。");
         //保存日志
         Journal journal = new Journal();
 
@@ -63,7 +97,7 @@ public class LogAspect {
         Log myLog = method.getAnnotation(Log.class);
         if (myLog != null) {
             String value = myLog.value();
-            journal.setParamsname(value); //保存获取的操作
+            journal.setParamsname(value);//保存获取的操作
         }
 
         //获取请求的类名
@@ -84,27 +118,18 @@ public class LogAspect {
         journal.setParamslength(params.length()+"");
         //获取操作时间
         journal.setCreateDate(new Date());
-        //获取用户名
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-//            Object principal = authentication.getPrincipal();
-//            if (principal instanceof SysUser) {
-//                SysUser u = (SysUser) principal;
-//                operationlog.setOperator(u.getUserName());
-//            }
-//        }
-        System.out.println("LogAspect::"+session.getAttribute("username"));
-        journal.setUserName((String) session.getAttribute("username"));
 
+
+        journal.setUserName(username);
+        System.out.println("sss:"+journal.getUserName());
+        System.out.println("sss:"+journal.getParamsname());
+        System.out.println("sss:"+journal.getParamslength());
+        System.out.println("sss:"+journal.getAddressip());
+        System.out.println("sss:"+journal.getFunctions());
         //获取用户ip地址
         String ip= InetAddress.getLocalHost().getHostAddress();
-//      request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+//         request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         journal.setAddressip(ip);
-        System.out.println("sssssssss:"+journal.getFunctions());
-        System.out.println("sssssssss:"+journal.getAddressip());
-        System.out.println("sssssssss:"+journal.getParamslength());
-        System.out.println("sssssssss:"+journal.getParamsname());
-        System.out.println("sssssssss:"+journal.getUserName());
         //调用service保存SysLog实体类到数据库
         journalService.insert(journal);
     }

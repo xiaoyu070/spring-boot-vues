@@ -1,5 +1,7 @@
 package com.trkj.projects.mybatis.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -8,6 +10,7 @@ import java.io.Serializable;
  * @author makejava
  * @since 2021-05-25 08:55:06
  */
+@Data
 public class SysRoles implements Serializable {
     private static final long serialVersionUID = -35611825193752235L;
     /**
@@ -23,41 +26,8 @@ public class SysRoles implements Serializable {
      */
     private String rolesName;
     /**
-     * 菜单id
+     * 角色备注
+     * @return
      */
-    private Integer menuId;
-
-
-    public Integer getRolesId() {
-        return rolesId;
-    }
-
-    public void setRolesId(Integer rolesId) {
-        this.rolesId = rolesId;
-    }
-
-    public Integer getRolesLv() {
-        return rolesLv;
-    }
-
-    public void setRolesLv(Integer rolesLv) {
-        this.rolesLv = rolesLv;
-    }
-
-    public String getRolesName() {
-        return rolesName;
-    }
-
-    public void setRolesName(String rolesName) {
-        this.rolesName = rolesName;
-    }
-
-    public Integer getMenuId() {
-        return menuId;
-    }
-
-    public void setMenuId(Integer menuId) {
-        this.menuId = menuId;
-    }
-
+    private String roles_beizhu;
 }

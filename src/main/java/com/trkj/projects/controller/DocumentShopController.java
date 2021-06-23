@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.trkj.projects.anntation.Log;
 import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.mybatis.entity.DocumentShop;
 import com.trkj.projects.mybatis.entity.XsdocumentList;
@@ -48,6 +49,8 @@ public class DocumentShopController {
         return this.documentShopService.queryById(id);
     }
 
+    @Log("selectnumberselectnumber")
+=======
     /**
      * 根据单价号查询商品
      * @param currenPage
@@ -67,7 +70,6 @@ public class DocumentShopController {
         map.put("rows",list);
         return AjaxResponse.success(map);
     }
-
     @GetMapping("selectstatezreonumber")
     public AjaxResponse selectstatezreonumber(Integer currenPage,Integer pageSize,String number,int wid){
         System.out.println("审核查询！！！");
@@ -214,6 +216,8 @@ public class DocumentShopController {
      * @return
      */
     @GetMapping("selectBycid")
+    public AjaxResponse selectBycid(Integer cid,String data1,String data2,Integer currentPage, Integer pageSize){
+        PageInfo<DocumentShop> page = documentShopService.selectbycid(cid,data1,data2,currentPage,pageSize);
     public AjaxResponse selectBycid(Integer cid,String data1,String data2,Integer currentPage, Integer pageSize,String name){
         PageInfo<DocumentShopVo> page = documentShopService.selectbycid(cid,data1,data2,currentPage,pageSize,name);
         System.out.println("商品信息："+page);

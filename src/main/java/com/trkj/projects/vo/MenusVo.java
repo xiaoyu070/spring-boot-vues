@@ -1,19 +1,13 @@
-package com.trkj.projects.mybatis.entity;
+package com.trkj.projects.vo;
 
+import com.trkj.projects.mybatis.entity.SysMenu;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.List;
 
-/**
- * (SysMenu)实体类
- *
- * @author makejava
- * @since 2021-05-25 09:08:34
- */
+
 @Data
-public class SysMenu implements Serializable {
-    private static final long serialVersionUID = 412269874065234215L;
+public class MenusVo {
     /**
      * 菜单id
      */
@@ -21,7 +15,7 @@ public class SysMenu implements Serializable {
     /**
      * 菜单名称
      */
-    private String menuName;
+    private String label;
     /**
      * 路由名称
      */
@@ -54,8 +48,5 @@ public class SysMenu implements Serializable {
      * 组件地址
      */
     private String component;
-
-    private List<SysMenu> ChildMenu;
-
-
+    private List<MenusVo> Children;
 }

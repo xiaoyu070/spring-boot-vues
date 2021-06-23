@@ -9,6 +9,7 @@
         <result property="userSex" column="user_sex" jdbcType="VARCHAR"/>
         <result property="userPhone" column="user_phone" jdbcType="VARCHAR"/>
         <result property="userImgs" column="user_imgs" jdbcType="VARCHAR"/>
+        <result property="create_date" column="create_date" jdbcType="TIMESTAMP"/>
         <result property="userCjr" column="user_cjr" jdbcType="VARCHAR"/>
         <result property="userGxr" column="user_gxr" jdbcType="VARCHAR"/>
         <result property="userstate" column="user_state" jdbcType="INTEGER"/>
@@ -17,20 +18,63 @@
     </resultMap>
 
     <resultMap id="Rosle_vo" type="com.trkj.projects.vo.SysUser_roles">
-        <result property="user_id" column="user_id" jdbcType="INTEGER"></result>
-        <result property="user_name" column="user_name" jdbcType="VARCHAR"></result>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="userPass" column="user_pass" jdbcType="VARCHAR"/>
+        <result property="userSex" column="user_sex" jdbcType="VARCHAR"/>
+        <result property="userPhone" column="user_phone" jdbcType="VARCHAR"/>
+        <result property="userImgs" column="user_imgs" jdbcType="VARCHAR"/>
+        <result property="create_date" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="userCjr" column="user_cjr" jdbcType="VARCHAR"/>
+        <result property="userGxr" column="user_gxr" jdbcType="VARCHAR"/>
+        <result property="userstate" column="user_state" jdbcType="INTEGER"/>
+        <result property="userError" column="user_error" jdbcType="TIMESTAMP"/>
+        <result property="userStatie" column="user_statie" jdbcType="INTEGER"/>
         <result property="roles_lv" column="roles_lv" jdbcType="INTEGER"></result>
+        <result property="roles_id" column="roles_id" jdbcType="INTEGER"></result>
         <result property="roles_name" column="roles_name" jdbcType="VARCHAR"></result>
-        <result property="user_state" column="user_state" jdbcType="INTEGER"></result>
     </resultMap>
 
+    <resultMap id="user_roles" type="com.trkj.projects.mybatis.entity.SysUserRoles">
+        <result property="userId" column="user_id" jdbcType="INTEGER"></result>
+        <result property="rolesId" column="roles_id" jdbcType="INTEGER"></result>
+    </resultMap>
+
+    <!--  新增一个用户  -->
+    <insert id="insertuser" keyProperty="user_id" useGeneratedKeys="true">
+        insert into sys_user(user_name,user_pass,user_sex,user_phone,user_imgs,create_date,user_cjr,user_state)values
+        (#{userName},#{userPass},#{userSex},#{userPhone},#{userImgs},#{create_date},#{userCjr},#{userstate})
+    </insert>
+<!--  编辑用户  -->
+    <update id="updateusers" >
+        update sys_user
+        <set>
+            <if test="userName != null">
+                user_name = #{userName},
+            </if>
+            <if test="userSex != null">
+                user_sex = #{userSex},
+            </if>
+            <if test="userPhone != null">
+                user_phone = #{userPhone},
+            </if>
+            <if test="userImgs != null">
+                user_imgs = #{userImgs},
+            </if>
+            <if test="userGxr != null">
+                user_gxr = #{userGxr}
+            </if>
+        </set>
+        where user_id = #{userId}
+    </update>
+    <!--根据用户名称查询用户-->
     <select id="findByNames" resultMap="SysUserMap">
         select
           user_id, user_name, user_pass, user_sex, user_phone, user_imgs, user_cjr, user_gxr, user_state, user_error,user_statie
         from projects.sys_user
-        where user_name = #{param1} and user_pass= #{param2}
+        where user_name = #{userName} and user_pass= #{userPass}
     </select>
-
+    <!--根据手机号查询用户-->
     <select id="findByPhone" resultMap="SysUserMap">
         SELECT * FROM `sys_user` WHERE `user_phone` = #{phone}
     </select>
@@ -41,11 +85,31 @@
         LEFT JOIN sys_roles sr ON sr.roles_id = sur.roles_id
         WHERE su.user_id=#{uid}
     </select>
-<!-- 查询所有用户 -->
+<!-- 查询所有用户vo -->
     <select id="selectuserall" resultMap="Rosle_vo">
-        SELECT su.user_id,su.user_name,sr.roles_name,su.user_state,roles_lv FROM sys_user su
-		LEFT JOIN sys_user_roles sur ON su.user_id = sur.user_id
-		LEFT JOIN sys_roles sr ON sr.roles_id = sur.roles_id
+        	SELECT su.*,sr.roles_id,sr.roles_name,sr.roles_lv FROM sys_user su
+			LEFT JOIN sys_user_roles sur ON su.user_id = sur.user_id
+			LEFT JOIN sys_roles sr ON sr.roles_id = sur.roles_id WHERE su.user_statie = 0
     </select>
+<!--  修改用户状态为0  -->
+    <update id="updateuserstatezero">
+        update sys_user set user_state = 0 where user_id = #{id}
+    </update>
+<!--  修改用户状态为1  -->
+    <update id="updateuserstateone">
+        update sys_user set user_state = 1 where user_id = #{id}
+    </update>
+<!-- 根据用户id修改用户对应的角色id -->
+    <update id="updateuserandroles">
+        update sys_user_roles set  roles_id = #{rolesid} where user_id = #{userid}
+    </update>
+    <!-- 删除角色 -->
+    <delete id="deleteuserid">
+        update sys_user set user_statie = 1 where user_id = #{userid}
+    </delete>
+<!--  修改用户最后登录时间  -->
+    <update id="updateerror">
+        update sys_user set user_error=#{param1} where user_id = #{param2}
+    </update>
 </mapper>
 
