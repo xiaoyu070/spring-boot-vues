@@ -1,7 +1,9 @@
 package com.trkj.projects.mybatis.dao;
 
+import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.XsdocumentShop;
 import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.SpxsmxVo;
 import com.trkj.projects.vo.SpxstjVo;
 import com.trkj.projects.vo.DocumentShopVo;
 import org.apache.ibatis.annotations.Mapper;
@@ -109,5 +111,7 @@ public interface XsdocumentShopDao {
     List<SpxstjVo> xssphz();
     List<SpxstjVo> xsspfltj();
     List<SpxstjVo> ckcx();
+    List<SpxstjVo> lbcx();
+    List<SpxstjVo> xsmxcx(SpxstjVo spxstjVo);
 }
 
