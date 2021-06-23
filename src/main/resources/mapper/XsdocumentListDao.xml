@@ -70,13 +70,14 @@
 
     <!-- 查询销售单据为待审核的数据 -->
     <select id="selectxsvo" resultMap="DocumentListVOMap">
-        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,v.`v_type_ck`,ws.wid,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,dl.dl_zonje,ag.agent_name,su.user_name,dls.dl_statie_name,dl.dl_beizhu
+        SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_contacts,v.`v_type_ck`,ws.wid,ws.wname,dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,dl.dl_zonje,ag.agent_name,su.user_name,dly.dl_type_id,dly.dl_type_name,dls.dl_statie_id,dls.dl_statie_name,dl.dl_beizhu
         FROM xsdocument_list dl
         LEFT JOIN customer sl ON dl.customerid = sl.c_id
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
         LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN xsdocument_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
+        LEFT JOIN xsdocument_list_type dly ON dl.dl_type_id = dly.dl_type_id
         LEFT JOIN branch dm ON dm.branchid = sl.branchid
         LEFT JOIN vip_type v ON v.`v_type_id` = sl.`v_type_id`
         <where>
@@ -237,7 +238,7 @@
 
     <!-- 将待审核状态的销售单据改为已审核 -->
     <update id="updatestaticzore">
-        update xsdocument_list set,dl_type_id = 1, dl_statie_id = 2,dl_qkje = #{dlQkje},dl_ssje= #{dlSsje},dl_ysje=#{dlYsje},dl_zonje=#{dlzonje} where dl_number = #{dlNumber}
+        update xsdocument_list set dl_type_id = 1, dl_statie_id = 2,dl_qkje = #{dlQkje},dl_ssje= #{dlSsje},dl_ysje=#{dlYsje},dl_zonje=#{dlzonje} where dl_number = #{dlNumber}
     </update>
 
 </mapper>

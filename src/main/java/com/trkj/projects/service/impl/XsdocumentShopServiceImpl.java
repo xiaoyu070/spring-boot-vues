@@ -55,9 +55,9 @@ public class XsdocumentShopServiceImpl implements XsdocumentShopService {
         return info;
     }
     @Override
-    public Integer uptshopstate(Integer id) {
+    public Integer uptshopstate(Integer id,String danju,String ysdanju) {
 
-        return this.xsdocumentShopDao.uptxsshopstate(id);
+        return this.xsdocumentShopDao.uptxsshopstate(id,danju,ysdanju);
     }
     /**
      * 通过ID查询单条数据

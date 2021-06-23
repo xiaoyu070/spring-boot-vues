@@ -38,6 +38,9 @@ public class XsdocumentListController {
     //单据商品
     @Resource
     private XsdocumentShopService xsdocumentShopService;
+    //销售退货
+    @Resource
+    private XtdocumentShopService xtdocumentShopService;
     //银行
     @Resource
     private EstablishmentService establishmentService;
@@ -164,15 +167,15 @@ public class XsdocumentListController {
         String bb = jsonObject.getString("list");
         XsdocumentList xsdocumentList = JSON.parseObject(ss,XsdocumentList.class);
         System.out.println("退货信息："+xsdocumentList);
-        //this.xsdocumentListService.insert(xsdocumentList);
+        this.xsdocumentListService.insert(xsdocumentList);
 
         List<XtdocumentShop> list = JSON.parseArray(bb,XtdocumentShop.class);
         System.out.println("商品信息："+list.toString());
-        //this.xtdocumentShopService.plinsert(list);
+//        this.xtdocumentShopService.plinsert(list);
         //循环获取销售商品id去修改状态
-//        for(int a=0;a<list.size();a++){
-//            this.documentShopService.uptshopstate(list.get(a).getId());
-//        }
+        for(int a=0;a<list.size();a++){
+            this.xsdocumentShopService.uptshopstate(list.get(a).getId(),list.get(a).getDlNumber(),list.get(a).getYsDlNumber());
+        }
 
         return AjaxResponse.success("退货成功");
 
@@ -186,16 +189,17 @@ public class XsdocumentListController {
         String one = jsonObject.getString("ttt");
         int xid = jsonObject.getInteger("xid");
         String two = jsonObject.getString("list");
-        XsDocumentlistVo documentlistVo = JSONObject.parseObject(one, XsDocumentlistVo.class);
-        System.out.println(documentlistVo.getDlysje()+",,,"+documentlistVo.getDlssje());
+        XsdocumentList documentlistVo = JSONObject.parseObject(one, XsdocumentList.class);
+        System.out.println(documentlistVo.getDlYsje()+",,,"+documentlistVo.getDlSsje());
         System.out.println(documentlistVo);
         System.out.println(xid);
+        this.xsdocumentListService.updatestaticzore(documentlistVo);
         Establishment establishment = new Establishment();
         establishment.setXid(xid);
-        establishment.setOpening(documentlistVo.getDlssje());
+        establishment.setOpening(documentlistVo.getDlSsje());
         //银行余额减去实付金额
         this.establishmentService.updateestab(establishment);
-        List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
+        List<XsdocumentShop> listshop = JSONArray.parseArray(two, XsdocumentShop.class);
 
         //审核通过后将该单据中包含的商品从库存减库存量
         Stock stock=new Stock();
@@ -205,21 +209,12 @@ public class XsdocumentListController {
             stock.setSkLossnumber(listshop.get(b).getLossNumber());
             this.stockService.xsupdate(stock);
         }
-        double x = documentlistVo.getDlysje() - documentlistVo.getDlssje();
+//        double x = documentlistVo.getDlysje() - documentlistVo.getDlssje();
 
         //获取销售商品里的客户和单价加到客户的我方应收里
         for (int i =0;i<listshop.size();i++){
-            this.customerService.updatemoney(listshop.get(i).getSpJprice(),listshop.get(i).getCustomerid());
+            this.customerService.updatemoney(listshop.get(i).getSpPresetPrice(),listshop.get(i).getCustomerid());
         }
-        XsdocumentList documentList = new XsdocumentList();
-        documentList.setDlNumber(documentlistVo.getDlNumber());
-        documentList.setDlQkje(x);
-        documentList.setDlzonje(documentlistVo.getDlzonje());
-        documentList.setDlYhje(documentlistVo.getDlyhje());
-        documentList.setDlYsje(documentlistVo.getDlysje());
-        documentList.setDlSsje(documentlistVo.getDlssje());
-        System.out.println("单据信息："+documentList.toString());
-        this.xsdocumentListService.updatestaticzore(documentList);
         return AjaxResponse.success("审核通过！");
     }
     //销售审核确认
@@ -243,6 +238,7 @@ public class XsdocumentListController {
         this.establishmentService.updateestab(establishment);
         //单据下的所有商品进行循环添加
         List<XsdocumentShop> listshop = JSONArray.parseArray(two, XsdocumentShop.class);
+        System.out.println(listshop);
         this.xsdocumentShopService.insertBatch(listshop);
         //审核通过后将该单据中包含的商品从库存减库存量
         Stock stock=new Stock();
