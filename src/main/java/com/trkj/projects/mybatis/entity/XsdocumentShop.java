@@ -8,7 +8,7 @@ import java.io.Serializable;
  * (XsdocumentShop)实体类
  *
  * @author makejava
- * @since 2021-06-18 15:46:50
+ * @since 2021-06-18 17:06:58
  */
 @Data
 public class XsdocumentShop implements Serializable {

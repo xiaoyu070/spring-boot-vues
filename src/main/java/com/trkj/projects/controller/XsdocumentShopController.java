@@ -1,5 +1,15 @@
 package com.trkj.projects.controller;
 
+import com.github.pagehelper.PageInfo;
+import com.trkj.projects.mybatis.entity.XsdocumentShop;
+import com.trkj.projects.service.XsdocumentShopService;
+import com.trkj.projects.vo.AjaxResponse;
+import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.SpxstjVo;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.List;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -17,12 +27,15 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 /**
  * (XsdocumentShop)表控制层
  *
  * @author makejava
+<<<<<<< HEAD
+ * @since 2021-06-18 17:07:15
+=======
  * @since 2021-06-18 15:47:03
+>>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
  */
 @RestController
 @RequestMapping("xsdocumentShop")
@@ -45,6 +58,38 @@ public class XsdocumentShopController {
     @GetMapping("selectOne")
     public XsdocumentShop selectOne(Integer id) {
         return this.xsdocumentShopService.queryById(id);
+    }
+
+    /**
+     * 商品销售明细表查询
+     */
+    @GetMapping("xsspmx")
+    public AjaxResponse selectcx(int currentPage, int pageSize) {
+        AjaxResponse ajaxResponse = null;
+        PageInfo<SpxstjVo> list = this.xsdocumentShopService.xsspmx(currentPage, pageSize);
+        return ajaxResponse.success(list);
+    }
+
+    @GetMapping("xssphz")
+    public AjaxResponse selectcx1() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.xssphz();
+        return ajaxResponse.success(list);
+    }
+
+    @GetMapping("xsspfltj")
+    public AjaxResponse selectcx2() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.xsspfltj();
+        return ajaxResponse.success(list);
+    }
+
+    @GetMapping("ckcx")
+    public AjaxResponse selectcx3() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.ckcx();
+        return ajaxResponse.success(list);
+
     }
     /**
      * 根据分店id查询销售商品

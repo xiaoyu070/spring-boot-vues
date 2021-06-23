@@ -16,7 +16,8 @@ public class CorsConfig {
         corsConfiguration.addAllowedOrigin("*"); // 1允许任何域名使用
         corsConfiguration.addAllowedHeader("*"); // 2允许任何头
         corsConfiguration.addAllowedMethod("*"); // 3允许任何方法（post、get等）
-        return corsConfiguration;  
+
+        return corsConfiguration;
     }  
   
     @Bean  

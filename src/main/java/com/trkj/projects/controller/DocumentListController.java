@@ -56,6 +56,7 @@ public class DocumentListController {
     private SupplierService supplierService;
 
     //新增单据、入库修改
+    @Log("新增一个订单")
     @PostMapping("addDocumentList")
     public AjaxResponse addDocumentList(@RequestBody String www){
         JSONObject jsonObject=JSONObject.parseObject(www);

@@ -1,6 +1,8 @@
 package com.trkj.projects.mybatis.dao;
 
 import com.trkj.projects.mybatis.entity.XsdocumentShop;
+import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.SpxstjVo;
 import com.trkj.projects.vo.DocumentShopVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -11,7 +13,7 @@ import java.util.List;
  * (XsdocumentShop)表数据库访问层
  *
  * @author makejava
- * @since 2021-06-18 15:46:51
+ * @since 2021-06-18 17:06:59
  */
 @Mapper
 public interface XsdocumentShopDao {
@@ -100,5 +102,12 @@ public interface XsdocumentShopDao {
      */
     int deleteById(Integer id);
 
+    /**
+     * 商品销售统计查询
+     */
+    List<SpxstjVo> xsspmx(int currentPage, int pageSize);
+    List<SpxstjVo> xssphz();
+    List<SpxstjVo> xsspfltj();
+    List<SpxstjVo> ckcx();
 }
 

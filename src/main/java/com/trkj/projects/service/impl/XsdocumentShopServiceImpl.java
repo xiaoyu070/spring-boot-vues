@@ -1,5 +1,13 @@
 package com.trkj.projects.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.trkj.projects.mybatis.entity.XsdocumentShop;
+import com.trkj.projects.mybatis.dao.XsdocumentShopDao;
+import com.trkj.projects.service.XsdocumentShopService;
+import com.trkj.projects.vo.CgdjVo;
+import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.SpxstjVo;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -17,6 +25,7 @@ import java.util.List;
  * (XsdocumentShop)表服务实现类
  *
  * @author makejava
+ * @since 2021-06-18 17:07:15
  * @since 2021-06-18 15:47:03
  */
 @Service("xsdocumentShopService")
@@ -115,5 +124,36 @@ public class XsdocumentShopServiceImpl implements XsdocumentShopService {
     @Override
     public boolean deleteById(Integer id) {
         return this.xsdocumentShopDao.deleteById(id) > 0;
+    }
+
+    @Override
+    public PageInfo<SpxstjVo> xsspmx(int currentPage, int pageSize) {
+        List<SpxstjVo> list=this.xsdocumentShopDao.xsspmx(currentPage,pageSize);
+        //封装分页插件
+        PageHelper.startPage(currentPage,pageSize,true);
+        //再查所有最终传过去的数据
+        List<SpxstjVo> list2=this.xsdocumentShopDao.xsspmx(currentPage,pageSize);
+        //封装到pageinfo再设置总条数获取第一个list的大小size()方法
+        PageInfo<SpxstjVo> info = new PageInfo<>(list2);
+        info.setTotal(list.size());
+        System.out.println(list);
+        return info;
+    }
+
+    @Override
+    public List<SpxstjVo> xssphz() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.xssphz();
+        return list2;
+    }
+
+    @Override
+    public List<SpxstjVo> xsspfltj() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.xsspfltj();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> ckcx() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.ckcx();
+        return list2;
     }
 }

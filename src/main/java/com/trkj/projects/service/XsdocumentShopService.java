@@ -1,6 +1,9 @@
 package com.trkj.projects.service;
 
 import com.github.pagehelper.PageInfo;
+import com.trkj.projects.mybatis.entity.XsdocumentShop;
+import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.SpxstjVo;
 import com.trkj.projects.mybatis.entity.DocumentShop;
 import com.trkj.projects.mybatis.entity.XsdocumentShop;
 import com.trkj.projects.vo.DocumentShopVo;
@@ -12,7 +15,7 @@ import java.util.List;
  * (XsdocumentShop)表服务接口
  *
  * @author makejava
- * @since 2021-06-18 15:47:03
+ * @since 2021-06-18 17:07:15
  */
 public interface XsdocumentShopService {
     /**
@@ -66,7 +69,6 @@ public interface XsdocumentShopService {
     List<XsdocumentShop> queryAllByLimit(int offset, int limit);
 
 
-
     /**
      * 通过主键删除数据
      *
@@ -74,5 +76,12 @@ public interface XsdocumentShopService {
      * @return 是否成功
      */
     boolean deleteById(Integer id);
+    /**
+     * 销售商品明细
+     */
+    PageInfo<SpxstjVo> xsspmx(int currentPage, int pageSize);
+    List<SpxstjVo> xssphz();
+    List<SpxstjVo> xsspfltj();
+    List<SpxstjVo> ckcx();
 
 }

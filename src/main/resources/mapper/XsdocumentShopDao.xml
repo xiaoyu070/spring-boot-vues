@@ -21,6 +21,27 @@
         <result property="xsSpState" column="xs_sp_state" jdbcType="INTEGER"/>
         <result property="ysDlNumber" column="ys_dl_number" jdbcType="VARCHAR"/>
     </resultMap>
+        <resultMap id="SpxstjVo" type="com.trkj.projects.vo.SpxstjVo">
+        <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
+        <result property="dlDate" column="dl_date" jdbcType="VARCHAR"/>
+        <result property="dlTypeName" column="dl_type_name" jdbcType="VARCHAR"/>
+        <result property="cContacts" column="c_contacts" jdbcType="VARCHAR"/>
+        <result property="spShopId" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
+        <result property="vTypeCk" column="v_type_ck" jdbcType="NUMERIC"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="zje" column="zje" jdbcType="NUMERIC"/>
+        <result property="agentName" column="agent_name" jdbcType="VARCHAR"/>
+        <result property="wName" column="wname" jdbcType="VARCHAR"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spTypeName" column="sp_type_name" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="beiZhu" column="beizhu" jdbcType="VARCHAR"/>
+        <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
+    </resultMap>
+
     <resultMap id="DocumentShopVo" type="com.trkj.projects.vo.DocumentShopVo">
         <result property="id" column="id" jdbcType="INTEGER" />
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
@@ -249,6 +270,40 @@
     <delete id="deleteById">
         delete from projects.xsdocument_shop where id = #{id}
     </delete>
-
+    <select id="xsspmx" resultMap="SpxstjVo">
+        SELECT l.dl_number,l.dl_date,lt.dl_type_name,c.c_contacts,sp.sp_shopid,sp.sp_name,sp.sp_Company,s.sp_Preset_price,
+         v.v_type_ck,s.number,s.zje,a.agent_name,w.wname,sp.sp_Specifications,sp.sp_color,st.sp_type_name,s.beizhu
+        FROM xsdocument_shop s
+        LEFT JOIN xsdocument_list l ON s.dl_number=l.dl_number
+        LEFT JOIN xsdocument_list_type lt ON l.dl_type_id=lt.dl_type_id
+        LEFT JOIN customer c ON l.customerid=c.c_id
+        LEFT JOIN shop sp ON s.sp_shopid=sp.sp_shopid
+        LEFT JOIN vip_type v ON c.v_type_id=v.v_type_id
+        LEFT JOIN agent a ON c.v_type_id=v.v_type_id
+        LEFT JOIN warehouse w ON w.wid=s.wid
+        LEFT JOIN shop_type st ON sp.sp_type_id=st.sp_type_id
+    </select>
+    <select id="xssphz" resultMap="SpxstjVo">
+        SELECT sp.sp_shopid,sp.sp_name,sp.sp_Company,sup.suppliername,
+     s.number,s.zje
+        FROM xsdocument_shop s
+        LEFT JOIN xsdocument_list l ON s.dl_number=l.dl_number
+        LEFT JOIN customer c ON l.customerid=c.c_id
+        LEFT JOIN shop sp ON s.sp_shopid=sp.sp_shopid
+        LEFT JOIN shop_type st ON sp.sp_type_id=st.sp_type_id
+        LEFT JOIN document_shop ds ON ds.dl_number=s.dl_number
+        LEFT JOIN supplier sup ON sup.supplierid=ds.supplierid
+    </select>
+    <select id="xsspfltj" resultMap="SpxstjVo">
+        SELECT st.sp_type_name,s.number,s.zje
+        FROM xsdocument_shop s
+        LEFT JOIN shop sp ON s.sp_shopid=sp.sp_shopid
+        LEFT JOIN shop_type st ON sp.sp_type_id=st.sp_type_id
+        LEFT JOIN document_shop ds ON ds.dl_number=s.dl_number
+    </select>
+    <select id="ckcx" resultMap="SpxstjVo">
+         SELECT wname
+            FROM warehouse
+    </select>
 </mapper>
 
