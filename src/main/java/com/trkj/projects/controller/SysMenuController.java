@@ -6,13 +6,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.trkj.projects.mybatis.entity.SysMenu;
 import com.trkj.projects.mybatis.entity.SysRoles;
 import com.trkj.projects.mybatis.entity.SysRolesMenu;
-import com.trkj.projects.mybatis.entity.SysUser;
 import com.trkj.projects.service.SysMenuService;
+import com.trkj.projects.service.SysRolesService;
 import com.trkj.projects.vo.AjaxResponse;
 import com.trkj.projects.vo.MenusVo;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -32,6 +32,8 @@ public class SysMenuController {
     @Resource
     private SysMenuService sysMenuService;
 
+    @Resource
+    private SysRolesService sysRolesService;
     //tree树形控制结构[vo]
     private List<MenusVo> getChildrens(MenusVo root, List<MenusVo> all) {
         List<MenusVo> children = all.stream().filter(m -> {
@@ -110,24 +112,29 @@ public class SysMenuController {
 //
 //        return AjaxResponse.success();
 //    }
-    //根据角色id和菜单id查询中间表中是否存在该菜单
-    @PostMapping("selectrolesidandmenusid")
-    public AjaxResponse selectrolesidandmenusid(@RequestBody String a){
+    //新增一个用户
+    @PostMapping("addrolesidandmenusid")
+    public AjaxResponse addrolesidandmenusid(@RequestBody String a){
         JSONObject jsonObject= JSON.parseObject(a);
-        String rolesidandmunesid = jsonObject.getString("rolesandmeun");
-        System.out.println("rolesidandmunesid"+rolesidandmunesid);
-        SysRolesMenu sysRolesMenu = JSONObject.parseObject(rolesidandmunesid,SysRolesMenu.class);
-        System.out.println("sysRolesMenu:"+sysRolesMenu.toString());
-        List<SysRolesMenu> list = this.sysMenuService.selectrolesidandmenusid(sysRolesMenu);
-        System.out.println("list:"+list.toString());
-        String message = "";
-        if(list.size()<=0){
-            this.sysMenuService.inserrolesidandmenusid(sysRolesMenu);
-            message = "添加菜单成功！";
-        }else{
-            this.sysMenuService.deleterolesidandmenusid(sysRolesMenu);
-            message = "已清空该节点对应菜单权限！";
+        //将传入的角色id拿到
+        int sysRolesId = jsonObject.getInteger("sysRolesId");
+        //将转换成js格式的数据通过name拿到后转换成string类型
+        String sysMenu = jsonObject.getString("sysMenuId");
+        //将拿到的菜单编号转换成list集合
+        List<Integer> sysMenuId = JSONObject.parseArray(sysMenu,Integer.class);
+        List<SysRolesMenu> sysRolesMenuList =new ArrayList<>();
+        //将转换成integer类型的list数组循环添加到实体类中
+        for (int i=0;i<sysMenuId.size();i++){
+            SysRolesMenu ttt = new SysRolesMenu();
+            ttt.setSysRolesId(sysRolesId);
+            ttt.setSysMenuId(sysMenuId.get(i));
+            //将传入到实体类中的角色id和对应的菜单id一个一个添加到list数组中
+            sysRolesMenuList.add(ttt);
         }
-        return AjaxResponse.success(message);
+        //先清空该角色的所有菜单权限
+        this.sysMenuService.deleterolesid(sysRolesId);
+        //然后将传过来的角色id和菜单权限进行批量新增
+        this.sysMenuService.addallrolesidandmenusid(sysRolesMenuList);
+        return AjaxResponse.success("修改角色权限成功！");
     }
 }

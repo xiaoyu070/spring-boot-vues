@@ -14,17 +14,25 @@ import java.io.Serializable;
 @Data
 public class Shop implements Serializable {
     private static final long serialVersionUID = -58659415091849695L;
-
+    /**
+     * 自增id
+     */
     private Integer spId;
-
+    /**
+     * 商品编号
+     */
     private Integer spShopId;
-
+    /**
+     * 商品名称
+     */
     private String spName;
     /**
      * 条码
      */
     private String spBarCode;
-
+    /**
+     * 商品类型id
+     */
     private Integer spTypeId;
     /**
      * 1:禁用0正常：
@@ -38,7 +46,9 @@ public class Shop implements Serializable {
      * 规格型号：5w-40
      */
     private String spSpecifications;
-
+    /**
+     * 商品颜色
+     */
     private String spColor;
     /**
      * 预设进价
@@ -52,133 +62,21 @@ public class Shop implements Serializable {
      * 生产厂商
      */
     private String spManufacturer;
-
+    /**
+     * 商品备注
+     */
     private String spBeizhu;
-
+    /**
+     * 不知道是啥玩意 知道的告诉我一下我是oys
+     */
     private Date spTime;
-
+    /**
+     * 商品图片
+     */
     private String shImg;
-
-
-
-    public Integer getSpId() {
-        return spId;
-    }
-
-    public void setSpId(Integer spId) {
-        this.spId = spId;
-    }
-
-    public Integer getSpShopId() {
-        return spShopId;
-    }
-
-    public void setSpShopId(Integer spShopId) {
-        this.spShopId = spShopId;
-    }
-
-    public String getSpName() {
-        return spName;
-    }
-
-    public void setSpName(String spName) {
-        this.spName = spName;
-    }
-
-    public String getSpBarCode() {
-        return spBarCode;
-    }
-
-    public void setSpBarCode(String spBarCode) {
-        this.spBarCode = spBarCode;
-    }
-
-    public Integer getSpTypeId() {
-        return spTypeId;
-    }
-
-    public void setSpTypeId(Integer spTypeId) {
-        this.spTypeId = spTypeId;
-    }
-
-    public Integer getSpState() {
-        return spState;
-    }
-
-    public void setSpState(Integer spState) {
-        this.spState = spState;
-    }
-
-    public String getSpCompany() {
-        return spCompany;
-    }
-
-    public void setSpCompany(String spCompany) {
-        this.spCompany = spCompany;
-    }
-
-    public String getSpSpecifications() {
-        return spSpecifications;
-    }
-
-    public void setSpSpecifications(String spSpecifications) {
-        this.spSpecifications = spSpecifications;
-    }
-
-    public String getSpColor() {
-        return spColor;
-    }
-
-    public void setSpColor(String spColor) {
-        this.spColor = spColor;
-    }
-
-    public Double getSpJprice() {
-        return spJprice;
-    }
-
-    public void setSpJprice(Double spJprice) {
-        this.spJprice = spJprice;
-    }
-
-    public Double getSpPresetPrice() {
-        return spPresetPrice;
-    }
-
-    public void setSpPresetPrice(Double spPresetPrice) {
-        this.spPresetPrice = spPresetPrice;
-    }
-
-    public String getSpManufacturer() {
-        return spManufacturer;
-    }
-
-    public void setSpManufacturer(String spManufacturer) {
-        this.spManufacturer = spManufacturer;
-    }
-
-    public String getSpBeizhu() {
-        return spBeizhu;
-    }
-
-    public void setSpBeizhu(String spBeizhu) {
-        this.spBeizhu = spBeizhu;
-    }
-
-    public Date getSpTime() {
-        return spTime;
-    }
-
-    public void setSpTime(Date spTime) {
-        this.spTime = spTime;
-    }
-
-    public String getShImg() {
-        return shImg;
-    }
-
-    public void setShImg(String shImg) {
-        this.shImg = shImg;
-    }
+    /**
+     * 商品所在仓库外键id
+     */
+    private Integer warehouse_id;
 
 }

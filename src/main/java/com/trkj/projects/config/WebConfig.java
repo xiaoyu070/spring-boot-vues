@@ -1,8 +1,8 @@
-package com.xingji.frameproject.config;
+package com.trkj.projects.config;
 
 
 
-import com.xingji.frameproject.interceptor.TokenInterceptor;
+import com.trkj.projects.interceptor.TokenInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

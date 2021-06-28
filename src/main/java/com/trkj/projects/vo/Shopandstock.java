@@ -16,5 +16,7 @@ public class Shopandstock {
     private String spManufacturer;//生产厂商
     private String spBeizhu;//备注
     private Integer supperlierid;//供货商id
+    private String supperliername;//供货商名称
+
 
 }

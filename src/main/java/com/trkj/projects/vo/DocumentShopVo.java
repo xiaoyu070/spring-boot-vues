@@ -62,7 +62,7 @@ public class DocumentShopVo {
     /**
      * 数量
      */
-    private Integer number;
+    private Integer numbers;
     /**
      * 损耗后数量
      */

@@ -1,4 +1,4 @@
-package com.xingji.frameproject.config;
+package com.trkj.projects.config;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;

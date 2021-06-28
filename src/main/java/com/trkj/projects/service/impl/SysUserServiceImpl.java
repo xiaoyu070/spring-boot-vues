@@ -75,6 +75,17 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
+    public void insertuserandroles(int userid, int rolesid) {
+        this.sysUserDao.insertuserandroles(userid,rolesid);
+    }
+
+    @Override
+    public void deleteuserandroles(int userid) {
+        this.sysUserDao.deleteuserandroles(userid);
+    }
+
+
+    @Override
     public void deleteuserid(int userid) {
         this.sysUserDao.deleteuserid(userid);
     }
@@ -85,4 +96,11 @@ public class SysUserServiceImpl implements SysUserService {
     public void updateerror(Date date, int userid) {
         this.sysUserDao.updateerror(date,userid);
     }
+
+    @Override
+    public List<SysUser> likeusers(String ttt) {
+        return this.sysUserDao.likeusers(ttt);
+    }
+
+
 }

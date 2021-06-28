@@ -56,6 +56,11 @@ public interface SysUserDao {
     void updateuserstateone(int id);
     //根据用户id修改用户对应的角色id
     void updateuserandroles(@Param("rolesid") int rolesid,@Param("userid") int userid);
+    //新增用户权限
+    void insertuserandroles(@Param("userid") int userid,@Param("rolesid") int rolesid);
+    //根据用户id删除该用户的所有角色
+    void deleteuserandroles(@Param("userid") int userid);
+
     //修改用户状态为1(删除)
     void deleteuserid(int userid);
 
@@ -63,5 +68,12 @@ public interface SysUserDao {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     void updateerror(Date date,int userid);
+
+    /**
+     * 模糊查询用户
+     * @param ttt
+     * @return
+     */
+    List<SysUser> likeusers(String ttt);
 }
 

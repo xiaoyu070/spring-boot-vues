@@ -18,6 +18,7 @@
         <result property="spBeizhu" column="sp_beizhu" jdbcType="VARCHAR"/>
         <result property="spTime" column="sp_time" jdbcType="TIMESTAMP"/>
         <result property="shImg" column="sh_img" jdbcType="VARCHAR"/>
+        <result property="warehouse_id" column="Warehouse_id" jdbcType="INTEGER"/>
     </resultMap>
 
     <resultMap type="com.trkj.projects.vo.Shopandstock" id="ShopandstockVo">
@@ -32,7 +33,8 @@
         <result property="spBeizhu" column="sp_beizhu" jdbcType="VARCHAR"/>
         <result property="number" column="sk_number" javaType="INTEGER"/>
         <result property="spBarCode" column="sp_bar_code" jdbcType="VARCHAR"/>
-        <result property="supperlierid" column="s_id" jdbcType="VARCHAR"/>
+        <result property="supperlierid" column="s_id" jdbcType="INTEGER"/>
+        <result property="supperliername" column="suppliername" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap type="com.trkj.projects.mybatis.entity.Shops" id="ShopMap">
@@ -225,15 +227,14 @@
         delete from projects.shop where sp_id = #{spId}
     </delete>
 
-
-
     <!-- 查询所有商品 -->
     <select id="queryshopanstock" resultMap="ShopandstockVo">
-        SELECT sk.sp_Warehouse_id,s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`,s.s_id
+        SELECT sk.sp_Warehouse_id,s.`sp_shopid`, s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS sk_number,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`,s.s_id
         FROM shop s
         LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
-        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid
-            <where>
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid AND s.Warehouse_id = sk.sp_Warehouse_id
+        LEFT JOIN `warehouse` ws ON ws.`wid` = s.`Warehouse_id`
+        <where>
                 <if test="value != 0">
                     tp.sp_type_id = #{value}
                 </if>
@@ -243,34 +244,61 @@
 
     <!-- 查询库存中剩余数量不为0的商品（退货） -->
     <select id="queryshopanstocktuihuo" resultMap="ShopandstockVo">
-        SELECT sk.sp_Warehouse_id,s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`,s.s_id FROM shop s
+        SELECT sl.suppliername,sk.sp_Warehouse_id,s.`sp_shopid`, s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS sk_number,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`,s.s_id
+        FROM shop s
         LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
-        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid AND s.Warehouse_id = sk.sp_Warehouse_id
+        LEFT JOIN `warehouse` ws ON ws.`wid` = s.`Warehouse_id`
+        LEFT JOIN supplier sl ON sl.supplierid = s.s_id
         <where>
         sk.`sk_number`>0
             <if test="value != 0">
-                tp.sp_type_id = #{value}
+                and tp.sp_type_id = #{value}
             </if>
         </where>
-        GROUP BY s.`sp_shopid`
+        GROUP BY s.`sp_shopid`,s.`s_id` ORDER BY s.`sp_shopid`
     </select>
-
+<!-- 根据选择的出货仓库查询他对应的商品库存 -->
+    <select id="chcsselect" resultMap="ShopandstockVo">
+        SELECT sl.`suppliername`,sk.sp_Warehouse_id,s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS sk_number,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`,s.s_id
+        FROM shop s
+        LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid AND s.`Warehouse_id` = sk.`sp_Warehouse_id`
+        LEFT JOIN `supplier` sl ON sl.supplierid = s.s_id
+        LEFT JOIN `warehouse` ws ON ws.`wid` = s.`Warehouse_id`
+        WHERE ws.`wid` = #{wid} AND sk.`sk_number` > 0 GROUP BY s.`sp_shopid`,s.`s_id` ORDER BY s.`sp_shopid`
+    </select>
     <!-- 模糊查询 -->
     <select id="likeselect" resultMap="ShopandstockVo">
-        SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code` FROM shop s
+        SELECT sl.`suppliername`,sk.sp_Warehouse_id,s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS sk_number,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`,s.s_id
+        FROM shop s
         LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
-        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid WHERE s.sp_name LIKE CONCAT('%',#{test},'%') OR s.sp_shopid like CONCAT('%',#{test},'%')
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid AND s.`Warehouse_id` = sk.`sp_Warehouse_id`
+        LEFT JOIN `supplier` sl ON sl.supplierid = s.s_id
+        LEFT JOIN `warehouse` ws ON ws.`wid` = s.`Warehouse_id`
+        WHERE s.sp_name LIKE CONCAT('%',#{test},'%') OR s.sp_shopid like CONCAT('%',#{test},'%')  GROUP BY s.`sp_shopid`,s.`s_id` ORDER BY s.`sp_shopid`
     </select>
-    
+    <!-- 模糊查询退货(库存大于0时才可以退货) -->
+    <select id="likeselecttuihuo" resultMap="ShopandstockVo">
+        SELECT sl.`suppliername`,sk.sp_Warehouse_id,s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS sk_number,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`,s.s_id
+        FROM shop s
+        LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid AND s.`Warehouse_id` = sk.`sp_Warehouse_id`
+        LEFT JOIN `supplier` sl ON sl.supplierid = s.s_id
+        LEFT JOIN `warehouse` ws ON ws.`wid` = s.`Warehouse_id`
+        WHERE (s.sp_name LIKE CONCAT('%',#{test},'%') OR s.sp_shopid like CONCAT('%',#{test},'%')) AND sk.`sk_number` > 0 GROUP BY s.`sp_shopid`,s.`s_id` ORDER BY s.`sp_shopid`
+    </select>
+
+
     <!-- 只显示当前供货商提供的商品 -->
     <select id="showsupplier" resultMap="ShopandstockVo">
-        SELECT s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,sk.`sk_number`,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code` FROM shop s
+        SELECT sp.`suppliername`,sk.sp_Warehouse_id,s.`sp_shopid`,s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS sk_number,s.`sp_Manufacturer`,s.`sp_beizhu`,s.`sp_bar_code`,s.s_id
+        FROM shop s
         LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
-        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid
-        LEFT JOIN supplier sp ON sp.supplierid=s.s_id WHERE sp.supplierid = #{test} AND s.sp_state = 0 GROUP BY s.`sp_shopid`
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid AND s.Warehouse_id = sk.sp_Warehouse_id
+        LEFT JOIN `warehouse` ws ON ws.`wid` = s.`Warehouse_id`
+        LEFT JOIN supplier sp ON sp.supplierid=s.s_id WHERE sp.supplierid = #{test} AND s.sp_state = 0 GROUP BY s.`sp_shopid` ORDER BY s.`sp_shopid`
     </select>
-
-
 
 <!--  楷楷的  -->
     <select id="queryById" resultMap="ShopMap">
@@ -353,7 +381,6 @@
         from projects.shop_type y
         INNER JOIN projects.shop s
         on s.sp_type_id=y.sp_type_id
-
         <where>
             <if test="shoptypename != null and shoptypename != '所有类别' ">
                 and sp_type_name = #{shoptypename}

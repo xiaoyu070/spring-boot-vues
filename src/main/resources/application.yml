@@ -46,11 +46,9 @@ jwt:
   # 密匙KEY
   secret: JWTSecret
   # HeaderKEY
-  header: JWTHeaderName
-  # Token前缀字符
-  tokenPrefix: Security-c
+  header: Token
   # 过期时间毫秒
-  expire: 5000
+  expire: 3600000
 pagehelper:
   helperDialect: mysql
   reasonable: true

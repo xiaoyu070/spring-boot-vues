@@ -66,6 +66,7 @@ public class DocumentListController {
         list.setDlDate(new Date());
         //添加到订单中
         this.documentListService.insert(list);
+        System.out.println("list:"+list.toString());
         String two = jsonObject.getString("list");
         //json转list集合对象
         List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
@@ -193,11 +194,12 @@ public class DocumentListController {
             String two = jsonObject.getString("list");
             DocumentlistVo documentlistVo = JSONObject.parseObject(one, DocumentlistVo.class);
             List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
-            //将库存new出来根据商品id增加商品库存
+            System.out.println("listshop:"+listshop.toString());
+            //将银行new实例化
             Establishment establishment = new Establishment();
             establishment.setXid(xid);
             establishment.setOpening(documentlistVo.getDlsfje());
-
+            //将库存new出来根据商品id增加商品库存
             DocumentList documentList = new DocumentList();
 
             //审核通过后将该单据中包含的商品添加到库存中
@@ -251,6 +253,7 @@ public class DocumentListController {
                 }
                 //根据退货的商品减少相应商品的库存量
                 for(int b=0;b<listshop.size();b++){
+                    System.out.println("listshop:"+listshop.toString());
                     stock.setSkShopid(listshop.get(b).getSpShopid());
                     stock.setSkNumber(listshop.get(b).getNumber());
                     stock.setSkLossnumber(listshop.get(b).getLossNumber());
@@ -359,6 +362,7 @@ public class DocumentListController {
                 //将库存new出来根据商品id和仓库减少商品库存
                 Stock stock=new Stock();
                 for(int b=0;b<listshop.size();b++){
+                    System.out.println("list:::"+listshop.get(b));
                     stock.setSkShopid(listshop.get(b).getSpShopid());
                     stock.setSkNumber(listshop.get(b).getNumber());
                     stock.setSkLossnumber(listshop.get(b).getLossNumber());

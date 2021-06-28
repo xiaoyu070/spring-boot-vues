@@ -87,6 +87,7 @@ public class ShopServiceImpl implements ShopService {
         return this.shopDao.queryshopanstocktuihuo(value);
     }
 
+
     /**
      * 模糊查询
      * @param test
@@ -98,8 +99,18 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    public List<Shopandstock> likeselecttuihuo(String test) {
+        return this.shopDao.likeselecttuihuo(test);
+    }
+
+    @Override
     public List<Shopandstock> showsupplier(Integer test) {
         return this.shopDao.showsupplier(test);
+    }
+
+    @Override
+    public List<Shopandstock> chcsselect(int wid) {
+        return this.shopDao.chcsselect(wid);
     }
 
 

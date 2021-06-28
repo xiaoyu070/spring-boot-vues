@@ -1,6 +1,6 @@
-package com.xingji.frameproject.exception;
+package com.trkj.projects.exception;
 
-import com.xingji.frameproject.vo.AjaxResponse;
+import com.trkj.projects.vo.AjaxResponse;
 import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
-
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -21,11 +20,13 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public AjaxResponse defaultErrorHandler(HttpServletRequest request, Exception e){
         log.info("开始输出错误信息：");
+        System.out.println(e);
         e.printStackTrace();
         if(e instanceof NoHandlerFoundException){
             log.info("没有找到匹配的url");
             return AjaxResponse.error(new CustomError(CustomErrorType.PAGE_NOT_FOUND_ERROR,e.getMessage()));
         }else if(e instanceof SignatureException){
+            System.out.println(".......................");
             log.info("签名验证异常");
             return AjaxResponse.error(new CustomError(CustomErrorType.SIGNATURE_ERROR,e.getMessage()));
         }else if(e instanceof MaxUploadSizeExceededException) {

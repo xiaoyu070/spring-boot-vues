@@ -73,13 +73,20 @@ public interface DocumentShopService {
     /**
      * 根据单据号查询商品
      */
-    List<DocumentShopVo> selectnumber(String number,int wid,int branchid);
-
+    List<DocumentShopVo> selectnumber(@Param("number") String number);
+    /**
+     * 根据单据号查询商品
+     */
+    List<DocumentShopVo> selectnumbers(String djh);
+    /**
+     * 根据单据号查询商品
+     */
+    List<DocumentShop> selectdocumentlistshop(@Param("djh") String djh);
     /**
      * 通过单据号查询待审核单据中的商品
      */
-    List<DocumentShopVo> selectstatezreonumber(String number,int wid);
-
+    List<DocumentShopVo> selectstatezreonumber(String number);
+    List<DocumentShopVo> selectstatezreoNumbers(@Param("number") String number);
     /**
      * 模糊查询
      */
