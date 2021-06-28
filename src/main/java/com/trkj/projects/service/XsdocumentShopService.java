@@ -49,7 +49,7 @@ public interface XsdocumentShopService {
      * @return 影响行数
      */
     int insertBatch(@Param("entities") List<XsdocumentShop> entities);
-    Integer uptshopstate(Integer id);
+    Integer uptshopstate(Integer id,String danju,String ysdanju);
 
     PageInfo<DocumentShopVo> selectbycid(Integer cid, String data1, String data2, Integer currentPage, Integer pageSize, String name);
     /**

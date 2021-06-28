@@ -11,7 +11,7 @@
         <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
         <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
         <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
-        <result property="spJprice" column="sp_jprice" jdbcType="VARCHAR"/>
+        <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
         <result property="number" column="number" jdbcType="INTEGER"/>
         <result property="lossNumber" column="loss_number" jdbcType="INTEGER"/>
         <result property="zje" column="zje" jdbcType="NUMERIC"/>
@@ -97,17 +97,17 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into projects.xtdocument_shop(dl_number, branchid, customerid, wid, sp_shopid, sp_name, sp_Company, sp_jprice, number, loss_number, zje, sp_Specifications, sp_color, beizhu, ys_dl_number)
-        values (#{dlNumber}, #{branchid}, #{customerid}, #{wid}, #{spShopid}, #{spName}, #{spCompany}, #{spJprice}, #{number}, #{lossNumber}, #{zje}, #{spSpecifications}, #{spColor}, #{beizhu}, #{ysDlNumber})
+        insert into projects.xtdocument_shop(dl_number, branchid, customerid, wid, sp_shopid, sp_name, sp_Company, sp_Preset_price, number, loss_number, zje, sp_Specifications, sp_color, beizhu, ys_dl_number)
+        values (#{dlNumber}, #{branchid}, #{customerid}, #{wid}, #{spShopid}, #{spName}, #{spCompany}, #{spPresetPrice}, #{number}, #{lossNumber}, #{zje}, #{spSpecifications}, #{spColor}, #{beizhu}, #{ysDlNumber})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
         insert into projects.xtdocument_shop(id,dl_number, branchid, customerid, wid, sp_shopid, sp_name, sp_Company,
-        sp_jprice, number, loss_number, zje, sp_Specifications, sp_color, beizhu, ys_dl_number)
+        sp_Preset_price, number, loss_number, zje, sp_Specifications, sp_color, beizhu, ys_dl_number)
         values
         <foreach collection="entities" item="entity" separator=",">
             (#{entity.id},#{entity.dlNumber}, #{entity.branchid}, #{entity.customerid}, #{entity.wid}, #{entity.spShopid},
-            #{entity.spName}, #{entity.spCompany}, #{entity.spJprice}, #{entity.number}, #{entity.lossNumber},
+            #{entity.spName}, #{entity.spCompany}, #{entity.spPresetPrice}, #{entity.number}, #{entity.lossNumber},
             #{entity.zje}, #{entity.spSpecifications}, #{entity.spColor}, #{entity.beizhu}, #{entity.ysDlNumber})
         </foreach>
     </insert>

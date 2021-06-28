@@ -87,5 +87,14 @@ public class XsDocumentlistVo {
      */
     private Integer branchid;
 
+    /**
+     * 类型外键id
+     */
+    private Integer dlTypeId;
+    /**
+     * 状态外键id
+     */
+    private Integer dlStatieId;
+
 
 }

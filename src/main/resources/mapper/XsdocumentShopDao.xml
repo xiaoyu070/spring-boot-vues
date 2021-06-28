@@ -19,6 +19,7 @@
         <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
         <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
         <result property="xsSpState" column="xs_sp_state" jdbcType="INTEGER"/>
+        <result property="ysDlNumber" column="ys_dl_number" jdbcType="VARCHAR"/>
     </resultMap>
         <resultMap id="SpxstjVo" type="com.trkj.projects.vo.SpxstjVo">
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
@@ -61,18 +62,20 @@
         <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
         <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
         <result property="dlDate" column="dl_date" jdbcType="TIMESTAMP"/>
+        <result property="xsSpState" column="xs_sp_state" jdbcType="NUMERIC"/>
+
     </resultMap>
 
     <update id="uptxsshopstate">
         update xsdocument_shop
-        set xs_sp_state = 1
+        set xs_sp_state = 1,dl_number = #{dlNumber},ys_dl_number = #{ysDlNumber}
         <where>
             id = #{id}
         </where>
     </update>
     <!--    根据客户id查询改客户的买的商品-->
     <select id="querybycustomeridanddata" resultMap="DocumentShopVo">
-        SELECT s.id,s.dl_number ,s.customerid,s.branchid,b.branchname,s.wid,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Preset_price,s.number,s.loss_number,k.sk_number,s.zje,s.sp_Specifications,s.sp_color,s.beizhu,xs.dl_date
+        SELECT s.id,s.dl_number ,s.customerid,s.branchid,b.branchname,s.wid,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Preset_price,s.number,s.loss_number,k.sk_number,s.zje,s.sp_Specifications,s.sp_color,s.beizhu,xs.dl_date,s.xs_sp_state
         FROM xsdocument_shop s
         LEFT JOIN xsdocument_list xs ON s.dl_number=xs.dl_number
         LEFT JOIN branch b ON s.branchid=b.branchid
@@ -87,6 +90,7 @@
                 or s.sp_name like CONCAT('%',#{name},'%')
             </if>
         </where>
+        ORDER BY xs.dl_date DESC
     </select>
     <!-- 根据商品单据号删除商品 -->
     <delete id="deleteshoplist" >

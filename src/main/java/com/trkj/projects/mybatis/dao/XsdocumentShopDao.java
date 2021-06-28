@@ -24,7 +24,7 @@ public interface XsdocumentShopDao {
      * @param id
      * @return
      */
-    Integer uptxsshopstate(Integer id);
+    Integer uptxsshopstate(@Param("id") Integer id,@Param("dlNumber") String dlNumber,@Param("ysDlNumber") String ysDlNumber);
     /**
      * 根据客户id查询销售商品以及时间查询
      * @param customerid
