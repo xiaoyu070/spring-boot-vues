@@ -72,11 +72,29 @@ public class XsdocumentShopController {
         List<SpxstjVo> list = this.xsdocumentShopService.xssphz();
         return ajaxResponse.success(list);
     }
+    @GetMapping("khtj")
+    public AjaxResponse selectcx5() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.khtj();
+        return ajaxResponse.success(list);
+    }
 
     @GetMapping("xsspfltj")
     public AjaxResponse selectcx2() {
         AjaxResponse ajaxResponse = null;
         List<SpxstjVo> list = this.xsdocumentShopService.xsspfltj();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("ghstj")
+    public AjaxResponse selectcx6() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.ghstj();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("artj")
+    public AjaxResponse selectcx7() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.artj();
         return ajaxResponse.success(list);
     }
 
@@ -93,6 +111,24 @@ public class XsdocumentShopController {
         List<SpxstjVo> list = this.xsdocumentShopService.lbcx();
         return ajaxResponse.success(list);
 
+    }
+    @GetMapping("selectnumber3xyz")
+    public AjaxResponse selectnumber3xyz(String ccontacts){
+        System.out.println(",,,"+ccontacts);
+        Map<String,Object> map=new HashMap<>();
+        List<SpxstjVo> list= this.xsdocumentShopService.selectnumber3xyz(ccontacts);
+        System.out.println("selectnumber:list:"+list);
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
+    @GetMapping("selectnumber4xyz")
+    public AjaxResponse selectnumber4xyz(String suppliername){
+        System.out.println(",,,"+suppliername);
+        Map<String,Object> map=new HashMap<>();
+        List<SpxstjVo> list= this.xsdocumentShopService.selectnumber4xyz(suppliername);
+        System.out.println("selectnumber:list:"+list);
+        map.put("rows",list);
+        return AjaxResponse.success(map);
     }
 
     @GetMapping("xsmxcx")

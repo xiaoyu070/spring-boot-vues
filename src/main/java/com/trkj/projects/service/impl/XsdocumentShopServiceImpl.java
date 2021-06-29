@@ -137,6 +137,15 @@ public class XsdocumentShopServiceImpl implements XsdocumentShopService {
         return info;
     }
 
+    /**
+     * 按客户会员统计
+     * @return
+     */
+    @Override
+    public List<SpxstjVo> khtj() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.khtj();
+        return list2;
+    }
     @Override
     public List<SpxstjVo> xssphz() {
         List<SpxstjVo> list2 = this.xsdocumentShopDao.xssphz();
@@ -149,6 +158,16 @@ public class XsdocumentShopServiceImpl implements XsdocumentShopService {
         return list2;
     }
     @Override
+    public List<SpxstjVo> ghstj() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.ghstj();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> artj() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.artj();
+        return list2;
+    }
+    @Override
     public List<SpxstjVo> ckcx() {
         List<SpxstjVo> list2 = this.xsdocumentShopDao.ckcx();
         return list2;
@@ -158,6 +177,15 @@ public class XsdocumentShopServiceImpl implements XsdocumentShopService {
         List<SpxstjVo> list2 = this.xsdocumentShopDao.lbcx();
         return list2;
     }
+    @Override
+    public List<SpxstjVo> selectnumber3xyz(String ccontacts) {
+        return this.xsdocumentShopDao.selectnumber3xyz(ccontacts);
+    }
+    @Override
+    public List<SpxstjVo> selectnumber4xyz(String suppliername) {
+        return this.xsdocumentShopDao.selectnumber4xyz(suppliername);
+    }
+
     @Override
     public PageInfo<SpxstjVo> xsmxcx(SpxstjVo spxstjVo, int currentPage, int pageSize) {
         List<SpxstjVo> list = this.xsdocumentShopDao.xsmxcx(spxstjVo);

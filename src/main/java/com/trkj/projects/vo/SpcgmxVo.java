@@ -22,4 +22,8 @@ public class SpcgmxVo {
     private String agentName;
     private String supplierName;
     private String dlTypeName;
+    private Double dlYfje;
+    private Double dlSfje;
+    private String userName;
+    private String beiZhu;
 }

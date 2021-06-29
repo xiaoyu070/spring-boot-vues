@@ -6,10 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.dao.DocumentListDao;
 import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.service.DocumentListService;
-import com.trkj.projects.vo.CghzVo;
-import com.trkj.projects.vo.DocumentlistVo;
-import com.trkj.projects.vo.SpcgmxVo;
-import com.trkj.projects.vo.SpxsmxVo;
+import com.trkj.projects.vo.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -215,20 +212,6 @@ public class DocumentListServiceImpl implements DocumentListService {
 
 
     @Override
-    public PageInfo<SpcgmxVo> djxq(int currentPage, int pageSize) {
-        List<SpcgmxVo> list=this.documentListDao.djxq(currentPage,pageSize);
-        //封装分页插件
-        PageHelper.startPage(currentPage,pageSize,true);
-        //再查所有最终传过去的数据
-        List<SpcgmxVo> list2 = this.documentListDao.djxq(currentPage,pageSize);
-        //封装到pageinfo再设置总条数获取第一个list的大小size()方法
-        PageInfo<SpcgmxVo> info = new PageInfo<>(list2);
-        info.setTotal(list.size());
-        System.out.println(list);
-        return info;
-    }
-
-    @Override
     public PageInfo<SpcgmxVo> spmx(int currentPage, int pageSize) {
         List<SpcgmxVo> list=this.documentListDao.spmx(currentPage,pageSize);
         //封装分页插件
@@ -260,6 +243,47 @@ public class DocumentListServiceImpl implements DocumentListService {
     public List<SpcgmxVo> ywymc() {
         List<SpcgmxVo> list2 = this.documentListDao.ywymc();
         return list2;
+    }
+    /**
+     * 根据单据号查询
+     */
+    @Override
+    public List<CghzVo> selectnumberxyz(String number) {
+        return this.documentListDao.selectnumberxyz(number);
+    }
+    /**
+     * 根据单据号查询
+     */
+    @Override
+    public List<CghzVo> selectnumber1xyz(String number) {
+        return this.documentListDao.selectnumber1xyz(number);
+    }
+    /**
+     * 根据单据号查询
+     */
+    @Override
+    public List<CghzVo> selectnumber2xyz(String spName) {
+        return this.documentListDao.selectnumber2xyz(spName);
+    }
+    /**
+     * 销售商品汇总查询
+     * @return
+     */
+
+    @Override
+    public List<CghzVo> xssphz() {
+        List<CghzVo> list = this.documentListDao.xssphz();
+        return list;
+    }
+    /**
+     * 销售商品明细查询
+     * @return
+     */
+
+    @Override
+    public List<CghzVo> xsspmx() {
+        List<CghzVo> list = this.documentListDao.xsspmx();
+        return list;
     }
 
     @Override
