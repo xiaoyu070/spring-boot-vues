@@ -3,6 +3,7 @@ package com.trkj.projects.controller;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.trkj.projects.anntation.Log;
 import com.trkj.projects.mybatis.entity.Shop;
 import com.trkj.projects.mybatis.entity.Shops;
 import com.trkj.projects.service.ShopService;
@@ -64,6 +65,7 @@ public class ShopController {
         return AjaxResponse.success(map);
     }
     //退货中老商品添加不使用分页查询，实现整单退货
+    @Log("查询所有库存商品")
     @GetMapping("selectandstockvotuihuotest")
     public AjaxResponse selectandstockvotuihuotest(){
         Map<String,Object> map=new HashMap<>();
@@ -72,6 +74,7 @@ public class ShopController {
         return AjaxResponse.success(map);
     }
     //模糊查询商品vo
+    @Log("模糊查询商品")
     @GetMapping("likeselect")
     public AjaxResponse likeselect(Integer currenPage,Integer pageSize,String test){
         Map<String,Object> map=new HashMap<>();
@@ -82,6 +85,7 @@ public class ShopController {
         return AjaxResponse.success(map);
     }
     //模糊查询(退货)
+    @Log("模糊查询库存中的所有商品")
     @GetMapping("likeselecttuihuo")
     public AjaxResponse likeselecttuihuo(Integer currenPage,Integer pageSize,String test){
         Map<String,Object> map=new HashMap<>();

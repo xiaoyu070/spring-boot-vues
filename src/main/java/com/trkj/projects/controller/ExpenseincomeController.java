@@ -22,7 +22,6 @@ public class ExpenseincomeController {
     @GetMapping("/selectexpen")
     public AjaxResponse selectExpen(@RequestParam("pageSize")int pageSize,@RequestParam("size")int size){
         PageInfo<ExpenEntryVo> info = service.selectExpen(pageSize,size);
-        log.debug("1111111111111111"+info.toString());
         return AjaxResponse.success(info);
     }
     @PostMapping("/selectentry")

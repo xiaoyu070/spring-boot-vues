@@ -6,10 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.dao.DocumentShopDao;
 import com.trkj.projects.mybatis.entity.DocumentShop;
 import com.trkj.projects.service.DocumentShopService;
-import com.trkj.projects.vo.CgdjVo;
-import com.trkj.projects.vo.DocumentShopVo;
-import com.trkj.projects.vo.ShopVo;
-import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
@@ -124,6 +121,21 @@ public class DocumentShopServiceImpl implements DocumentShopService {
     @Override
     public List<DocumentShopVo> selectnumbers(String djh) {
         return this.documentShopDao.selectnumbers(djh);
+    }
+
+    @Override
+    public List<Documentlistshopstatiezreovo> huizoshop() {
+        return this.documentShopDao.huizoshop();
+    }
+
+    @Override
+    public List<Documentlistshopstatiezreojinhuomingxivo> selectshopnamehuizovo(String txxt) {
+        return this.documentShopDao.selectshopnamehuizovo(txxt);
+    }
+
+    @Override
+    public List<Documentlistshopstatiezreovo> huizoshoplike(String ttt) {
+        return this.documentShopDao.huizoshoplike(ttt);
     }
 
     @Override

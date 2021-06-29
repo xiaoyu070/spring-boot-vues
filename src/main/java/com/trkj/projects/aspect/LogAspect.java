@@ -54,7 +54,7 @@ public class LogAspect {
         // 记录下请求内容
         String xx=JSONObject.toJSONString(joinPoint.getArgs());
         Object[] str = joinPoint.getArgs();
-        System.out.println("xxxx::"+str.toString());
+        System.out.println("xxxx::"+xx);
         int index=xx.indexOf("userName");
         int index2=xx.indexOf('"'+","+'"'+"userPass");
         String cha=xx.substring(index+11,index2);

@@ -55,6 +55,7 @@ public class DocumentShopController {
     /**
      * 根据单价号查询商品
      */
+    @Log("通过单据号查询了某个单据中包含的商品")
     @PostMapping("selectnumbers")
     public AjaxResponse selectnumbers(@RequestBody String a){
         JSONObject jsonObject = JSON.parseObject(a);
@@ -69,10 +70,10 @@ public class DocumentShopController {
         map.put("rows",list);
         return AjaxResponse.success(map);
     }
+    @Log("通过单据号查询了状态为已审核的单据")
     @PostMapping("selectstatezreonumber")
     public AjaxResponse selectstatezreonumber(@RequestBody String a){
         JSONObject jsonObject = JSON.parseObject(a);
-        System.out.println("jsss:"+jsonObject);
         Integer currenPage = jsonObject.getInteger("currenPage");
         Integer pageSize = jsonObject.getInteger("pageSize");
         String numbers = jsonObject.getString("number");
@@ -83,6 +84,7 @@ public class DocumentShopController {
         map.put("rows",list);
         return AjaxResponse.success(map);
     }
+    @Log("删除了待审核单据中的某个商品")
     @PostMapping("deleteshopall")
     public AjaxResponse deleteshopall(@RequestBody String a){
         JSONObject jsonObject=JSONObject.parseObject(a);
@@ -112,6 +114,7 @@ public class DocumentShopController {
             return AjaxResponse.success("删除失败！");
         }
     }
+    @Log("修改了待审核单据中的某个商品")
     @PostMapping("/updateshop")
     public AjaxResponse updateshop(@RequestBody String a){
         JSONObject jsonObject = JSONObject.parseObject(a);
@@ -134,6 +137,43 @@ public class DocumentShopController {
         this.documentListService.update(list);
         return AjaxResponse.success("修改成功！");
     }
+    //查询商品汇总
+    @Log("查询商品汇总")
+    @GetMapping("selecthuizoshop")
+    public AjaxResponse selecthuizoshop(Integer currenPage,Integer pageSize){
+        Map<String,Object> map=new HashMap<>();
+        Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+        List<Documentlistshopstatiezreovo> list= this.documentShopService.huizoshop();
+        System.out.println("list:"+list.toString());
+        map.put("total",pg.getTotal());
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
+    //模糊查询商品汇总
+    @Log("模糊查询审核单据中的汇总表")
+    @GetMapping("selecthuizoshoplike")
+    public AjaxResponse selecthuizoshoplike(Integer currenPage,Integer pageSize,String ttt){
+        System.out.println("currenPage"+currenPage+"pageSize"+pageSize+"ttt"+ttt);
+        Map<String,Object> map=new HashMap<>();
+        Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+        List<Documentlistshopstatiezreovo> list= this.documentShopService.huizoshoplike(ttt);
+        System.out.println("list:"+list.toString());
+        map.put("total",pg.getTotal());
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
+    //根据商品名称查询单据明细
+    @Log("根据商品名称查询某个商品下包含的单据明细")
+    @GetMapping("selectshopnamehuizovo")
+    public AjaxResponse selectshopnamehuizovo(Integer currenPage,Integer pageSize,String txxt){
+        Map<String,Object> map=new HashMap<>();
+        Page<Object> pg = PageHelper.startPage(currenPage,pageSize);
+        List<Documentlistshopstatiezreojinhuomingxivo> list= this.documentShopService.selectshopnamehuizovo(txxt);
+        map.put("total",pg.getTotal());
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
+
 
     /**
      *
@@ -141,6 +181,7 @@ public class DocumentShopController {
      * @param a
      * @return
      */
+
     @PostMapping("xsupdateshop")
     public AjaxResponse xsupdateshop(@RequestBody String a){
         JSONObject jsonObject = JSONObject.parseObject(a);
