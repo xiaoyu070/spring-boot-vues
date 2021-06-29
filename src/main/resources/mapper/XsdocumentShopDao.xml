@@ -262,6 +262,9 @@
             <if test="xsSpState != null">
                 xs_sp_state = #{xsSpState},
             </if>
+            <if test="ysDlNumber != null and ysDlNumber != ''">
+                ys_dl_number = #{ysDlNumber},
+            </if>
         </set>
         where id = #{id}
     </update>

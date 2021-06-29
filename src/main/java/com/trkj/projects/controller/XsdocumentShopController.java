@@ -27,11 +27,6 @@ import java.util.Map;
  * (XsdocumentShop)表控制层
  *
  * @author makejava
-<<<<<<< HEAD
- * @since 2021-06-18 17:07:15
-=======
- * @since 2021-06-18 15:47:03
->>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
  */
 @RestController
 @RequestMapping("xsdocumentShop")

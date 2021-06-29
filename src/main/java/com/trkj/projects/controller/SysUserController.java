@@ -183,6 +183,16 @@ public class SysUserController {
         return AjaxResponse.success(map);
     }
 
+    /**
+     * 查询所有用户没有参数
+     * @return
+     */
+    @GetMapping("findalluser")
+    public AjaxResponse findalluser(){
+        List<SysUser_roles> list = this.sysUserService.selectuserall();
+        return AjaxResponse.success(list);
+    }
+
     @PostMapping("selectallroles")
     public AjaxResponse selectallRoles(@RequestBody String a){
         JSONObject jsonObject = JSON.parseObject(a);

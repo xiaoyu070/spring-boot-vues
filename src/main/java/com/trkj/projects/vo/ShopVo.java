@@ -45,6 +45,11 @@ public class ShopVo {
      */
     private String spManufacturer;
 
+    private String spTypeName;
+
+    private Integer sId;
+    private String suppliername;
+
     private String spBeizhu;
 
     private Date spTime;

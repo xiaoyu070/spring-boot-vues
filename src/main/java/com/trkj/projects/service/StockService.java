@@ -52,6 +52,7 @@ public interface StockService {
      * @return
      */
     int xsupdate(Stock stock);
+    int xsupdate2(Stock stock);
 
     PageInfo<StockVov> findallbytypeandlike(String nameandid, int currentPage, int pageSize);
     /**
@@ -137,4 +138,6 @@ public interface StockService {
      * @return
      */
     PageInfo<StockVo>baosunbaoyiselect(int currentPage, int pageSize,int param1, int param2);
+
+
 }

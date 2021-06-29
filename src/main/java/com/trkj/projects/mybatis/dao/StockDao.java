@@ -47,6 +47,7 @@ public interface StockDao {
      * @return 影响行数
      */
     int updateadd(Stock stock);
+
     /**
      * 修改数据
      *
@@ -54,6 +55,7 @@ public interface StockDao {
      * @return 影响行数xs
      */
     int xsupdateadd(Stock stock);
+    int xsupdateadd2(Stock stock);
 
     /**
      * 修改数据
@@ -129,6 +131,7 @@ public interface StockDao {
      * @return
      */
     List<StockVo>baosunbaoyiselect(int param1, int param2);
+
 
 
 }

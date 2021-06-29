@@ -83,6 +83,13 @@
         sk_number = sk_number - #{skNumber},sk_loss_number = sk_loss_number - #{skLossnumber}
         where sk_shopid = #{skShopid}
     </update>
+<!--    退货加库存数量-->
+    <update id="xsupdateadd2">
+        update projects.stock set
+        sk_number = sk_number + #{skNumber},sk_loss_number = sk_loss_number + #{skLossnumber}
+        where sk_shopid = #{skShopid}
+    </update>
+
 
     <!--通过商品编号和所在仓库修改库存数量-->
     <update id="updatedelete">

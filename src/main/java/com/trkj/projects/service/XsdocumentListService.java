@@ -1,5 +1,6 @@
 package com.trkj.projects.service;
 
+import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.mybatis.entity.XsdocumentList;
 import com.trkj.projects.vo.DocumentlistVo;
@@ -54,6 +55,10 @@ public interface XsdocumentListService {
      * 将未审核的销售单据状态改为已审核
      */
     void updatestaticzore(XsdocumentList xsdocumentList);
+    /**
+     * 将未审核的销售单据状态改为已审核
+     */
+    void updatestaticzoret(XsdocumentList xsdocumentList);
 
     /**
      * 通过主键删除数据
@@ -74,4 +79,8 @@ public interface XsdocumentListService {
      * 查询给定的俩个时间节点之间的销售单据
      */
     List<XsDocumentlistVo> xsselectdate(String date1, String date2);
+    PageInfo<XsDocumentlistVo> finxsdwlzw(String dlNumber, Integer cid, Integer wid, Integer agentid, Integer userid, Integer branchid, String date1, String date2,Integer currentPage, Integer pageSize);
+
+    void updatetwo(XsdocumentList documentlistVo);
 }
+

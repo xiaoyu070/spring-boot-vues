@@ -92,6 +92,11 @@ public class CustomerServiceImpl implements CustomerService {
         this.customerDao.updatemoney(money,customerid);
     }
 
+    @Override
+    public void updatemoney2(Double dlzonje, Integer customerid) {
+        this.customerDao.updatemoney2(dlzonje,customerid);
+    }
+
     /**
      * 通过主键删除数据
      *
