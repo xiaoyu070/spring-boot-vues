@@ -42,9 +42,9 @@ public class ShopController {
 //        this.shopService.insert(shop);
 //        return ajaxResponse;
 //    }
+    //老商品添加中的商品信息查询
     @GetMapping("shopandstockvo")
     public AjaxResponse shopandstockvo(Integer currenPage,Integer pageSize,int value){
-        System.out.println("currenPage:"+currenPage+",,"+"pageSize:"+pageSize+",,"+value);
         Map<String,Object> map=new HashMap<>();
         Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
         List<Shopandstock> list=this.shopService.queryshopanstock(value);
@@ -53,11 +53,40 @@ public class ShopController {
         return AjaxResponse.success(map);
     }
 
+    //退货中老商品添加中的商品信息查询
+    @GetMapping("shopandstockvotuihuo")
+    public AjaxResponse shopandstockvotuihuo(Integer currenPage,Integer pageSize,int value){
+        Map<String,Object> map=new HashMap<>();
+        Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+        List<Shopandstock> list=this.shopService.queryshopanstocktuihuo(value);
+        map.put("total",pg.getTotal());
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
+    //退货中老商品添加不使用分页查询，实现整单退货
+    @GetMapping("selectandstockvotuihuotest")
+    public AjaxResponse selectandstockvotuihuotest(){
+        Map<String,Object> map=new HashMap<>();
+        List<Shopandstock> list=this.shopService.queryshopanstocktuihuo(0);
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
+    //模糊查询商品vo
     @GetMapping("likeselect")
     public AjaxResponse likeselect(Integer currenPage,Integer pageSize,String test){
         Map<String,Object> map=new HashMap<>();
         Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
         List<Shopandstock> list=this.shopService.likeselect(test);
+        map.put("total",pg.getTotal());
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
+    //模糊查询(退货)
+    @GetMapping("likeselecttuihuo")
+    public AjaxResponse likeselecttuihuo(Integer currenPage,Integer pageSize,String test){
+        Map<String,Object> map=new HashMap<>();
+        Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+        List<Shopandstock> list=this.shopService.likeselecttuihuo(test);
         map.put("total",pg.getTotal());
         map.put("rows",list);
         return AjaxResponse.success(map);
@@ -72,6 +101,15 @@ public class ShopController {
         map.put("rows",list);
         return AjaxResponse.success(map);
     }
+    //根据选择的出货仓库查询该仓库下的所有商品
+    @GetMapping("chcsselect")
+    public AjaxResponse chcsselect(Integer wid){
+        Map<String,Object> map=new HashMap<>();
+        List<Shopandstock> list=this.shopService.chcsselect(wid);
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
+
 
     //------------------------------------------------
 

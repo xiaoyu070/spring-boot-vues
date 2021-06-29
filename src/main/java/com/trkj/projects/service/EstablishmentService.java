@@ -64,7 +64,10 @@ public interface EstablishmentService {
      * 通过id减少银行金额（给供货商付款）
      */
     void updateestab(Establishment establishment);
-
+    /**
+     * 通过id增加银行金额（退货后供货商的实付金额）
+     */
+    void updateestabjia(Establishment establishment);
 
     List<Establishment> selectbybranchid(Integer branchid);
 

@@ -2,6 +2,7 @@ package com.trkj.projects.service.impl;
 
 import com.trkj.projects.mybatis.dao.SysRolesDao;
 import com.trkj.projects.mybatis.entity.SysRoles;
+import com.trkj.projects.mybatis.entity.SysUserRoles;
 import com.trkj.projects.service.SysRolesService;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,11 @@ import java.util.List;
 public class SysRolesServiceImpl implements SysRolesService {
     @Resource
     private SysRolesDao sysRolesDao;
+
+    @Override
+    public List<SysRoles> selectall() {
+        return this.sysRolesDao.selectall();
+    }
 
     /**
      * 通过ID查询单条数据
@@ -75,5 +81,25 @@ public class SysRolesServiceImpl implements SysRolesService {
     @Override
     public boolean deleteById(Integer rolesId) {
         return this.sysRolesDao.deleteById(rolesId) > 0;
+    }
+
+    @Override
+    public void insertroles(SysRoles sysRoles) {
+        this.sysRolesDao.insertroles(sysRoles);
+    }
+
+    @Override
+    public List<SysUserRoles> selectuseranroles(Integer rolesId) {
+        return this.sysRolesDao.selectuseranroles(rolesId);
+    }
+
+    @Override
+    public List<SysRoles> likeroles(String rolestext) {
+        return this.sysRolesDao.likeroles(rolestext);
+    }
+
+    @Override
+    public List<SysRoles> findbyuseridroles(int userid) {
+        return this.sysRolesDao.findbyuseridroles(userid);
     }
 }

@@ -66,8 +66,14 @@ public interface SupplierService {
 
     Integer deletepl(Integer[] supplierid);
 
+
     /**
      * 单据号审核通过后，该单据中包含的商品根据供应商将采购付款一一对应加入到供货商的初期余额中
      */
     void numbersmoney(double money,int supplierid);
+
+    /**
+     * 退货单据审核通过后，该单据中包含的商品根据提供的供应商id将退货实际收款一一对应并减少供货商的初期余额
+     */
+    void numbersmoneyjian(double money,int supplierid);
 }

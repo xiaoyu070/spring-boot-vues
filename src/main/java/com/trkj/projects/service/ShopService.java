@@ -5,6 +5,7 @@ import com.trkj.projects.mybatis.entity.Shop;
 import com.trkj.projects.mybatis.entity.Shops;
 import com.trkj.projects.vo.ShopVo;
 import com.trkj.projects.vo.Shopandstock;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -62,15 +63,26 @@ public interface ShopService {
     List<Shopandstock> queryshopanstock(int value);
 
     /**
+     * 查询库存中剩余数量不为0的商品（退货）
+     */
+    List<Shopandstock> queryshopanstocktuihuo(int value);
+    /**
      * 模糊查询
      */
     List<Shopandstock> likeselect(String test);
+    /**
+     * 模糊查询退货(库存大于0时才可以退货)
+     */
+    List<Shopandstock> likeselecttuihuo(String test);
 
     /**
      * 只显示当前供货商提供的商品
      */
     List<Shopandstock> showsupplier(Integer test);
-
+    /**
+     * 根据选择的出货仓库查询他对应的商品库存（退货）
+     */
+    List<Shopandstock> chcsselect(int wid);
 
 /**
  * -------------------------------------------------------------------------

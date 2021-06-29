@@ -1,9 +1,15 @@
 package com.trkj.projects.service;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.trkj.projects.anntation.Log;
+import com.trkj.projects.mybatis.entity.SysRoles;
 import com.trkj.projects.mybatis.entity.SysUser;
 import com.trkj.projects.vo.SysUser_roles;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,8 +20,14 @@ import java.util.List;
  */
 public interface SysUserService {
 
-
-    SysUser findByNames(String name,String pass);
+    //新增用户
+    void insertuser(SysUser sysUser);
+    /**
+     * 根据用户名称查询用户
+     * @param sysUser
+     * @return
+     */
+    SysUser findByNames(SysUser sysUser);
 
     /**
      * 根据手机号查询用户
@@ -28,5 +40,37 @@ public interface SysUserService {
      * @return
      */
     SysUser_roles findByUser_roles(int uid);
+    /**
+     * 查询所有用户vo
+     * @return
+     */
+    List<SysUser_roles> selectuserall();
+    
 
+    //修改用户状态为0
+    void updateuserstatezero(int id);
+    //修改用户状态为1
+    void updateuserstateone(int id);
+    //修改用户
+    void updateusers(SysUser sysUser);
+    //根据用户id修改用户对应的角色id
+    void updateuserandroles(@Param("rolesid") int rolesid, @Param("userid") int userid);
+    //新增用户权限
+    void insertuserandroles(@Param("userid") int userid,@Param("rolesid") int rolesid);
+    //根据用户id删除该用户的所有角色
+    void deleteuserandroles(@Param("userid") int userid);
+
+    //修改用户状态为1(删除)
+    void deleteuserid(int userid);
+    //修改用户最后登录时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    void updateerror(Date date, int userid);
+
+    /**
+     * 模糊查询用户
+     * @param ttt
+     * @return
+     */
+    List<SysUser> likeusers(String ttt);
 }

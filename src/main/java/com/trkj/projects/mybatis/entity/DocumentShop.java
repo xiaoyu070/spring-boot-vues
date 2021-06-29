@@ -26,6 +26,15 @@ public class DocumentShop implements Serializable {
      */
     private Integer supperlierid;
     /**
+     * 所在店面外键id
+     */
+    private Integer branchid;
+    /**
+     * 客户外键
+     */
+    private Integer customerid;
+
+    /**
      * 所在仓库外键id
      */
     private Integer wid;
@@ -69,5 +78,9 @@ public class DocumentShop implements Serializable {
      * 备注
      */
     private String beizhu;
+    /**
+     * 销售退货状态为1就是已退回的销售商品
+     */
+    private Integer xsspstate;
 
 }

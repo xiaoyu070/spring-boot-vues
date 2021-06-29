@@ -1,18 +1,22 @@
 package com.trkj.projects.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.trkj.projects.anntation.Log;
 import com.trkj.projects.mybatis.entity.DocumentList;
 import com.trkj.projects.mybatis.entity.DocumentShop;
+import com.trkj.projects.mybatis.entity.XsdocumentList;
 import com.trkj.projects.service.DocumentListService;
 import com.trkj.projects.service.DocumentShopService;
-import com.trkj.projects.vo.AjaxResponse;
-import com.trkj.projects.vo.CgdjVo;
-import com.trkj.projects.vo.DocumentShopVo;
-import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.service.XsdocumentListService;
+import com.trkj.projects.vo.*;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +39,9 @@ public class DocumentShopController {
 
     @Resource
     private DocumentListService documentListService;
+
+    @Resource
+    private XsdocumentListService xsdocumentListService;
     /**
      * 通过主键查询单条数据
      *
@@ -45,13 +52,33 @@ public class DocumentShopController {
     public DocumentShop selectOne(Integer id) {
         return this.documentShopService.queryById(id);
     }
-
-    @GetMapping("selectnumber")
-    public AjaxResponse selectnumber(Integer currenPage,Integer pageSize,String number){
+    /**
+     * 根据单价号查询商品
+     */
+    @PostMapping("selectnumbers")
+    public AjaxResponse selectnumbers(@RequestBody String a){
+        JSONObject jsonObject = JSON.parseObject(a);
+        System.out.println("sssss:"+jsonObject);
+        Integer currenPage = jsonObject.getInteger("currenPage");
+        Integer pageSize = jsonObject.getInteger("pageSize");
+        String number = jsonObject.getString("number");
         Map<String,Object> map=new HashMap<>();
         Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
-        List<DocumentShopVo> list= this.documentShopService.selectnumber(number);
-        System.out.println("selectnumber:list:"+list);
+        List<DocumentShopVo> list= this.documentShopService.selectnumbers(number);
+        map.put("total",pg.getTotal());
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
+    @PostMapping("selectstatezreonumber")
+    public AjaxResponse selectstatezreonumber(@RequestBody String a){
+        JSONObject jsonObject = JSON.parseObject(a);
+        System.out.println("jsss:"+jsonObject);
+        Integer currenPage = jsonObject.getInteger("currenPage");
+        Integer pageSize = jsonObject.getInteger("pageSize");
+        String numbers = jsonObject.getString("number");
+        Map<String,Object> map=new HashMap<>();
+        Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+        List<DocumentShopVo> list= this.documentShopService.selectstatezreoNumbers(numbers);
         map.put("total",pg.getTotal());
         map.put("rows",list);
         return AjaxResponse.success(map);
@@ -62,36 +89,132 @@ public class DocumentShopController {
         String shops = jsonObject.getString("tabshop");
         List<DocumentShopVo> list=JSONObject.parseArray(shops,DocumentShopVo.class);
         boolean tt = true;
+        //循环删除选中的单据商品
         for (int i=0;i<list.size();i++){
             tt = this.documentShopService.deleteById(list.get(i).getId());
         }
+        double zzz=0;
+        String number = list.get(0).getDlNumber();
+        //循环获取修改后的总金额
+        List<DocumentShopVo> listshop =this.documentShopService.selectnumbers(number);
+        for(int i = 0;i<listshop.size();i++){
+            zzz += listshop.get(i).getZje();
+        }
+        //根据传入的单据号修改应付实付金额
+        DocumentList listsss = new DocumentList();
+        listsss.setDlNumber(list.get(0).getDlNumber());
+        listsss.setDlYfje(zzz);
+        listsss.setDlSfje(zzz);
+        this.documentListService.update(listsss);
         if(tt == true){
             return AjaxResponse.success("删除成功！");
         }else{
             return AjaxResponse.success("删除失败！");
         }
     }
-
-    @PostMapping("updateshop")
+    @PostMapping("/updateshop")
     public AjaxResponse updateshop(@RequestBody String a){
         JSONObject jsonObject = JSONObject.parseObject(a);
         String one = jsonObject.getString("tabshop");
         DocumentShop documentShop = JSONObject.parseObject(one,DocumentShop.class);
+        //修改商品的商品数量
         this.documentShopService.update(documentShop);
         double zzz = 0;
-        List<DocumentShopVo> listshop= this.documentShopService.selectnumber(documentShop.getDlNumber());
-        System.out.println("listshop:"+listshop);
+        String number = documentShop.getDlNumber();
+        //循环获取修改后的总金额
+        List<DocumentShop> listshop = this.documentShopService.selectdocumentlistshop(number);
         for(int i = 0;i<listshop.size();i++){
             zzz += listshop.get(i).getZje();
         }
-        System.out.println("zzz:"+zzz);
+        //根据传入的单据号修改应付实付金额
         DocumentList list = new DocumentList();
         list.setDlNumber(documentShop.getDlNumber());
         list.setDlYfje(zzz);
         list.setDlSfje(zzz);
         this.documentListService.update(list);
-        System.out.println("documentShop"+documentShop.getDlNumber());
         return AjaxResponse.success("修改成功！");
+    }
+
+    /**
+     *
+     * 修改商品更新该单据的金额
+     * @param a
+     * @return
+     */
+    @PostMapping("xsupdateshop")
+    public AjaxResponse xsupdateshop(@RequestBody String a){
+        JSONObject jsonObject = JSONObject.parseObject(a);
+        String one = jsonObject.getString("tabshop");
+        DocumentShop documentShop = JSONObject.parseObject(one,DocumentShop.class);
+        this.documentShopService.update(documentShop);
+        double zzz = 0;
+        List<DocumentShopVo> listshop= this.documentShopService.selectnumbers(documentShop.getDlNumber());
+        for(int i = 0;i<listshop.size();i++){
+            zzz += listshop.get(i).getZje();
+        }
+        //根据修改的商品的单据号查询该单据信息
+        XsDocumentlistVo xsvo = xsdocumentListService.queryBydlnumber(documentShop.getDlNumber());
+        System.out.println(documentShop.getDlNumber()+" : "+xsvo.toString());
+        XsdocumentList list = new XsdocumentList();
+        list.setDlNumber(documentShop.getDlNumber());
+        list.setDlzonje(zzz);//总金额
+        //应收金额=总金额*折扣率
+        double aa = xsvo.getV_type_ck() * zzz;
+        list.setDlYsje(aa);//应收
+        list.setDlSsje(aa);//实收
+        //优惠=总金额-应收
+        double yh = zzz-aa;
+        list.setDlYhje(yh);
+        this.xsdocumentListService.update(list);
+        return AjaxResponse.success("修改成功！");
+    }
+
+    /**
+     * 根据单据号删除商品更新该单据的金额
+     * @param a
+     * @return
+     */
+    @PostMapping("xsdeleteshopall")
+    public AjaxResponse xsdeleteshopall(@RequestBody String a){
+        JSONObject jsonObject=JSONObject.parseObject(a);
+        String shops = jsonObject.getString("tabshop");
+        List<DocumentShopVo> list=JSONObject.parseArray(shops,DocumentShopVo.class);
+        System.out.println("删掉商品前："+list.toString());
+        boolean tt = true;
+        for (int i=0;i<list.size();i++){
+            tt = this.documentShopService.deleteById(list.get(i).getId());
+        }
+        if(tt == true){
+            double zzz = 0;
+            List<DocumentShopVo> listshop= this.documentShopService.selectnumbers(list.get(0).getDlNumber());
+            for(int i = 0;i<listshop.size();i++){
+                zzz += listshop.get(i).getZje();
+            }
+            XsDocumentlistVo xsvo = xsdocumentListService.queryBydlnumber(list.get(0).getDlNumber());
+            XsdocumentList xsdocumentList = new XsdocumentList();
+            xsdocumentList.setDlNumber(xsvo.getDlNumber());
+            xsdocumentList.setDlzonje(zzz);
+            double aa = xsvo.getV_type_ck() * zzz;
+            xsdocumentList.setDlYsje(aa);
+            xsdocumentList.setDlSsje(aa);
+            double yh = zzz-aa;
+            xsdocumentList.setDlYhje(yh);
+            this.xsdocumentListService.update(xsdocumentList);
+            return AjaxResponse.success("删除成功！");
+        }else{
+            return AjaxResponse.success("删除失败！");
+        }
+    }
+
+    /**
+     * 根据分店id查询销售商品
+     * @return
+     */
+    @GetMapping("selectBycid")
+    public AjaxResponse selectBycid(Integer cid,String data1,String data2,Integer currentPage, Integer pageSize,String name){
+        PageInfo<DocumentShopVo> page = documentShopService.selectbycid(cid,data1,data2,currentPage,pageSize,name);
+        System.out.println("商品信息："+page);
+        return AjaxResponse.success(page);
     }
 
     @GetMapping("selectByname")
@@ -136,5 +259,6 @@ public class DocumentShopController {
         System.out.println(list);
         return AjaxResponse.success(list);
     }
+
 
 }

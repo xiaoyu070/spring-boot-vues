@@ -30,7 +30,10 @@ public class XsDocumentlistVo {
      * 客户会员折扣id
      */
     private double v_type_ck;
-
+    /**
+     * 仓库id
+     */
+    private Integer wid;
     /**
      * 仓库名称
      */
@@ -51,6 +54,10 @@ public class XsDocumentlistVo {
      * 优惠金额
      */
     private double dlyhje;
+    /**
+     * 总金额
+     */
+    private double dlzonje;
     /**
      * 员工名称
      */
@@ -79,6 +86,15 @@ public class XsDocumentlistVo {
      * 店面id
      */
     private Integer branchid;
+
+    /**
+     * 类型外键id
+     */
+    private Integer dlTypeId;
+    /**
+     * 状态外键id
+     */
+    private Integer dlStatieId;
 
 
 }

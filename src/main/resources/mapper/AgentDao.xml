@@ -178,13 +178,9 @@
         where branchid = #{branchid}
     </select>
 
-
-
 <!--    文利君  查询所有经办人-->
     <select id="slectagentname" resultMap="AgentMap">
         SELECT * FROM agent
     </select>
-
-
 </mapper>
 

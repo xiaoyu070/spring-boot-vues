@@ -22,6 +22,9 @@ public class Customer implements Serializable {
      * 客户类型外键
      */
     private Integer cTypeid;
+
+    private Integer vtypeid;
+    private double vtypeck;
     /**
      * 联系人
      */
@@ -67,109 +70,8 @@ public class Customer implements Serializable {
      */
     private Integer cIsmoren;
 
-
-    public Integer getCId() {
-        return cId;
-    }
-
-    public void setCId(Integer cId) {
-        this.cId = cId;
-    }
-
-    public Integer getCTypeid() {
-        return cTypeid;
-    }
-
-    public void setCTypeid(Integer cTypeid) {
-        this.cTypeid = cTypeid;
-    }
-
-    public String getCContacts() {
-        return cContacts;
-    }
-
-    public void setCContacts(String cContacts) {
-        this.cContacts = cContacts;
-    }
-
-    public Integer getAddressid() {
-        return addressid;
-    }
-
-    public void setAddressid(Integer addressid) {
-        this.addressid = addressid;
-    }
-
-    public String getCPhone() {
-        return cPhone;
-    }
-
-    public void setCPhone(String cPhone) {
-        this.cPhone = cPhone;
-    }
-
-    public Double getCMoney() {
-        return cMoney;
-    }
-
-    public void setCMoney(Double cMoney) {
-        this.cMoney = cMoney;
-    }
-
-    public Integer getBranchid() {
-        return branchid;
-    }
-
-    public void setBranchid(Integer branchid) {
-        this.branchid = branchid;
-    }
-
-    public Integer getUserid() {
-        return userid;
-    }
-
-    public void setUserid(Integer userid) {
-        this.userid = userid;
-    }
-
-    public String getCLxaddress() {
-        return cLxaddress;
-    }
-
-    public void setCLxaddress(String cLxaddress) {
-        this.cLxaddress = cLxaddress;
-    }
-
-    public String getBeizhu() {
-        return beizhu;
-    }
-
-    public void setBeizhu(String beizhu) {
-        this.beizhu = beizhu;
-    }
-
-    public Date getCTime() {
-        return cTime;
-    }
-
-    public void setCTime(Date cTime) {
-        this.cTime = cTime;
-    }
-
-    public Integer getCState() {
-        return cState;
-    }
-
-    public void setCState(Integer cState) {
-        this.cState = cState;
-    }
-
-    public Integer getCIsmoren() {
-        return cIsmoren;
-    }
-
-    public void setCIsmoren(Integer cIsmoren) {
-        this.cIsmoren = cIsmoren;
-    }
+    private Address address;
+    private CustomerType customerType;
+    private Branch branch;
 
 }

@@ -163,4 +163,9 @@ public class SupplierServiceImpl implements SupplierService {
         this.supplierDao.numbersmoney(money,supplierid);
     }
 
+    @Override
+    public void numbersmoneyjian(double money, int supplierid) {
+        this.supplierDao.numbersmoneyjian(money,supplierid);
+    }
+
 }

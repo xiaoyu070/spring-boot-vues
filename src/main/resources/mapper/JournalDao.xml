@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.JournalDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.Journal" id="JournalMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="paramsname" column="paramsname" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="functions" column="functions" jdbcType="VARCHAR"/>
+        <result property="paramslength" column="paramslength" jdbcType="VARCHAR"/>
+        <result property="addressip" column="Addressip" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="JournalMap">
+        select
+          id, paramsname, create_date, user_name, functions, paramslength, Addressip
+        from projects.journal
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="JournalMap">
+        select
+          id, paramsname, create_date, user_name, functions, paramslength, Addressip
+        from projects.journal
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="JournalMap">
+        select
+        id, paramsname, create_date, user_name, functions, paramslength, Addressip
+        from projects.journal
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="paramsname != null and paramsname != ''">
+                and paramsname = #{paramsname}
+            </if>
+            <if test="createDate != null">
+                and create_date = #{createDate}
+            </if>
+            <if test="userName != null and userName != ''">
+                and user_name = #{userName}
+            </if>
+            <if test="functions != null and functions != ''">
+                and functions = #{functions}
+            </if>
+            <if test="paramslength != null and paramslength != ''">
+                and paramslength = #{paramslength}
+            </if>
+            <if test="addressip != null and addressip != ''">
+                and Addressip = #{addressip}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.journal(paramsname, create_date, user_name, functions, paramslength, Addressip)
+        values (#{paramsname}, #{createDate}, #{userName}, #{functions}, #{paramslength}, #{addressip})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.journal(paramsname, create_date, user_name, functions, paramslength, Addressip)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.paramsname}, #{entity.createDate}, #{entity.userName}, #{entity.functions},
+            #{entity.paramslength}, #{entity.addressip})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.journal(paramsname, create_date, user_name, functions, paramslength, Addressip)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.paramsname}, #{entity.createDate}, #{entity.userName}, #{entity.functions},
+            #{entity.paramslength}, #{entity.addressip})
+        </foreach>
+        on duplicate key update
+        paramsname = values(paramsname) , create_date = values(create_date) , user_name = values(user_name) , functions
+        = values(functions) , paramslength = values(paramslength) , Addressip = values(Addressip)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.journal
+        <set>
+            <if test="paramsname != null and paramsname != ''">
+                paramsname = #{paramsname},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate},
+            </if>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="functions != null and functions != ''">
+                functions = #{functions},
+            </if>
+            <if test="paramslength != null and paramslength != ''">
+                paramslength = #{paramslength},
+            </if>
+            <if test="addressip != null and addressip != ''">
+                Addressip = #{addressip},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.journal where id = #{id}
+    </delete>
+
+</mapper>
+

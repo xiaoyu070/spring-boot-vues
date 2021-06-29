@@ -3,12 +3,14 @@
 <mapper namespace="com.trkj.projects.mybatis.dao.DocumentListDao">
 
 <!--  欧阳渗的实体类  -->
+    <!--  欧阳渗的实体类  -->
     <resultMap type="com.trkj.projects.mybatis.entity.DocumentList" id="DocumentListMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
         <result property="dlDate" column="dl_date" jdbcType="TIMESTAMP"/>
         <result property="supplierid" column="supplierid" jdbcType="INTEGER"/>
         <result property="customerid" column="customerid" jdbcType="INTEGER"/>
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
         <result property="wid" column="wid" jdbcType="INTEGER"/>
         <result property="dlYfje" column="dl_yfje" jdbcType="NUMERIC"/>
         <result property="dlSfje" column="dl_sfje" jdbcType="NUMERIC"/>
@@ -22,10 +24,12 @@
     </resultMap>
 
 <!--  欧阳渗的VO  -->
+    <!--  欧阳渗的VO  -->
     <resultMap type="com.trkj.projects.vo.DocumentlistVo" id="DocumentListVOMap">
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
         <result property="dlDate" column="dl_date" jdbcType="TIMESTAMP"/>
         <result property="suppliername" column="suppliername" jdbcType="VARCHAR"/>
+        <result property="supplierid" column="supplierid" jdbcType="INTEGER"/>
         <result property="contacts" column="c_contacts" jdbcType="VARCHAR"/>
         <result property="wname" column="wname" jdbcType="VARCHAR"/>
         <result property="dlyfje" column="dl_yfje" jdbcType="NUMERIC"/>
@@ -33,7 +37,10 @@
         <result property="dlqkje" column="dl_qkje" jdbcType="NUMERIC"/>
         <result property="dlyhje" column="dl_yhje" jdbcType="NUMERIC"/>
         <result property="agentname" column="agent_name" jdbcType="VARCHAR"/>
+        <result property="agentid" column="agent_id" jdbcType="INTEGER"/>
         <result property="username" column="user_name" jdbcType="VARCHAR"/>
+        <result property="dltypeid" column="dl_type_id" jdbcType="INTEGER"/>
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
         <result property="dltypename" column="dl_type_name" jdbcType="VARCHAR"/>
         <result property="dlstatiename" column="dl_statie_name" jdbcType="VARCHAR"/>
         <result property="dlbeizhu" column="dl_beizhu" jdbcType="VARCHAR"/>
@@ -53,6 +60,20 @@
         <result property="userName" column="user_name" jdbcType="VARCHAR"/>
         <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
     </resultMap>
+    <resultMap type="com.trkj.projects.vo.SpxsmxVo" id="SpxsmxVo">
+        <result property="dlDate" column="dl_date" jdbcType="VARCHAR"/>
+        <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
+        <result property="dlYSje" column="dl_ysje" jdbcType="NUMERIC"/>
+        <result property="dlSSje" column="dl_ssje" jdbcType="NUMERIC"/>
+        <result property="dlBeiZhu" column="dl_beizhu" jdbcType="VARCHAR"/>
+        <result property="agentName" column="agent_name" jdbcType="VARCHAR"/>
+        <result property="WName" column="wname" jdbcType="VARCHAR"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
+        <result property="cContacts" column="c_contacts" jdbcType="VARCHAR"/>
+        <result property="dlTypeName" column="dl_type_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
     <resultMap type="com.trkj.projects.vo.CghzVo" id="CghzVo">
         <result property="spShopId" column="sp_shopid" jdbcType="INTEGER"/>
         <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
@@ -60,8 +81,13 @@
         <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
         <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
         <result property="skNumber" column="sk_number" jdbcType="INTEGER"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="lossNumber" column="loss_number" jdbcType="INTEGER"/>
+        <result property="zje" column="zje" jdbcType="NUMERIC"/>
+        <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
         <result property="spPresetPrice" column="sp_Preset_price" jdbcType="VARCHAR"/>
         <result property="skLoss" column="sk_loss" jdbcType="VARCHAR"/>
+        <result property="spTypeName" column="sp_type_name" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap type="com.trkj.projects.vo.SpcgmxVo" id="SpcgmxVo">
         <result property="number" column="number" jdbcType="INTEGER"/>
@@ -79,8 +105,11 @@
         <result property="WName" column="wname" jdbcType="VARCHAR"/>
         <result property="agentName" column="agent_name" jdbcType="VARCHAR"/>
         <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
+        <result property="dlTypeName" column="dl_type_name" jdbcType="VARCHAR"/>
     </resultMap>
 <!--    邓峄楷-->
+
+    <!--    邓峄楷-->
     <select id="findallbyfdandkhanduserandgjz" resultMap="DocumentListVOMap">
         SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,c.c_contacts,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_name,dl.dl_beizhu
         FROM document_list dl
@@ -181,14 +210,18 @@
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
         insert into projects.document_list(dl_number, dl_date, supplierid,customerid, wid, dl_yfje, dl_sfje, dl_qkje, dl_yhje, agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu)
         values (#{dlNumber}, #{dlDate}, #{supplierid},#{customerid}, #{wid}, #{dlYfje}, #{dlSfje}, #{dlQkje}, #{dlYhje}, #{agentId}, #{admin}, #{dlTypeId}, #{dlStatieId}, #{dlBeizhu})
+        insert into projects.document_list(branchid,dl_number, dl_date, supplierid,customerid, wid, dl_yfje, dl_sfje, dl_qkje, dl_yhje, agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu)
+        values (#{branchid},#{dlNumber}, #{dlDate}, #{supplierid},#{customerid}, #{wid}, #{dlYfje}, #{dlSfje}, #{dlQkje}, #{dlYhje}, #{agentId}, #{admin}, #{dlTypeId}, #{dlStatieId}, #{dlBeizhu})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
         insert into projects.document_list(dl_number, dl_date, supplierid, wid, dl_yfje, dl_sfje, dl_qkje, dl_yhje,
+        insert into projects.document_list(branchid,dl_number, dl_date, supplierid, wid, dl_yfje, dl_sfje, dl_qkje, dl_yhje,
         agent_id, admin, dl_type_id, dl_statie_id, dl_beizhu)
         values
         <foreach collection="entities" item="entity" separator=",">
             (#{entity.dlNumber}, #{entity.dlDate}, #{entity.supplierid}, #{entity.wid}, #{entity.dlYfje},
+            (#{branchid},#{entity.dlNumber}, #{entity.dlDate}, #{entity.supplierid}, #{entity.wid}, #{entity.dlYfje},
             #{entity.dlSfje}, #{entity.dlQkje}, #{entity.dlYhje}, #{entity.agentId}, #{entity.admin},
             #{entity.dlTypeId}, #{entity.dlStatieId}, #{entity.dlBeizhu})
         </foreach>
@@ -266,21 +299,28 @@
     <!-- 查询单据为待审核的数据 -->
     <select id="selectvo" resultMap="DocumentListVOMap">
         SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_name,dl.dl_beizhu
+        SELECT ws.wid,dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_id,dlt.dl_type_name,dl.dl_beizhu
         FROM document_list dl
         LEFT JOIN supplier sl ON dl.supplierid = sl.supplierid
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
+        LEFT JOIN warehouse ws ON ws.wid = dl.wid
         LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
         LEFT JOIN branch dm ON dm.branchid = ws.branchid
+        LEFT JOIN branch dm ON dm.branchid = dl.branchid
         <where>
             dl.dl_statie_id = 1
+            (dl.dl_statie_id = 1 or dl.dl_statie_id = 3)
             <if test="dlNumber != null  and dlNumber != ''">
                 AND dl.dl_number LIKE CONCAT('%',#{dlNumber},'%')
             </if>
             <if test="suppliername != null and  suppliername != ''">
                 AND sl.suppliername LIKE CONCAT('%',#{suppliername},'%')
+            </if>
+            <if test="supplierid != null and  supplierid != ''">
+                AND sl.supplierid = #{supplierid}
             </if>
             <if test="wname != null and wname != ''">
                 AND ws.wname LIKE CONCAT('%',#{wname},'%')
@@ -302,6 +342,9 @@
             </if>
             <if test="branchname != null and branchname != ''">
                 AND dm.branchname LIKE CONCAT('%',#{branchname},'%')
+            </if>
+            <if test="branchid != null and branchid != ''">
+                AND dm.branchid = #{branchid}
             </if>
             ORDER BY dl.dl_date DESC
         </where>
@@ -353,6 +396,7 @@
     <!-- 模糊查询单据为待审核的单据 -->
     <select id="likevo" resultMap="DocumentListVOMap">
         SELECT dl.dl_number,dl.dl_date,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_name,dl.dl_beizhu
+        SELECT ws.wid,dl.dl_number,dl.dl_date,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_id,dlt.dl_type_name,dl.dl_beizhu
         FROM document_list dl
         LEFT JOIN supplier sl ON dl.supplierid = sl.supplierid
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
@@ -364,6 +408,20 @@
         or (sl.suppliername LIKE  CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
         or (ws.wname LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1)
         or (ws.wname LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1) ORDER BY dl.dl_date DESC
+        LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
+        <where>
+            dl.dl_statie_id = 1 or dl.dl_statie_id = 3
+            <if test="text != null || text != ''">
+                or (sl.suppliername LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1 or dl.dl_statie_id = 3)
+            </if>
+            <if test="text != null || text != ''">
+                or (ws.wname LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1 or dl.dl_statie_id = 3)
+            </if>
+            <if test="text != null || text != ''">
+                or (dl.dl_number LIKE CONCAT('%',#{text},'%') and dl.dl_statie_id = 1 or dl.dl_statie_id = 3)
+            </if>
+        </where>
+        ORDER BY dl.dl_date DESC
     </select>
     <!-- 模糊查询销售单据为待审核的单据 -->
     <select id="xslikevo" resultMap="DocumentListVOMap">
@@ -382,13 +440,22 @@
 
     </select>
     <!-- 将待审核状态的单据改为已审核 -->
+    <!-- 将采购待审核状态的单据改为已审核 -->
     <update id="updatestaticzore">
         update document_list set dl_statie_id = 0,dl_qkje = #{dlQkje},dl_sfje= #{dlSfje},dl_yfje=#{dlYfje} where dl_number = #{dlNumber}
     </update>
 
     <!-- 查询往来账务中的单据 -->
+    <!-- 将退货待审核状态的单据改为已审核 -->
+    <update id="updatestatictwo">
+        update document_list set dl_statie_id = 2,dl_qkje = #{dlQkje},dl_sfje= #{dlSfje},dl_yfje=#{dlYfje} where dl_number = #{dlNumber}
+    </update>
+
+
+    <!-- 查询往来账务中的单据 采购已审核和退货已审核的单据 -->
     <select id="selectwlzw" resultMap="DocumentListVOMap">
         SELECT dl.dl_number,dm.branchname,dl.dl_date,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dlt.dl_type_name,dls.dl_statie_name,dl.dl_beizhu
+        SELECT ws.wid,dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.supplierid,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_id,dlt.dl_type_name,dl.dl_beizhu
         FROM document_list dl
         LEFT JOIN supplier sl ON dl.supplierid = sl.supplierid
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
@@ -397,11 +464,88 @@
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
         LEFT JOIN branch dm ON dm.branchid = sl.companyid WHERE dl.dl_statie_id = 0 ORDER BY dl.dl_date DESC
+        LEFT JOIN branch dm ON dm.branchid = dl.branchid
+        <where>
+            (dls.dl_statie_id = 0 OR dls.dl_statie_id = 2)
+            <if test="dlNumber != null  and dlNumber != ''">
+                AND dl.dl_number LIKE CONCAT('%',#{dlNumber},'%')
+            </if>
+            <if test="suppliername != null and  suppliername != ''">
+                AND sl.suppliername LIKE CONCAT('%',#{suppliername},'%')
+            </if>
+            <if test="wname != null and wname != ''">
+                AND ws.wname LIKE CONCAT('%',#{wname},'%')
+            </if>
+            <if test="agentname != null and agentname != ''">
+                AND ag.agent_name LIKE CONCAT('%',#{agentname},'%')
+            </if>
+            <if test="username != null and username != ''">
+                AND su.user_name LIKE CONCAT('%',#{username},'%')
+            </if>
+            <if test="dltypename != null and dltypename != ''">
+                AND dlt.dl_type_name LIKE CONCAT('%',#{dltypename},'%')
+            </if>
+            <if test="dlstatiename != null and dlstatiename != ''">
+                AND dls.dl_statie_name LIKE CONCAT('%',#{dlstatiename},'%')
+            </if>
+            <if test="dlbeizhu != null and dlbeizhu != ''">
+                AND dl.dl_beizhu LIKE CONCAT('%',#{dlbeizhu},'%')
+            </if>
+            <if test="branchname != null and branchname != ''">
+                AND dm.branchname LIKE CONCAT('%',#{branchname},'%')
+            </if>
+            <if test="branchid != null and branchid != ''">
+                AND dm.branchid =#{branchid}
+            </if>
+            <if test="supplierid != null and  supplierid != ''">
+                AND sl.supplierid =#{supplierid}
+            </if>
+            <if test="agentid != null and  agentid != ''">
+                AND ag.agent_id =#{agentid}
+            </if>
+            ORDER BY dl.dl_date DESC
+        </where>
+    </select>
+    <!-- 模糊查询往来账务 -->
+    <select id="selectwlzwlike" resultMap="DocumentListVOMap">
+        SELECT ws.wid,dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.supplierid,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_id,dlt.dl_type_name,dl.dl_beizhu
+        FROM document_list dl
+        LEFT JOIN supplier sl ON dl.supplierid = sl.supplierid
+        LEFT JOIN warehouse ws ON dl.wid = ws.wid
+        LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
+        LEFT JOIN sys_user su ON dl.admin = su.user_id
+        LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
+        LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
+        LEFT JOIN branch dm ON dm.branchid = dl.branchid
+        <where>
+            <if test="txt != null">
+                or (dl.dl_number LIKE '%${txt}%' and  (dl.dl_statie_id = 0 OR dl.dl_statie_id = 2))
+                or (sl.suppliername LIKE '%${txt}%' and  (dl.dl_statie_id = 0 OR dl.dl_statie_id = 2))
+                or (dlt.dl_type_name LIKE '%${txt}%' and (dl.dl_statie_id = 0 OR dl.dl_statie_id = 2))
+            </if>
+        </where>
+        ORDER BY dl.dl_date DESC
+    </select>
+
+    <!-- 根据供货商编号查询往来账务 -->
+    <select id="selectwlzwghs" resultMap="DocumentListVOMap">
+        SELECT ws.wid,dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.supplierid,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_id,dlt.dl_type_name,dl.dl_beizhu
+        FROM document_list dl
+        LEFT JOIN supplier sl ON dl.supplierid = sl.supplierid
+        LEFT JOIN warehouse ws ON dl.wid = ws.wid
+        LEFT JOIN agent ag ON dl.agent_id = ag.agent_id
+        LEFT JOIN sys_user su ON dl.admin = su.user_id
+        LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
+        LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
+        LEFT JOIN branch dm ON dm.branchid = dl.branchid
+        WHERE sl.supplierid = #{id} AND (dls.dl_statie_id = 0 OR dls.dl_statie_id = 2)
+        ORDER BY dl.dl_date DESC
     </select>
 
     <!-- 根据俩个时间之间查询单据 -->
     <select id="selectdate" resultMap="DocumentListVOMap">
         SELECT dl.dl_number,dm.branchname,dl.dl_date,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dlt.dl_type_name,dl.dl_beizhu
+        SELECT ws.wid,dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.supplierid,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_id,dlt.dl_type_name,dl.dl_beizhu
         FROM document_list dl
         LEFT JOIN supplier sl ON dl.supplierid = sl.supplierid
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
@@ -412,10 +556,16 @@
         LEFT JOIN branch dm ON dm.branchid = sl.companyid
         WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 0 ORDER BY dl.dl_date DESC
     </select>
+        LEFT JOIN branch dm ON dm.branchid = dl.branchid
+        where  (dls.dl_statie_id = 0 OR dls.dl_statie_id = 2) and
+               (DATE_FORMAT(dl.dl_date,'%Y-%m-%d')
+                BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d')) ORDER BY dl.dl_date DESC
+        </select>
 
     <!-- 根据时间查询单据为待审核的单据 -->
     <select id="selectdatesdanju" resultMap="DocumentListVOMap">
         SELECT dl.dl_number,dl.dl_date,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_name,dl.dl_beizhu
+        SELECT ws.wid,dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.suppliername,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_id,dlt.dl_type_name,dl.dl_beizhu
         FROM document_list dl
         LEFT JOIN supplier sl ON dl.supplierid = sl.supplierid
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
@@ -424,6 +574,8 @@
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
         WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d')  BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 1 ORDER BY dl.dl_date DESC
+        LEFT JOIN branch dm ON dm.branchid = dl.branchid
+        WHERE  (dls.dl_statie_id = 1 OR dls.dl_statie_id = 3) and DATE_FORMAT(dl.dl_date,'%Y-%m-%d')  BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') ORDER BY dl.dl_date DESC
     </select>
 
 
@@ -449,7 +601,10 @@
     </select>
     <select id="djxq" resultMap="CghzVo">
         SELECT s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Preset_price,s.sp_Specifications,s.sp_color,kc.sk_number,kc.sk_loss  FROM shop s
+        SELECT l.dl_number,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Preset_price,s.sp_Specifications,s.sp_color,kc.sk_number,kc.sk_loss  FROM shop s
             LEFT JOIN stock kc ON s.sp_shopid=kc.sk_shopid
+            LEFT JOIN document_shop sp ON sp.sp_shopid=s.sp_shopid
+            LEFT JOIN document_list l ON  sp.dl_number=l.dl_number
     </select>
     <select id="spmx" resultMap="SpcgmxVo">
         SELECT sp.number,sp.loss_number,sp.zje,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Specifications,s.sp_color,l.dl_number,l.dl_date, lb.sp_type_name, w.wname,a.agent_name,sup.suppliername FROM document_shop sp
@@ -459,6 +614,12 @@
                 LEFT JOIN supplier sup ON sp.supplierid=sup.supplierid
                 LEFT JOIN shop_type lb ON s.sp_type_id=lb.sp_type_id
                 LEFT JOIN agent a ON l.agent_id=a.id
+        LEFT JOIN shop s ON sp.sp_shopid=s.sp_shopid
+        LEFT JOIN warehouse w ON sp.wid=w.wid
+        LEFT JOIN document_list l ON sp.dl_number=l.dl_number
+        LEFT JOIN supplier sup ON sp.supplierid=sup.supplierid
+        LEFT JOIN shop_type lb ON s.sp_type_id=lb.sp_type_id
+        LEFT JOIN agent a ON l.agent_id=a.id
     </select>
     <select id="ywymc" resultMap="SpcgmxVo">
         SELECT agent_name
@@ -489,6 +650,71 @@
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
         LEFT JOIN branch dm ON dm.branchid = sl.companyid WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 0
+        SELECT sp.number,sp.loss_number,sp.zje,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Specifications,s.sp_color,s.sp_beizhu,l.dl_number,l.dl_date, lb.sp_type_name, w.wname,a.agent_name,sup.suppliername FROM document_shop sp
+        LEFT JOIN shop s ON sp.sp_shopid=s.sp_shopid
+        LEFT JOIN warehouse w ON sp.wid=w.wid
+        LEFT JOIN document_list l ON sp.dl_number=l.dl_number
+        LEFT JOIN supplier sup ON sp.supplierid=sup.s_id
+        LEFT JOIN shop_type lb ON s.sp_type_id=lb.sp_type_id
+        LEFT JOIN agent a ON l.agent_id=a.id WHERE DATE_FORMAT(l.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') ORDER BY l.dl_date DESC
+    </select>
+    <select id="ywymc1" resultMap="SpxsmxVo">
+        SELECT agent_name
+            FROM agent
+    </select>
+    <select id="fdcx" resultMap="SpxsmxVo">
+         SELECT wname
+            FROM warehouse
+    </select>
+    <select id="djlx" resultMap="SpxsmxVo">
+         SELECT dl_type_name
+            FROM document_list_type
+    </select>
+    <select id="ssdj" resultMap="SpxsmxVo">
+        SELECT l.dl_number,l.dl_date,a.agent_name,w.wname,lt.dl_type_name,l.dl_ysje,l.dl_ssje,u.user_name,c.c_contacts,l.dl_beizhu  FROM xsdocument_list l
+        LEFT JOIN agent a ON l.agent_id=a.id
+        LEFT JOIN warehouse w ON l.wid=w.wid
+        LEFT JOIN document_list_type lt ON l.dl_type_id=lt.dl_type_id
+        LEFT JOIN sys_user u ON l.admin=u.user_id
+        LEFT JOIN customer c ON l.customerid=c.c_id
+    </select>
+    <select id="ssdjcx" resultMap="SpxsmxVo">
+        SELECT l.dl_number,l.dl_date,a.agent_name,w.wname,lt.dl_type_name,l.dl_ysje,l.dl_ssje,u.user_name,c.c_contacts,l.dl_beizhu  FROM xsdocument_list l
+        LEFT JOIN agent a ON l.agent_id=a.id
+        LEFT JOIN warehouse w ON l.wid=w.wid
+        LEFT JOIN document_list_type lt ON l.dl_type_id=lt.dl_type_id
+        LEFT JOIN sys_user u ON l.admin=u.user_id
+        LEFT JOIN customer c ON l.customerid=c.c_id
+        <where>
+            <if test="agentName != null">
+                and agent_name = #{agentName}
+            </if>
+            <if test="WName != null">
+                and wname = #{WName}
+            </if>
+            <if test="dlTypeName != null">
+                and dl_type_name = #{dlTypeName}
+            </if>
+        </where>
+    </select>
+    <select id="cghz" resultMap="CghzVo">
+        SELECT sp_shopid ,sp_name,sp_Company,sp_Specifications,sp_color,SUM(number) AS number ,SUM(loss_number) AS loss_number,SUM(zje) AS zje,s.suppliername
+        FROM document_shop d
+        LEFT JOIN supplier s ON d.supplierid = s.s_id
+        <where>
+            d.supplierid > 0
+        </where>
+        GROUP BY sp_shopid,sp_name,sp_Company,sp_Specifications,sp_color,s.suppliername
+    </select>
+    <select id="fltj" resultMap="CghzVo">
+        SELECT  sp_type_name,SUM(number) AS number ,SUM(loss_number) AS loss_number,SUM(zje) AS zje
+        FROM document_shop d
+        LEFT JOIN shop s ON d.sp_shopid=s.sp_shopid
+        LEFT JOIN shop_type sp ON s.sp_type_id=sp.sp_type_id
+        <where>
+            d.supplierid > 0
+        </where>
+        GROUP BY sp_type_name
     </select>
 
 </mapper>

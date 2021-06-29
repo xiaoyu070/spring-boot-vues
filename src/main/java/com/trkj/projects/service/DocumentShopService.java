@@ -18,6 +18,9 @@ import java.util.List;
  */
 public interface DocumentShopService {
 
+    Integer uptshopstate(Integer id);
+
+    PageInfo<DocumentShopVo> selectbycid(Integer cid,String data1,String data2,Integer currentPage, Integer pageSize,String name);
     /**
      * 通过ID查询单条数据
      *
@@ -70,8 +73,20 @@ public interface DocumentShopService {
     /**
      * 根据单据号查询商品
      */
-    List<DocumentShopVo> selectnumber(String number);
-
+    List<DocumentShopVo> selectnumber(@Param("number") String number);
+    /**
+     * 根据单据号查询商品
+     */
+    List<DocumentShopVo> selectnumbers(String djh);
+    /**
+     * 根据单据号查询商品
+     */
+    List<DocumentShop> selectdocumentlistshop(@Param("djh") String djh);
+    /**
+     * 通过单据号查询待审核单据中的商品
+     */
+    List<DocumentShopVo> selectstatezreonumber(String number);
+    List<DocumentShopVo> selectstatezreoNumbers(@Param("number") String number);
     /**
      * 模糊查询
      */

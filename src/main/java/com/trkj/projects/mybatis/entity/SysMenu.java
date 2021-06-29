@@ -1,5 +1,7 @@
 package com.trkj.projects.mybatis.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import java.util.List;
  * @author makejava
  * @since 2021-05-25 09:08:34
  */
+@Data
 public class SysMenu implements Serializable {
     private static final long serialVersionUID = 412269874065234215L;
     /**
@@ -54,90 +57,5 @@ public class SysMenu implements Serializable {
 
     private List<SysMenu> ChildMenu;
 
-    public Integer getMenuId() {
-        return menuId;
-    }
 
-    public void setMenuId(Integer menuId) {
-        this.menuId = menuId;
-    }
-
-    public String getMenuName() {
-        return menuName;
-    }
-
-    public void setMenuName(String menuName) {
-        this.menuName = menuName;
-    }
-
-    public String getMenuPathname() {
-        return menuPathname;
-    }
-
-    public void setMenuPathname(String menuPathname) {
-        this.menuPathname = menuPathname;
-    }
-
-    public String getMenuPath() {
-        return menuPath;
-    }
-
-    public void setMenuPath(String menuPath) {
-        this.menuPath = menuPath;
-    }
-
-    public String getMenuIcon() {
-        return menuIcon;
-    }
-
-    public void setMenuIcon(String menuIcon) {
-        this.menuIcon = menuIcon;
-    }
-
-    public Integer getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
-    }
-
-    public Integer getOrderNum() {
-        return orderNum;
-    }
-
-    public void setOrderNum(Integer orderNum) {
-        this.orderNum = orderNum;
-    }
-
-    public String getMenuType() {
-        return menuType;
-    }
-
-    public void setMenuType(String menuType) {
-        this.menuType = menuType;
-    }
-
-    public Integer getVisible() {
-        return visible;
-    }
-
-    public void setVisible(Integer visible) {
-        this.visible = visible;
-    }
-
-    public String getComponent() {
-        return component;
-    }
-
-    public void setComponent(String component) {
-        this.component = component;
-    }
-    public List<SysMenu> getChildMenu() {
-        return ChildMenu;
-    }
-
-    public void setChildMenu(List<SysMenu> childMenu) {
-        ChildMenu = childMenu;
-    }
 }

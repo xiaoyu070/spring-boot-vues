@@ -1,7 +1,11 @@
 package com.trkj.projects.service;
 
 
+import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.Customer;
+import com.trkj.projects.mybatis.entity.Supplier;
+import com.trkj.projects.vo.CustomerVo;
+import com.trkj.projects.vo.SupplierVo;
 
 import java.util.List;
 
@@ -46,6 +50,9 @@ public interface CustomerService {
      * @return 实例对象
      */
     Customer update(Customer customer);
+    //修改客户我方收款金额
+    void updatemoney(double money,int customerid);
+    Integer deletepl(Integer[] supplierid);
 
     /**
      * 通过主键删除数据
@@ -54,5 +61,10 @@ public interface CustomerService {
      * @return 是否成功
      */
     boolean deleteById(Integer cId);
-
+    Integer addcustomer(Customer customer);
+    PageInfo<CustomerVo> khcx(Integer branchid, String cContacts, Integer currentPage, Integer pageSize);
+/**
+ * 修改
+ */
+Boolean upsupplier(Customer customer);
 }

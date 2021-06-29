@@ -1,8 +1,10 @@
 package com.trkj.projects.mybatis.dao;
 
 import com.trkj.projects.mybatis.entity.DocumentList;
+import com.trkj.projects.vo.CghzVo;
 import com.trkj.projects.vo.DocumentlistVo;
 import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.SpxsmxVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -105,14 +107,28 @@ public interface DocumentListDao {
     List<DocumentlistVo> xslikevo(String text);
 
     /**
-     * 将未审核的单据状态改为已审核
+     * 将采购未审核的单据状态改为已审核
      */
     void updatestaticzore(DocumentList documentList);
 
     /**
+     * 将退货未审核的单据状态改为已审核
+     */
+    void updatestatictwo(DocumentList documentList);
+
+    /**
      * 查询往来账务
      */
-    List<DocumentlistVo> selectwlzw();
+    List<DocumentlistVo> selectwlzw(DocumentlistVo documentlistVo);
+
+    /**
+     * 模糊查询往来账务
+     */
+    List<DocumentlistVo> selectwlzwlike(String txt);
+    /**
+     * 根据供货商编号查询往来账务
+     */
+    List<DocumentlistVo> selectwlzwghs(int id);
 
     /**
      * 查询给定的俩个时间节点之间的单据
@@ -127,12 +143,18 @@ public interface DocumentListDao {
      * 根据给定的时间节点查询状态为待审核的销售单据
      */
     List<DocumentlistVo> xsselectdatesdanju(String date1, String date2);
-
     List<SpcgmxVo> cgdj(int currentPage, int pageSize);
+    List<CghzVo> cghz(int currentPage, int pageSize);
+    List<CghzVo> fltj(int currentPage, int pageSize);
     List<SpcgmxVo> djxq(int currentPage, int pageSize);
     List<SpcgmxVo> spmx(int currentPage, int pageSize);
+    List<SpxsmxVo> ssdj(int currentPage, int pageSize);
     List<SpcgmxVo> ywymc();
+    List<SpxsmxVo> ywymc1();
+    List<SpxsmxVo> fdcx();
+    List<SpxsmxVo> djlx();
     List<SpcgmxVo> ywycx(SpcgmxVo spcgmxVo);
+    List<SpxsmxVo> ssdjcx(SpxsmxVo spxsmxVo);
     /**
      * 查询给定的俩个时间节点之间的单据
      */

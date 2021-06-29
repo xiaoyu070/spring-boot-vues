@@ -75,7 +75,14 @@ public interface CustomerDao {
      * @param customer 实例对象
      * @return 影响行数
      */
-    int update(Customer customer);
+    Boolean update(Customer customer);
+
+    /**
+     * 修改客户的我方应收金额
+     * @param money
+     * @param
+     */
+    void updatemoney(@Param("money") double money,@Param("customerid") int customerid);
 
     /**
      * 通过主键删除数据
@@ -84,6 +91,10 @@ public interface CustomerDao {
      * @return 影响行数
      */
     int deleteById(Integer cId);
-
+    List<Customer> khcx(@Param("branchid") Integer branchid, @Param("cContacts") String cContacts);
+    /**
+     * 批量删除
+     */
+    Integer pildelsup(@Param("cid")Integer[] supplierid);
 }
 

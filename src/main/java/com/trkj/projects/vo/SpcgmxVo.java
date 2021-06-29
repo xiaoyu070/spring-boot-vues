@@ -21,4 +21,5 @@ public class SpcgmxVo {
     private String WName ;
     private String agentName;
     private String supplierName;
+    private String dlTypeName;
 }
