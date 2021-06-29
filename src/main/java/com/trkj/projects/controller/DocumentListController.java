@@ -310,7 +310,6 @@ public class DocumentListController {
         String two = jsonObject.getString("list");
         //将json对象one转换成实体类
         DocumentList documentlist = JSONObject.parseObject(one, DocumentList.class);
-
         //new出银行
         Establishment establishment = new Establishment();
         //将银行id传入
