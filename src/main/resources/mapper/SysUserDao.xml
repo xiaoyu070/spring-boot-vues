@@ -41,7 +41,7 @@
     </resultMap>
 
     <!--  新增一个用户  -->
-    <insert id="insertuser" keyProperty="user_id" useGeneratedKeys="true">
+    <insert id="insertuser" keyProperty="userId" useGeneratedKeys="true">
         insert into sys_user(user_name,user_pass,user_sex,user_phone,user_imgs,create_date,user_cjr,user_state)values
         (#{userName},#{userPass},#{userSex},#{userPhone},#{userImgs},#{create_date},#{userCjr},#{userstate})
     </insert>
@@ -70,26 +70,33 @@
     <!--根据用户名称查询用户-->
     <select id="findByNames" resultMap="SysUserMap">
         select
-          user_id, user_name, user_pass, user_sex, user_phone, user_imgs, user_cjr, user_gxr, user_state, user_error,user_statie
+          *
         from projects.sys_user
-        where user_name = #{userName} and user_pass= #{userPass}
+        where user_name = #{userName}
     </select>
+
     <!--根据手机号查询用户-->
     <select id="findByPhone" resultMap="SysUserMap">
         SELECT * FROM `sys_user` WHERE `user_phone` = #{phone}
     </select>
+
+    <select id="findByUid" resultMap="SysUserMap">
+        SELECT * FROM `sys_user` WHERE `user_id` = #{id}
+    </select>
+
 <!--  根据当前登录的用户查询他的角色  -->
     <select id="findByUser_roles" resultMap="Rosle_vo">
+        SELECT sr.roles_lv,sr.roles_name FROM sys_user su
         SELECT su.user_id,su.user_name,sr.roles_name,su.user_state,roles_lv FROM sys_user su
         LEFT JOIN sys_user_roles sur ON su.user_id = sur.user_id
         LEFT JOIN sys_roles sr ON sr.roles_id = sur.roles_id
         WHERE su.user_id=#{uid}
     </select>
+
 <!-- 查询所有用户vo -->
-    <select id="selectuserall" resultMap="Rosle_vo">
-        	SELECT su.*,sr.roles_id,sr.roles_name,sr.roles_lv FROM sys_user su
-			LEFT JOIN sys_user_roles sur ON su.user_id = sur.user_id
-			LEFT JOIN sys_roles sr ON sr.roles_id = sur.roles_id WHERE su.user_statie = 0
+    <select id="selectuserall" resultMap="SysUserMap">
+        	SELECT su.* FROM sys_user su
+			 WHERE su.user_statie = 0
     </select>
 <!--  修改用户状态为0  -->
     <update id="updateuserstatezero">
@@ -103,6 +110,14 @@
     <update id="updateuserandroles">
         update sys_user_roles set  roles_id = #{rolesid} where user_id = #{userid}
     </update>
+<!--  新增用户权限  -->
+    <insert id="insertuserandroles">
+        insert into sys_user_roles(user_id,roles_id) values (#{userid},#{rolesid})
+    </insert>
+<!--  根据用户id删除该用户的所有角色  -->
+    <delete id="deleteuserandroles">
+        delete from sys_user_roles where user_id = #{userid}
+    </delete>
     <!-- 删除角色 -->
     <delete id="deleteuserid">
         update sys_user set user_statie = 1 where user_id = #{userid}
@@ -111,5 +126,9 @@
     <update id="updateerror">
         update sys_user set user_error=#{param1} where user_id = #{param2}
     </update>
+<!-- 模糊查询用户 -->
+    <select id="likeusers" resultMap="SysUserMap">
+        select * from sys_user where user_name like CONCAT('%',#{ttt},'%') or user_id like CONCAT('%',#{ttt},'%')
+    </select>
 </mapper>
 

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.BsReportDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.BsReport" id="BsReportMap">
+        <result property="bsId" column="bs_id" jdbcType="INTEGER"/>
+        <result property="bsLossReport" column="bs_Loss_report" jdbcType="VARCHAR"/>
+        <result property="bsDate" column="bs_date" jdbcType="TIMESTAMP"/>
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
+        <result property="agentId" column="agent_id" jdbcType="INTEGER"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
+        <result property="documentsTypeId" column="Documents_type_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="BSReportVo" type="com.trkj.projects.vo.BsReportVo">
+        <result property="bsId" column="bs_id" jdbcType="INTEGER"/>
+        <result property="bsLossReport" column="bs_Loss_report" jdbcType="VARCHAR"/>
+        <result property="bsDate" column="bs_date" jdbcType="TIMESTAMP"/>
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
+        <result property="agentId" column="agent_id" jdbcType="INTEGER"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
+        <result property="documentsTypeId" column="Documents_type_id" jdbcType="INTEGER"/>
+        <result property="wname" column="wname" jdbcType="VARCHAR"/>
+        <result property="branchname" column="branchname" jdbcType="VARCHAR"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="agentName" column="agent_name" jdbcType="VARCHAR"/>
+        <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spTypeId" column="sp_type" jdbcType="INTEGER"/>
+        <result property="skNumber" column="sk_number" jdbcType="INTEGER"/>
+        <result property="bsNumbers" column="bs_numbers" jdbcType="INTEGER"/>
+        <result property="bsBaosunhou" column="bs_baosunhou" jdbcType="INTEGER"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="zje" column="zje" jdbcType="NUMERIC"/>
+        <result property="spJprice" column="sp_Jprice" jdbcType="NUMERIC"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="beizu" column="beizu" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BsReportMap">
+        select
+          bs_id, bs_Loss_report, bs_date, wid, agent_id, beizhu, user_id, branchid, Documents_type_id
+        from projects.bs_report
+        where bs_id = #{bsId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BsReportMap">
+        select
+          bs_id, bs_Loss_report, bs_date, wid, agent_id, beizhu, user_id, branchid, Documents_type_id
+        from projects.bs_report
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BsReportMap">
+        select
+        bs_id, bs_Loss_report, bs_date, wid, agent_id, beizhu, user_id, branchid, Documents_type_id
+        from projects.bs_report
+        <where>
+            <if test="bsId != null">
+                and bs_id = #{bsId}
+            </if>
+            <if test="bsLossReport != null and bsLossReport != ''">
+                and bs_Loss_report = #{bsLossReport}
+            </if>
+            <if test="bsDate != null">
+                and bs_date = #{bsDate}
+            </if>
+            <if test="wid != null">
+                and wid = #{wid}
+            </if>
+            <if test="agentId != null">
+                and agent_id = #{agentId}
+            </if>
+            <if test="beizhu != null and beizhu != ''">
+                and beizhu = #{beizhu}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="branchid != null">
+                and branchid = #{branchid}
+            </if>
+            <if test="documentsTypeId != null">
+                and Documents_type_id = #{documentsTypeId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" >
+        insert into projects.bs_report(bs_Loss_report, bs_date, wid, agent_id, beizhu, user_id, branchid, Documents_type_id)
+        values (#{bsLossReport}, #{bsDate}, #{wid}, #{agentId}, #{beizhu}, #{userId}, #{branchid}, #{documentsTypeId})
+    </insert>
+<!--keyProperty="bsId" useGeneratedKeys="true"-->
+    <insert id="insertBatch" >
+        insert into projects.bs_report(bs_Loss_report, bs_date, wid, agent_id, beizhu, user_id, branchid,
+        Documents_type_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.bsLossReport}, #{entity.bsDate}, #{entity.wid}, #{entity.agentId}, #{entity.beizhu},
+            #{entity.userId}, #{entity.branchid}, #{entity.documentsTypeId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="bsId" useGeneratedKeys="true">
+        insert into projects.bs_report(bs_Loss_report, bs_date, wid, agent_id, beizhu, user_id, branchid,
+        Documents_type_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.bsLossReport}, #{entity.bsDate}, #{entity.wid}, #{entity.agentId}, #{entity.beizhu},
+            #{entity.userId}, #{entity.branchid}, #{entity.documentsTypeId})
+        </foreach>
+        on duplicate key update
+        bs_Loss_report = values(bs_Loss_report) , bs_date = values(bs_date) , wid = values(wid) , agent_id =
+        values(agent_id) , beizhu = values(beizhu) , user_id = values(user_id) , branchid = values(branchid) ,
+        Documents_type_id = values(Documents_type_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.bs_report
+        <set>
+            <if test="bsLossReport != null and bsLossReport != ''">
+                bs_Loss_report = #{bsLossReport},
+            </if>
+            <if test="bsDate != null">
+                bs_date = #{bsDate},
+            </if>
+            <if test="wid != null">
+                wid = #{wid},
+            </if>
+            <if test="agentId != null">
+                agent_id = #{agentId},
+            </if>
+            <if test="beizhu != null and beizhu != ''">
+                beizhu = #{beizhu},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="branchid != null">
+                branchid = #{branchid},
+            </if>
+            <if test="documentsTypeId != null">
+                Documents_type_id = #{documentsTypeId},
+            </if>
+        </set>
+        where bs_id = #{bsId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.bs_report where bs_id = #{bsId}
+    </delete>
+
+
+<!--   查询所有的报损报溢单据-->
+    <select id="selectdj" resultMap="BSReportVo">
+        SELECT  r.`bs_Loss_report`,r.`bs_date`,r.`beizhu`,r.`Documents_type_id`,
+        w.`wname`,b.`branchname`,a.`agent_name`,s.`user_name`,s.user_id
+         FROM  bs_report r
+         LEFT JOIN warehouse w ON w.`wid`= r.`wid`
+         LEFT JOIN branch b ON b.`branchid`=r.`branchid`
+         LEFT JOIN agent a ON a.`agent_id`=r.`agent_id`
+         LEFT JOIN `sys_user` s ON s.`user_id`=r.`user_id`
+         LEFT JOIN `bs_by_type` ty ON ty.`bs_by_byname`=r.`Documents_type_id`
+    </select>
+    <!--    根据单号查询商品信息-->
+    <select id="selectbsLossreport" resultMap="BSReportVo">
+         SELECT
+         sp.sp_shopid,sp.sp_name,sp.sp_color,sp.sp_Company,sp.sp_Specifications,sp.sk_number ,r.`bs_Loss_report`,sp.`sp_jprice`,sp.`bs_numbers`
+         FROM bs_by_shop sp
+         LEFT JOIN bs_report r ON sp.bs_Loss_report=r.bs_Loss_report
+         WHERE r.bs_Loss_report=#{param1}
+    </select>
+
+<!--    根据报损报溢类型查询单据信息-->
+    <select id="selectbsbytype" resultMap="BSReportVo">
+        SELECT b.bs_Loss_report, b.bs_date,b.`beizhu` ,w.`wname` ,a.`agent_name`,s.`user_name`,b.`Documents_type_id`  FROM bs_report b
+LEFT JOIN warehouse w ON w.`wid`=b.`wid`
+LEFT JOIN agent a ON a.`agent_id`=b.`agent_id`
+LEFT JOIN sys_user s ON s.`user_id` =b.`user_id`
+WHERE Documents_type_id=#{documentsTypeId};
+    </select>
+
+<!--根据时间查询报损报溢单号-->
+    <select id="selectdate" resultMap="BSReportVo">
+             SELECT b.bs_Loss_report, b.bs_date,b.`beizhu` ,w.`wname` ,a.`agent_name`,s.`user_name`,b.`Documents_type_id`  FROM bs_report b
+LEFT JOIN warehouse w ON w.`wid`=b.`wid`
+LEFT JOIN agent a ON a.`agent_id`=b.`agent_id`
+LEFT JOIN sys_user s ON s.`user_id` =b.`user_id`
+where  DATE_FORMAT(b.bs_date,'%Y-%m-%d') BETWEEN DATE_FORMAT (#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') ORDER BY b.bs_date DESC
+    </select>
+</mapper>
+

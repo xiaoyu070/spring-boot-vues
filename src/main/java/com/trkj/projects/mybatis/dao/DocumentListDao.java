@@ -1,10 +1,7 @@
 package com.trkj.projects.mybatis.dao;
 
 import com.trkj.projects.mybatis.entity.DocumentList;
-import com.trkj.projects.vo.CghzVo;
-import com.trkj.projects.vo.DocumentlistVo;
-import com.trkj.projects.vo.SpcgmxVo;
-import com.trkj.projects.vo.SpxsmxVo;
+import com.trkj.projects.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -146,7 +143,11 @@ public interface DocumentListDao {
     List<SpcgmxVo> cgdj(int currentPage, int pageSize);
     List<CghzVo> cghz(int currentPage, int pageSize);
     List<CghzVo> fltj(int currentPage, int pageSize);
-    List<SpcgmxVo> djxq(int currentPage, int pageSize);
+    List<CghzVo> xssphz();
+    List<CghzVo> xsspmx();
+    List<CghzVo> selectnumberxyz(String number);
+    List<CghzVo> selectnumber1xyz(String number);
+    List<CghzVo> selectnumber2xyz(String spName);
     List<SpcgmxVo> spmx(int currentPage, int pageSize);
     List<SpxsmxVo> ssdj(int currentPage, int pageSize);
     List<SpcgmxVo> ywymc();

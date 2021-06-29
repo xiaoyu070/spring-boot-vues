@@ -97,4 +97,9 @@ public class SysRolesServiceImpl implements SysRolesService {
     public List<SysRoles> likeroles(String rolestext) {
         return this.sysRolesDao.likeroles(rolestext);
     }
+
+    @Override
+    public List<SysRoles> findbyuseridroles(int userid) {
+        return this.sysRolesDao.findbyuseridroles(userid);
+    }
 }

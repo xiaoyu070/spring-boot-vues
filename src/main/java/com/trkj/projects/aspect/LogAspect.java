@@ -54,13 +54,12 @@ public class LogAspect {
         // 记录下请求内容
         String xx=JSONObject.toJSONString(joinPoint.getArgs());
         Object[] str = joinPoint.getArgs();
+        System.out.println("xxxx::"+xx);
         int index=xx.indexOf("userName");
         int index2=xx.indexOf('"'+","+'"'+"userPass");
         String cha=xx.substring(index+11,index2);
         username = cha;
     }
-
-
     @Pointcut("execution(public * com.trkj.projects.controller.SysUserController.queryByPhoneandCode(..))")
     public void webLog1(){
         // this.
@@ -85,7 +84,7 @@ public class LogAspect {
     //切面 配置通知
     @AfterReturning("logPoinCut()")
     public void saveSysLog(JoinPoint joinPoint) throws UnknownHostException {
-        System.out.println("切面。。。。。");
+        System.out.println("进入切面:::::::::::::::::::::::");
         //保存日志
         Journal journal = new Journal();
 
@@ -121,11 +120,6 @@ public class LogAspect {
 
 
         journal.setUserName(username);
-        System.out.println("sss:"+journal.getUserName());
-        System.out.println("sss:"+journal.getParamsname());
-        System.out.println("sss:"+journal.getParamslength());
-        System.out.println("sss:"+journal.getAddressip());
-        System.out.println("sss:"+journal.getFunctions());
         //获取用户ip地址
         String ip= InetAddress.getLocalHost().getHostAddress();
 //         request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();

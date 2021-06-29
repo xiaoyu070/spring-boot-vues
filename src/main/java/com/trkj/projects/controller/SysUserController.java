@@ -1,6 +1,7 @@
 package com.trkj.projects.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -18,16 +19,14 @@ import com.trkj.projects.vo.AjaxResponse;
 import com.trkj.projects.vo.SysUserVo;
 import com.trkj.projects.vo.SysUser_roles;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.sound.midi.Soundbank;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,13 +67,13 @@ public class SysUserController {
         ).collect(Collectors.toList());
         return children;
     }
+    @Log("用户登入")
     @PostMapping("Login")
     public AjaxResponse getChildrens(@RequestBody SysUser sysUser) {
         SysUser sysUser1=sysUserService.findByNames(sysUser);
         SysUserVo sysUserVo=new SysUserVo();
-        if(!sysUser1.equals(null)){
+        if(!StringUtils.isEmpty(sysUser1)){
             if(sysUser1.getUserstate() == 0 && sysUser1.getUserStatie() == 0){
-
                 sysUser1.setUserError(new Date());
                 this.sysUserService.updateerror(new Date(),sysUser1.getUserId());
                 //获取父菜单
@@ -220,14 +219,14 @@ public class SysUserController {
         this.sysRolesService.update(sysRoles);
         return AjaxResponse.success("角色信息修改成功!");
     }
-    //修改角色
+    //删除用户
     @GetMapping("deleteroles")
     public AjaxResponse deleteroles(Integer id){
 
         List<SysUserRoles> list = this.sysRolesService.selectuseranroles(id);
         String message = "";
         if(list.size()<=0){
-            message = "删除角色成功！";
+            message = "删除成功！";
             this.sysRolesService.deleteById(id);
         }else{
             message = "该角色下存在用户，不可删除！";
@@ -252,14 +251,14 @@ public class SysUserController {
         return AjaxResponse.success(message);
     }
     //模糊查询角色
-    @PostMapping("likeroles")
+    @PostMapping("likeusers")
     public AjaxResponse likeroles(@RequestBody String a){
         JSONObject jsonObject = JSON.parseObject(a);
         String rolestext = jsonObject.getString("ttt");
         int  currenPage = jsonObject.getInteger("currenPage");
         int  pageSize = jsonObject.getInteger("pageSize");
         Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
-        List<SysRoles> list = this.sysRolesService.likeroles(rolestext);
+        List<SysUser> list = this.sysUserService.likeusers(rolestext);
         Map<String,Object> map=new HashMap<>();
         map.put("total",pg.getTotal());
         map.put("rows",list);
@@ -267,26 +266,52 @@ public class SysUserController {
     }
     //根据用户id修改对应的角色
     @GetMapping("updaterolesidanduser")
-    public AjaxResponse updaterolesidanduser(int rolesid,int userid){
+    public AjaxResponse updaterolesidanduser(@RequestBody String a){
+        JSONObject jsonObject = JSON.parseObject(a);
+        int userid = jsonObject.getInteger("userid");
+        int rolesid = jsonObject.getInteger("rolesid");
         System.out.println("roles:"+rolesid+",,"+"user:"+userid);
+
+        //修改用户修改的信息
         this.sysUserService.updateuserandroles(rolesid,userid);
+
         return AjaxResponse.success("修改角色成功！");
     }
     //新增用户
     @PostMapping("insertusers")
-    public AjaxResponse insertusers(@RequestBody SysUser sysUser){
-        System.out.println("sys:"+sysUser.toString());
+    public AjaxResponse insertusers(@RequestBody String a){
+        JSONObject jsonObject = JSON.parseObject(a);
+        String sys = jsonObject.getString("form");
+        String roles = jsonObject.getString("roles");
+        SysUser sysUser = JSONArray.parseObject(sys,SysUser.class);
+        System.out.println("sysuser:"+sysUser.toString());
+        String str = roles.substring(roles.indexOf("[")+1,roles.indexOf("]"));
+        String[] rolesid = str.split(",");
         SysUser list = this.sysUserService.findByNames(sysUser);
+        System.out.println("list:"+list);
         SysUser list2 = this.sysUserService.findByPhone(sysUser.getUserPhone());
+        System.out.println("list2:"+list2);
         String message = "";
-        if(list.getUserName().equals(sysUser.getUserName())){
+        if(!StringUtils.isEmpty(list)){
             message = "该用户名已被使用!";
-        }else if(list2.getUserPhone().equals(sysUser.getUserPhone())){
+            return AjaxResponse.success(message);
+        }else if(!StringUtils.isEmpty(list2)){
             message = "该手机号已被使用！";
+            return AjaxResponse.success(message);
         }else{
+            //新增成功后再查詢出該用戶的數據，添加他選擇的角色
+            sysUser.setCreate_date(new Date());
             this.sysUserService.insertuser(sysUser);
+            SysUser sss = this.sysUserService.findByNames(sysUser);
+            System.out.println("sss"+sss.toString());
+            for(int i = 0;i<rolesid.length;i++){
+                System.out.println("rolesid:"+rolesid[i]);
+                //新增用户选择的所有角色
+                this.sysUserService.insertuserandroles(sss.getUserId(),Integer.parseInt(rolesid[i]));
+            }
+            message = "新增成功！";
         }
-        return AjaxResponse.success("新增成功！");
+        return AjaxResponse.success(message);
     }
     //删除用户
     @GetMapping("deleteusers")
@@ -297,9 +322,38 @@ public class SysUserController {
     }
     //编辑用户信息
     @PostMapping("updateusers")
-    public AjaxResponse updateusers(@RequestBody SysUser sysUser){
-        System.out.println("sys::::"+sysUser);
+    public AjaxResponse updateusers(@RequestBody String a){
+        JSONObject jsonObject = JSON.parseObject(a);
+        String sys= jsonObject.getString("form");
+        String roles= jsonObject.getString("roles");
+        String str = roles.substring(roles.indexOf("[")+1,roles.indexOf("]"));
+        String[] rolesid = str.split(",");
+        SysUser sysUser = JSONArray.parseObject(sys,SysUser.class);
+        //根据用户id删除中间表中所有的数据
+        System.out.println("sys:"+sysUser.toString());
+        this.sysUserService.deleteuserandroles(sysUser.getUserId());
+        for(int i = 0;i<rolesid.length;i++){
+            System.out.println("rolesid:"+rolesid[i]);
+            //新增用户选择的所有角色
+            this.sysUserService.insertuserandroles(sysUser.getUserId(),Integer.parseInt(rolesid[i]));
+        }
         this.sysUserService.updateusers(sysUser);
         return AjaxResponse.success("修改成功！");
+    }
+    //根据userid查询对应的所有角色
+    @PostMapping("findbyuseridroles")
+    public AjaxResponse findbyuseridroles(@RequestBody String a){
+        JSONObject jsonObject = JSON.parseObject(a);
+        System.out.println("ssss"+jsonObject);
+        int userid = jsonObject.getInteger("userid");
+        int currenPage = jsonObject.getInteger("currenPage");
+        int pageSize = jsonObject.getInteger("pageSize");
+        System.out.println("user:"+userid+","+"ccc:"+currenPage+"..."+pageSize);
+        Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+        List<SysRoles> list=this.sysRolesService.findbyuseridroles(userid);
+        Map<String,Object> map=new HashMap<>();
+        map.put("total",pg.getTotal());
+        map.put("rows",list);
+        return AjaxResponse.success(map);
     }
 }

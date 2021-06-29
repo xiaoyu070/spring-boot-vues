@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.JintuicankaoaDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.Jintuicankaoa" id="JintuicankaoaMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="sId" column="s_id" jdbcType="INTEGER"/>
+        <result property="ckTuihuonumber" column="ck_tuihuonumber" jdbcType="INTEGER"/>
+        <result property="skNumber" column="sk_number" jdbcType="INTEGER"/>
+        <result property="adddate" column="adddate" jdbcType="TIMESTAMP"/>
+        <result property="suppliername" column="suppliername" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+        insert into projects.jintuicankaoa(id, sp_shopid, sp_name, sp_Company, sp_Specifications, sp_color, s_id, ck_tuihuonumber, sk_number, adddate, suppliername)
+        values (#{id}, #{spShopid}, #{spName}, #{spCompany}, #{spSpecifications}, #{spColor}, #{sId}, #{ckTuihuonumber}, #{skNumber}, #{adddate}, #{suppliername})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="" useGeneratedKeys="true">
+        insert into projects.jintuicankaoa(id, sp_shopid, sp_name, sp_Company, sp_Specifications, sp_color, s_id,
+        ck_tuihuonumber, sk_number, adddate, suppliername)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.spShopid}, #{entity.spName}, #{entity.spCompany}, #{entity.spSpecifications},
+            #{entity.spColor}, #{entity.sId}, #{entity.ckTuihuonumber}, #{entity.skNumber}, #{entity.adddate},
+            #{entity.suppliername})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="" useGeneratedKeys="true">
+        insert into projects.jintuicankaoa(id, sp_shopid, sp_name, sp_Company, sp_Specifications, sp_color, s_id,
+        ck_tuihuonumber, sk_number, adddate, suppliername)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.spShopid}, #{entity.spName}, #{entity.spCompany}, #{entity.spSpecifications},
+            #{entity.spColor}, #{entity.sId}, #{entity.ckTuihuonumber}, #{entity.skNumber}, #{entity.adddate},
+            #{entity.suppliername})
+        </foreach>
+        on duplicate key update
+        id = values(id) , sp_shopid = values(sp_shopid) , sp_name = values(sp_name) , sp_Company = values(sp_Company) ,
+        sp_Specifications = values(sp_Specifications) , sp_color = values(sp_color) , s_id = values(s_id) ,
+        ck_tuihuonumber = values(ck_tuihuonumber) , sk_number = values(sk_number) , adddate = values(adddate) ,
+        suppliername = values(suppliername)
+    </insert>
+
+
+    <select id="selectjinhuocangkao1" resultMap="JintuicankaoaMap">
+        SELECT * FROM jintuicankaoa
+    </select>
+
+
+    <update id="updatecangkao1">
+        UPDATE jintuicankaoa SET ck_tuihuonumber =#{ckTuihuonumber} WHERE sp_shopid=#{spShopid}
+
+    </update>
+
+    <delete id="deletecangkao1">
+        DELETE FROM jintuicankaoa WHERE sp_shopid=#{spShopid}
+    </delete>
+
+
+</mapper>
+

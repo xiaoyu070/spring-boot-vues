@@ -45,6 +45,9 @@
         <result property="wname" column="wname" jdbcType="VARCHAR"/>
         <result property="branchname" column="branchname" jdbcType="VARCHAR"/>
         <result property="spTypeId" column="sp_type_id" jdbcType="INTEGER"/>
+        <result property="pdNumber" column="pd_number" jdbcType="INTEGER"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="suppliername" column="suppliername" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--新增所有列-->
@@ -166,8 +169,6 @@
         </where>
     </select>
 
-
-
     <!--    模糊查询-->
     <select id="selectlike" resultMap="srockvo">
         SELECT p.`sp_shopid`,p.`sp_name`,p.`sp_state`,p.`sp_bar_code`,p.`sp_Company`,p.`sp_Specifications`,p.`sp_Preset_price`,p.`sp_jprice`
@@ -195,6 +196,7 @@
         <if test="testlike2 !=null">
             and  sp.`sp_name` like concat('%',#{testkike2},'%')
             or sp.`sp_shopid` like concat('%',#{testkike2},'%')
+            and s.sk_number &lt;= s.sp_number
         </if>
         </where>
 
@@ -247,13 +249,85 @@
 
 <!-- 根据店面和仓库查询要添加报损报溢的商品-->
 <select id="baosunbaoyiselect" resultMap="srockvo">
-    SELECT p.`sp_shopid`,p.`sp_name`,p.`sp_color`,p.`sp_Specifications`,p.`sp_Company`,k.`sk_number`,w.`wname`,b.`branchname`
+    SELECT p.`sp_shopid`,p.`sp_name`,p.`sp_color`,p.`sp_Specifications`,
+    p.`sp_Company`,k.`sk_number`,w.`wname`,b.`branchname`,p.`sp_beizhu`, p.`sp_jprice`
+    FROM stock k
+    LEFT JOIN shop p ON k.`sk_shopid`=p.`sp_shopid`
+    LEFT JOIN warehouse w ON  w.wid =k.sp_warehouse_id
+    LEFT JOIN branch b ON b.`branchid` =k.sp_storefront_id
+    WHERE w.wid=#{param1} AND b.branchid=#{param2}
+
+</select>
+<!--    根据店面和仓库，商品类型查询所有商品-->
+    <select id="selectdiancnag" resultMap="srockvo">
+           SELECT p.`sp_shopid`,p.`sp_name`,p.`sp_color`,p.`sp_Specifications`,k.`sk_number`,w.`wname`,b.`branchname`,p.`sp_beizhu`
+           ,p.sp_state,p.sp_bar_code,p.sp_Company,p.sp_Preset_price,p.sp_jprice
+        ,p.sp_Manufacturer,p.sp_color,p.sp_beizhu ,p.sp_time,st.sp_type_name
 FROM stock k
 LEFT JOIN shop p ON k.`sk_shopid`=p.`sp_shopid`
 LEFT JOIN warehouse w ON  w.wid =k.sp_warehouse_id
 LEFT JOIN branch b ON b.`branchid` =k.sp_storefront_id
-WHERE w.wid=#{param1} AND b.branchid=#{param2}
-</select>
+LEFT JOIN shop_type  st ON st.sp_type_id=p.sp_type_id
+WHERE b.branchid =#{param1} AND w.wid=#{param2} AND st.sp_type_id=#{param3}
+    </select>
+
+
+<!--    根据店面仓库商品类型查询库存商品-->
+    <select id="kucunbaojin" resultMap="srockvo">
+  SELECT s.`sk_number`,s.`sp_number`,sp.`sp_shopid`,sp.`sp_name`,sp.`sp_Company`,sp.`sp_Specifications`
+        ,sp.`sp_color`, bc.`branchname`,ws.`wname`,sp_type_name,s.sp_number
+        FROM stock s
+        LEFT JOIN shop sp ON s.`sk_shopid` = sp.`sp_shopid`
+        LEFT JOIN branch bc ON bc.`branchid` = s.`sp_storefront_id`
+        LEFT JOIN warehouse ws ON ws.`wid` = s.`sp_Warehouse_id`
+        LEFT JOIN shop_type  st ON st.sp_type_id=sp.sp_type_id
+       WHERE bc.branchid =#{param1} AND ws.wid=#{param2} AND st.sp_type_id=#{param3}
+        AND  s.sk_number &lt;= s.sp_number
+    </select>
+
+    <select id="typeselect" resultMap="srockvo">
+         SELECT s.`sk_number`,s.`sp_number`,sp.`sp_shopid`,sp.`sp_name`,sp.`sp_Company`,sp.`sp_Specifications`
+        ,sp.`sp_color`, bc.`branchname`,ws.`wname`,sp_type_name,s.sp_number
+        FROM stock s
+        LEFT JOIN shop sp ON s.`sk_shopid` = sp.`sp_shopid`
+        LEFT JOIN branch bc ON bc.`branchid` = s.`sp_storefront_id`
+        LEFT JOIN warehouse ws ON ws.`wid` = s.`sp_Warehouse_id`
+        LEFT JOIN shop_type  st ON st.sp_type_id=sp.sp_type_id
+        where st.sp_type_id=#{param1}
+    </select>
+
+
+<!--    根据店面和仓库以及商品编号修改库存数量-->
+    <update id="updatestocknumber" >
+            UPDATE stock SET `sk_number` = #{skNumber}
+            WHERE `sk_shopid` = #{skShopid} AND sp_Warehouse_id=#{spWarehouseId}  AND sp_storefront_id=#{spStorefrontId}
+    </update>
+
+<!--查询所有的进货参考的商品商品-->
+    <select id="selectjhck" resultMap="srockvo">
+        SELECT s.sp_shopid,s.sp_name, s.sp_Company,s.sp_Specifications,s.sp_color,ty.sp_type_name,k.sk_number,SUM(xs.number) AS number,su.suppliername
+FROM stock k
+LEFT JOIN shop s ON s.sp_shopid =k.sk_shopid
+LEFT JOIN shop_type ty ON ty.sp_type_id =s.sp_type_id
+LEFT JOIN supplier su ON su.supplierid =s.s_id
+LEFT JOIN xsdocument_shop xs  ON  xs.sp_shopid=s.sp_shopid GROUP BY s.sp_shopid
+    </select>
+
+<!--    根据类型查询所有进货参考商品-->
+    <select id="selecttypejhck" resultMap="srockvo">
+        SELECT s.sp_shopid,s.sp_name, s.sp_Company,s.sp_Specifications,s.sp_color,ty.sp_type_name,k.sk_number,SUM(xs.number) AS number,su.suppliername,ty.sp_type_id
+        FROM stock k
+        LEFT JOIN shop s ON s.sp_shopid =k.sk_shopid
+        LEFT JOIN shop_type ty ON ty.sp_type_id =s.sp_type_id
+        LEFT JOIN supplier su ON su.supplierid =s.s_id
+        LEFT JOIN xsdocument_shop xs  ON  xs.sp_shopid=s.sp_shopid
+        WHERE ty.sp_type_id =#{typeid}  GROUP BY s.sp_shopid
+    </select>
+
+    <update id="updatepilian" >
+        update stock set sk_number = #{skNumber}
+        where sk_shopid = #{skShopid}
+    </update>
 
 
 </mapper>

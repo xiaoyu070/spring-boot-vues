@@ -2,10 +2,7 @@ package com.trkj.projects.mybatis.dao;
 
 import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.XsdocumentShop;
-import com.trkj.projects.vo.SpcgmxVo;
-import com.trkj.projects.vo.SpxsmxVo;
-import com.trkj.projects.vo.SpxstjVo;
-import com.trkj.projects.vo.DocumentShopVo;
+import com.trkj.projects.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -108,10 +105,20 @@ public interface XsdocumentShopDao {
      * 商品销售统计查询
      */
     List<SpxstjVo> xsspmx(int currentPage, int pageSize);
+
+    /**
+     * 按客户会员统计
+     * @return
+     */
+    List<SpxstjVo> khtj();
     List<SpxstjVo> xssphz();
     List<SpxstjVo> xsspfltj();
+    List<SpxstjVo> ghstj();
+    List<SpxstjVo> artj();
     List<SpxstjVo> ckcx();
     List<SpxstjVo> lbcx();
+    List<SpxstjVo> selectnumber3xyz(String ccontacts);
+    List<SpxstjVo> selectnumber4xyz(String suppliername);
     List<SpxstjVo> xsmxcx(SpxstjVo spxstjVo);
 }
 

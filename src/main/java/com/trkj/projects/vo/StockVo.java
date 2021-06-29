@@ -79,4 +79,14 @@ public class StockVo {
      * 分店名称
      */
     private String branchname;
+
+    private Integer pdNumber;
+
+    private Integer number;
+    /**
+     * 供货商
+     */
+    private String suppliername;
+
+
 }

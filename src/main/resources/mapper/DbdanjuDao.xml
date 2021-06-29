@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.DbdanjuDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.Dbdanju" id="DbdanjuMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="dbid" column="dbid" jdbcType="VARCHAR"/>
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
+        <result property="widR" column="wid_r" jdbcType="INTEGER"/>
+        <result property="jingbanren" column="jingbanren" jdbcType="INTEGER"/>
+        <result property="adminid" column="adminid" jdbcType="INTEGER"/>
+        <result property="beizu" column="beizu" jdbcType="VARCHAR"/>
+        <result property="dbdate" column="dbdate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="DbdanjuVo" type="com.trkj.projects.vo.DbdanjuVo">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="dbid" column="dbid" jdbcType="VARCHAR"/>
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
+        <result property="widR" column="wid_r" jdbcType="INTEGER"/>
+        <result property="jingbanren" column="jingbanren" jdbcType="INTEGER"/>
+        <result property="adminid" column="adminid" jdbcType="INTEGER"/>
+        <result property="beizu" column="beizu" jdbcType="VARCHAR"/>
+        <result property="dbdate" column="dbdate" jdbcType="TIMESTAMP"/>
+        <result property="spShopid" column="sp_shopid" jdbcType="VARCHAR"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="shulian" column="shulian" jdbcType="INTEGER"/>
+        <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
+        <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
+        <result property="dbname" column="dbname" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+
+    <!--查询指定行数据-->
+
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+        insert into projects.dbdanju(id, dbid, wid, wid_r, jingbanren, adminid, beizu, dbdate)
+        values (#{id}, #{dbid}, #{wid}, #{widR}, #{jingbanren}, #{adminid}, #{beizu}, #{dbdate})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="" useGeneratedKeys="true">
+        insert into projects.dbdanju(id, dbid, wid, wid_r, jingbanren, adminid, beizu, dbdate)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.dbid}, #{entity.wid}, #{entity.widR}, #{entity.jingbanren}, #{entity.adminid},
+            #{entity.beizu}, #{entity.dbdate})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="" useGeneratedKeys="true">
+        insert into projects.dbdanju(id, dbid, wid, wid_r, jingbanren, adminid, beizu, dbdate)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.dbid}, #{entity.wid}, #{entity.widR}, #{entity.jingbanren}, #{entity.adminid},
+            #{entity.beizu}, #{entity.dbdate})
+        </foreach>
+        on duplicate key update
+        id = values(id) , dbid = values(dbid) , wid = values(wid) , wid_r = values(wid_r) , jingbanren =
+        values(jingbanren) , adminid = values(adminid) , beizu = values(beizu) , dbdate = values(dbdate)
+    </insert>
+
+
+
+</mapper>
+

@@ -20,4 +20,9 @@ public class SpxsmxVo {
     private String userName;
     private String dlTypeName;
     private String cContacts;
+    private String zje;
+    private String spPresetPrice;
+    private String spJprice;
+    private Double xslr;
+    private Double mll;
 }

@@ -1,9 +1,7 @@
 package com.trkj.projects.mybatis.dao;
 
 import com.trkj.projects.mybatis.entity.DocumentShop;
-import com.trkj.projects.vo.CgdjVo;
-import com.trkj.projects.vo.DocumentShopVo;
-import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -105,13 +103,35 @@ public interface DocumentShopDao {
     /**
      * 根据单据号查询商品
      */
-    List<DocumentShopVo> selectnumber(String number,int wid,int branchid);
+    List<DocumentShopVo> selectnumber(@Param("number") String number);
+    /**
+     * 根据单据号查询商品
+     */
+    List<DocumentShopVo> selectnumbers(@Param("djh") String djh);
 
+    /**
+     * 根据单据号查询商品
+     */
+    List<DocumentShop> selectdocumentlistshop(@Param("djh") String djh);
+    /**
+     * 查询商品汇总表(状态为已审核状态的单据)
+     */
+    List<Documentlistshopstatiezreovo> huizoshop();
+    /**
+     * 模糊查询商品汇总表(状态为已审核状态的单据)
+     */
+    List<Documentlistshopstatiezreovo> huizoshoplike(String ttt);
+    /**
+     * 根据商品名称查询明细单据vo
+     */
+    List<Documentlistshopstatiezreojinhuomingxivo> selectshopnamehuizovo(String txxt);
     /**
      * 通过单据号查询待审核单据中的商品
      */
-    List<DocumentShopVo> selectstatezreonumber(String number,int wid);
+    List<DocumentShopVo> selectstatezreonumber(@Param("number") String number);
 
+
+    List<DocumentShopVo> selectstatezreoNumbers(@Param("number") String number);
     /**
      *模糊查询
      */

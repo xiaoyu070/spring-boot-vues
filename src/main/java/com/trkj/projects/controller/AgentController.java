@@ -1,5 +1,6 @@
 package com.trkj.projects.controller;
 
+import com.trkj.projects.anntation.Log;
 import com.trkj.projects.mybatis.entity.Agent;
 import com.trkj.projects.service.AgentService;
 import com.trkj.projects.vo.AjaxResponse;
@@ -45,6 +46,7 @@ public class AgentController {
      * 查询所有经办人
      * @return
      */
+    @Log("查询所有经办人")
     @GetMapping("selectAgentname")
     public AjaxResponse selectAgentname(){
         List<Agent> list=this.agentService.slectagentname();

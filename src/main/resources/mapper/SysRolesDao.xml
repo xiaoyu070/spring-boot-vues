@@ -17,10 +17,11 @@
 
     <!--  新增角色  -->
     <insert id="insertroles" keyProperty="rolesId" useGeneratedKeys="true">
-        insert into sys_roles(roles_lv,roles_name, roles_beizhu) values (#{rolesLv},#{rolesName},#{roles_beizhu})
+        insert into sys_roles(roles_lv,roles_name, roles_beizhu)
+        values (#{rolesLv},#{rolesName},#{roles_beizhu})
     </insert>
-    <!--  修改角色  -->
 
+    <!--  修改角色  -->
      <select id="selectall" resultMap="SysRolesMap">
          select * from sys_roles
      </select>
@@ -112,6 +113,13 @@
 <!--  模糊查询角色  -->
     <select id="likeroles" resultMap="SysRolesMap">
         select * from sys_roles where roles_name like CONCAT('%',#{rolestext},'%') or roles_beizhu like CONCAT('%',#{rolestext},'%')
+    </select>
+    <!-- 根据userid查询对应的所有角色 -->
+    <select id="findbyuseridroles" resultMap="SysRolesMap">
+        SELECT sr.* FROM sys_user su
+			 LEFT JOIN `sys_user_roles` sur ON sur.user_id = su.user_id
+			 LEFT JOIN  `sys_roles` sr ON sr.roles_id = sur.roles_id
+			 WHERE su.user_id = #{userid}
     </select>
 </mapper>
 

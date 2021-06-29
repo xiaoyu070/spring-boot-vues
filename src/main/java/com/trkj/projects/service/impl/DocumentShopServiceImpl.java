@@ -6,10 +6,8 @@ import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.dao.DocumentShopDao;
 import com.trkj.projects.mybatis.entity.DocumentShop;
 import com.trkj.projects.service.DocumentShopService;
-import com.trkj.projects.vo.CgdjVo;
-import com.trkj.projects.vo.DocumentShopVo;
-import com.trkj.projects.vo.ShopVo;
-import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.*;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -116,13 +114,43 @@ public class DocumentShopServiceImpl implements DocumentShopService {
     }
 
     @Override
-    public List<DocumentShopVo> selectnumber(String number,int wid,int branchid) {
-        return this.documentShopDao.selectnumber(number,wid,branchid);
+    public List<DocumentShopVo> selectnumber(@Param("number") String number) {
+        return this.documentShopDao.selectnumber(number);
     }
 
     @Override
-    public List<DocumentShopVo> selectstatezreonumber(String number, int wid) {
-        return this.documentShopDao.selectstatezreonumber(number,wid);
+    public List<DocumentShopVo> selectnumbers(String djh) {
+        return this.documentShopDao.selectnumbers(djh);
+    }
+
+    @Override
+    public List<Documentlistshopstatiezreovo> huizoshop() {
+        return this.documentShopDao.huizoshop();
+    }
+
+    @Override
+    public List<Documentlistshopstatiezreojinhuomingxivo> selectshopnamehuizovo(String txxt) {
+        return this.documentShopDao.selectshopnamehuizovo(txxt);
+    }
+
+    @Override
+    public List<Documentlistshopstatiezreovo> huizoshoplike(String ttt) {
+        return this.documentShopDao.huizoshoplike(ttt);
+    }
+
+    @Override
+    public List<DocumentShop> selectdocumentlistshop(String djh) {
+        return this.documentShopDao.selectdocumentlistshop(djh);
+    }
+
+    @Override
+    public List<DocumentShopVo> selectstatezreonumber(String number) {
+        return this.documentShopDao.selectstatezreonumber(number);
+    }
+
+    @Override
+    public List<DocumentShopVo> selectstatezreoNumbers(String number) {
+        return this.documentShopDao.selectstatezreoNumbers(number);
     }
 
     @Override

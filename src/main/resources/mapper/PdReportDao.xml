@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.PdReportDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.PdReport" id="PdReportMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="pdId" column="pd_id" jdbcType="VARCHAR"/>
+        <result property="pdDate" column="pd_date" jdbcType="TIMESTAMP"/>
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="pdShopTiao" column="pd_shop_tiao" jdbcType="INTEGER"/>
+        <result property="skNumber" column="sk_number" jdbcType="INTEGER"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+        <result property="pdNumber" column="pd_number" jdbcType="INTEGER"/>
+
+    </resultMap>
+
+    <resultMap type="com.trkj.projects.vo.PdResponseVo" id="PdResponseVo">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="pdId" column="pd_id" jdbcType="VARCHAR"/>
+        <result property="pdDate" column="pd_date" jdbcType="TIMESTAMP"/>
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="pdShopTiao" column="pd_shop_tiao" jdbcType="INTEGER"/>
+        <result property="skNumber" column="sk_number" jdbcType="INTEGER"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+        <result property="spShopid" column="sp_shop" jdbcType="VARCHAR"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="pdNumber" column="pd_number" jdbcType="INTEGER"/>
+        <result property="pdJiner" column="pd_jiner" jdbcType="NUMERIC"/>
+        <result property="kcJiner" column="kc_jiner" jdbcType="NUMERIC"/>
+        <result property="slchaer" column="slchaer" jdbcType="NUMERIC"/>
+        <result property="wname" column="wname" jdbcType="VARCHAR"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="pdNumber" column="pd_number" jdbcType="INTEGER"/>
+        <result property="spShopid" column="sp_shopid" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <delete id="delectpdd">
+                     DELETE  FROM pd_report  WHERE pd_id =#{pdId}
+    </delete>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="PdReportMap">
+        select
+          id, pd_id, pd_date, wid, user_id, pd_shop_tiao, sk_number, beizhu
+        from projects.pd_report
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="PdReportMap">
+        select
+        id, pd_id, pd_date, wid, user_id, pd_shop_tiao, sk_number, beizhu
+        from projects.pd_report
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="pdId != null and pdId != ''">
+                and pd_id = #{pdId}
+            </if>
+            <if test="pdDate != null">
+                and pd_date = #{pdDate}
+            </if>
+            <if test="wid != null">
+                and wid = #{wid}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="pdShopTiao != null">
+                and pd_shop_tiao = #{pdShopTiao}
+            </if>
+            <if test="skNumber != null">
+                and sk_number = #{skNumber}
+            </if>
+            <if test="beizhu != null and beizhu != ''">
+                and beizhu = #{beizhu}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+        insert into projects.pd_report(id, pd_id, pd_date, wid, user_id, pd_shop_tiao, sk_number, beizhu,pd_number)
+        values (#{id}, #{pdId}, #{pdDate}, #{wid}, #{userId}, #{pdShopTiao}, #{skNumber}, #{beizhu},#{pdNumber})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="" useGeneratedKeys="true">
+        insert into projects.pd_report(id, pd_id, pd_date, wid, user_id, pd_shop_tiao, sk_number, beizhu)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.pdId}, #{entity.pdDate}, #{entity.wid}, #{entity.userId}, #{entity.pdShopTiao},
+            #{entity.skNumber}, #{entity.beizhu})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="" useGeneratedKeys="true">
+        insert into projects.pd_report(id, pd_id, pd_date, wid, user_id, pd_shop_tiao, sk_number, beizhu)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.pdId}, #{entity.pdDate}, #{entity.wid}, #{entity.userId}, #{entity.pdShopTiao},
+            #{entity.skNumber}, #{entity.beizhu})
+        </foreach>
+        on duplicate key update
+        id = values(id) , pd_id = values(pd_id) , pd_date = values(pd_date) , wid = values(wid) , user_id =
+        values(user_id) , pd_shop_tiao = values(pd_shop_tiao) , sk_number = values(sk_number) , beizhu = values(beizhu)
+    </insert>
+
+    <select id="selectddh" resultMap="PdResponseVo">
+        SELECT p.`pd_id`,p.`pd_date`,w.`wname`,s.`user_name` ,p.`beizhu` ,sp.`pd_number` FROM pd_report p
+        LEFT JOIN warehouse w ON w.`wid` =p.`wid`
+        LEFT JOIN sys_user s ON s.`user_id`=p.`user_id`
+        LEFT JOIN pd_shop sp ON sp.`pd_number` =p.`pd_number`
+    </select>
+
+    <select id="selectpdid" resultMap="PdResponseVo">
+            SELECT pd.id,pd.sp_shopid, pd.sp_name,pd.sp_Company,pd.sp_color,pd. pd_number,pd.sk_number ,pd.sp_Specifications
+    FROM pd_shop pd
+    LEFT JOIN  pd_report re ON re.pd_id =pd.pd_id
+    WHERE re.pd_id=#{param1}
+    </select>
+
+    <select id="selectpddone" resultMap="PdResponseVo">
+        SELECT pd.pd_id,pd.pd_date ,sp.pd_number,w.wname,su.user_name
+FROM  pd_report pd
+LEFT JOIN pd_shop sp ON sp.pd_number =pd.pd_number
+LEFT JOIN warehouse w ON w.wid= pd.wid
+LEFT JOIN `sys_user` su ON su.user_id=pd.user_id
+
+    </select>
+
+    <select id="selectwherewid" resultMap="PdResponseVo">
+        SELECT pd.pd_id,pd.pd_date ,sp.pd_number,w.wname,su.user_name
+FROM  pd_report pd
+LEFT JOIN pd_shop sp ON sp.pd_number =pd.pd_number
+LEFT JOIN warehouse w ON w.wid= pd.wid
+LEFT JOIN sys_user su ON su.user_id=pd.user_id
+where pd.wid=#{w}
+    </select>
+
+
+    <select id="selectwherepdid" resultMap="PdResponseVo">
+        SELECT * FROM pd_shop pd
+LEFT JOIN warehouse w ON w.wid = pd.wid
+LEFT JOIN `pd_report` pe ON pe.pd_id=pd.pd_id
+WHERE pe.pd_id=#{pd}
+    </select>
+
+<select id="selectpddh" resultMap="PdResponseVo">
+SELECT pd.pd_id, pd.sp_shopid, pd.sp_name, pd.sp_jprice, pd.sp_Company, pd.sp_Specifications ,pd.sp_color,w.`wname`,pr.`pd_date`,pd.`pd_number`,pd.`sk_number` FROM pd_shop pd
+LEFT JOIN `pd_report` pr ON pr.`pd_id` =pd.`pd_id`
+LEFT JOIN `warehouse` w ON w.`wid` =pd.`wid`
+
+
+</select>
+
+    <select id="selectpadate" resultMap="PdResponseVo">
+         SELECT pd.pd_id, pd.sp_shopid, pd.sp_name, pd.sp_jprice, pd.sp_Company, pd.sp_Specifications ,pd.sp_color,w.`wname`,pr.`pd_date`,pd.`pd_number`,pd.`sk_number` FROM pd_shop pd
+LEFT JOIN `pd_report` pr ON pr.`pd_id` =pd.`pd_id`
+LEFT JOIN `warehouse` w ON w.`wid` =pd.`wid`
+where  DATE_FORMAT(pr.pd_date,'%Y-%m-%d') BETWEEN DATE_FORMAT (#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') ORDER BY pr.pd_date DESC
+    </select>
+
+</mapper>
+

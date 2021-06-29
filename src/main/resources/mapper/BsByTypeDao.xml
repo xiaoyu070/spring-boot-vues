@@ -3,7 +3,7 @@
 <mapper namespace="com.trkj.projects.mybatis.dao.BsByTypeDao">
 
     <resultMap type="com.trkj.projects.mybatis.entity.BsByType" id="BsByTypeMap">
-        <result property="bsByByid" column="bs_by_byid" jdbcType="INTEGER"/>
+        <result property="documentstypeid" column="Documents_type_id" jdbcType="INTEGER"/>
         <result property="bsByByname" column="bs_by_byname" jdbcType="VARCHAR"/>
     </resultMap>
 
@@ -76,6 +76,8 @@
     <delete id="deleteById">
         delete from projects.bs_by_type where bs_by_byid = #{bsByByid}
     </delete>
+
+
 
 </mapper>
 

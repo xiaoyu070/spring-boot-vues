@@ -6,6 +6,7 @@ import com.trkj.projects.mybatis.entity.SysRoles;
 import com.trkj.projects.mybatis.entity.SysRolesMenu;
 import com.trkj.projects.service.SysMenuService;
 import com.trkj.projects.vo.MenusVo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -60,5 +61,15 @@ public class SysMenuServiceImpl implements SysMenuService {
     @Override
     public void deleterolesidandmenusid(SysRolesMenu sysRolesMenu) {
         this.sysMenuDao.deleterolesidandmenusid(sysRolesMenu);
+    }
+
+    @Override
+    public void deleterolesid(int sysrolesid) {
+        this.sysMenuDao.deleterolesid(sysrolesid);
+    }
+
+    @Override
+    public void addallrolesidandmenusid(@Param("entities")List<SysRolesMenu> entities) {
+        this.sysMenuDao.addallrolesidandmenusid(entities);
     }
 }

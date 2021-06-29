@@ -13,19 +13,19 @@ public class BsByType implements Serializable {
     /**
      * 报损报溢状态id
      */
-    private Integer bsByByid;
+    private Integer Documentstypeid;
     /**
      * 报损报溢状态名称
      */
     private String bsByByname;
 
 
-    public Integer getBsByByid() {
-        return bsByByid;
+    public Integer getDocumentstypeid() {
+        return Documentstypeid;
     }
 
-    public void setBsByByid(Integer bsByByid) {
-        this.bsByByid = bsByByid;
+    public void setDocumentstypeid(Integer bsByByid) {
+        this.Documentstypeid = bsByByid;
     }
 
     public String getBsByByname() {
