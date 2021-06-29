@@ -227,5 +227,86 @@ public class StockServiceImpl implements StockService {
         return info;
     }
 
+    /**
+     * 根据您店面和仓库查询所有库存商品
+     * @param currentPage
+     * @param pageSize
+     * @param param1
+     * @param param2
+     * @param param3
+     * @return
+     */
+    @Override
+    public PageInfo<StockVo> selectdiancnag(int currentPage, int pageSize, int param1, int param2,int param3) {
+        List<StockVo> list=this.stockDao.selectdiancnag(param1,param2,param3);
+        PageInfo<StockVo> info=new PageInfo<>(list);
+        info.setTotal(list.size());
+        return info;
+    }
+
+    /**
+     * 根据仓库店面查询所有库存报警商品
+     * @param currentPage
+     * @param pageSize
+     * @param param1
+     * @param param2
+     * @param param3
+     * @return
+     */
+    @Override
+    public PageInfo<StockVo> kucunbaojin(int currentPage, int pageSize, int param1, int param2, int param3) {
+        List<StockVo> list=this.stockDao.kucunbaojin(param1,param2,param3);
+        PageInfo<StockVo> info =new PageInfo<>(list);
+        info.setTotal(list.size());
+        return info;
+    }
+
+    @Override
+    public PageInfo<StockVo> typeselect(int currentPage, int pageSize, int param1) {
+        List<StockVo> list=this.stockDao.typeselect(param1);
+        PageInfo<StockVo> info =new PageInfo<>(list);
+        info.setTotal(list.size());
+        return  info;
+    }
+
+    /**
+     * 根据店面仓库 商品编号修改库存数量
+
+     * @return
+     */
+    @Override
+    public int updatestocknumber(Stock stock) {
+
+        return this.stockDao.updatestocknumber(stock);
+    }
+
+    @Override
+    public PageInfo<StockVo> selectjhck(int currentPage, int pageSize) {
+        List<StockVo> list =this.stockDao.selectjhck();
+        PageInfo<StockVo> info=new PageInfo<>(list);
+        info.setTotal(list.size());
+        return  info;
+    }
+
+    /**
+     * 查询进货参考
+     * @param currentPage
+     * @param pageSize
+     * @param typeid
+     * @return
+     */
+    @Override
+    public PageInfo<StockVo> selecttypejhck(int currentPage, int pageSize, int typeid) {
+        List<StockVo> list =this.stockDao.selecttypejhck(typeid);
+        PageInfo<StockVo> info=new PageInfo<>(list);
+        info.setTotal(list.size());
+        return  info;
+    }
+
+    @Override
+    public Integer updatepilian(Integer stocks,Integer shopid) {
+        return this.stockDao.updatepilian(stocks,shopid);
+    }
+
 
 }

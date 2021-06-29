@@ -54,7 +54,7 @@ public class DocumentListController {
     @PostMapping("addDocumentList")
     public AjaxResponse addDocumentList(@RequestBody String www){
         JSONObject jsonObject=JSONObject.parseObject(www);
-        String one = jsonObject.getString("sss");
+        String one = jsonObject.getString("sss") ;
         //json转实体类对象
         DocumentList list = JSON.parseObject(one, DocumentList.class);
         list.setDlDate(new Date());
@@ -162,6 +162,8 @@ public class DocumentListController {
             map.put("rows",list);
             return AjaxResponse.success(map);
         }
+
+
     //根据时间查询销售审核单中状态为待审核的单据
     @PostMapping("xsshenhedates")
     public AjaxResponse xsshenhedates(@RequestBody String b){
@@ -294,6 +296,9 @@ public class DocumentListController {
             map.put("rows",list);
             return AjaxResponse.success(map);
         }
+
+
+
         //根据单据号删除商品
         @GetMapping("deletelistandshop")
         public AjaxResponse deletelistandshop(String number){

@@ -117,6 +117,44 @@ public interface StockDao {
      */
     List<StockVo>baosunbaoyiselect(int param1, int param2);
 
+    /**
+     * 根据仓库和店面查询所有库存商品
+     */
+    List<StockVo> selectdiancnag(int param1,int param2,int param3);
 
+    /**
+     * 根据店面仓库类型查询库存商品
+     * @param param1
+     * @param param2
+     * @param param3
+     * @return
+     */
+    List<StockVo>kucunbaojin(int param1,int param2,int param3);
+
+    /**
+     * 根据仓库查询商品
+     * @param param1
+     * @return
+     */
+    List<StockVo>typeselect(int param1);
+
+    /**
+     * 根据店面仓库 商品编号修改库存数量
+     * @param shopid
+     * @param wids
+     * @param dianid
+     * @return
+     */
+    int updatestocknumber(Stock stock);
+
+    /**
+     * 查询所有进货参考商品
+     * @return
+     */
+    List<StockVo> selectjhck();
+
+    List<StockVo>selecttypejhck(int typeid);
+
+    Integer updatepilian(@Param("skNumber") Integer stocks,@Param("skShopid")Integer shopid);
 }
 

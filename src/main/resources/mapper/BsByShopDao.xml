@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.BsByShopDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.BsByShop" id="BsByShopMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="bsLossReport" column="bs_Loss_report" jdbcType="VARCHAR"/>
+        <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spTypeId" column="sp_type_id" jdbcType="INTEGER"/>
+        <result property="skNumber" column="sk_number" jdbcType="INTEGER"/>
+        <result property="bsNumbers" column="bs_numbers" jdbcType="INTEGER"/>
+        <result property="bsBaosunhou" column="bs_baosunhou" jdbcType="INTEGER"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="zje" column="zje" jdbcType="NUMERIC"/>
+        <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="beizu" column="beizu" jdbcType="VARCHAR"/>
+        <result property="branchid" column="branchid" jdbcType="INTEGER"/>
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BsByShopMap">
+        select
+          id, bs_Loss_report, sp_shopid, sp_name, sp_type_id, sk_number, bs_numbers, bs_baosunhou, sp_color, sp_Specifications, zje, sp_jprice, sp_Company, number, beizu
+        from projects.bs_by_shop
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BsByShopMap">
+        select
+          id, bs_Loss_report, sp_shopid, sp_name, sp_type_id, sk_number, bs_numbers, bs_baosunhou, sp_color, sp_Specifications, zje, sp_jprice, sp_Company, number, beizu
+        from projects.bs_by_shop
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BsByShopMap">
+        select
+        id, bs_Loss_report, sp_shopid, sp_name, sp_type_id, sk_number, bs_numbers, bs_baosunhou, sp_color,
+        sp_Specifications, zje, sp_jprice, sp_Company, number, beizu
+        from projects.bs_by_shop
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="bsLossReport != null and bsLossReport != ''">
+                and bs_Loss_report = #{bsLossReport}
+            </if>
+            <if test="spShopid != null">
+                and sp_shopid = #{spShopid}
+            </if>
+            <if test="spName != null and spName != ''">
+                and sp_name = #{spName}
+            </if>
+            <if test="spTypeId != null">
+                and sp_type_id = #{spTypeId}
+            </if>
+            <if test="skNumber != null">
+                and sk_number = #{skNumber}
+            </if>
+            <if test="bsNumbers != null">
+                and bs_numbers = #{bsNumbers}
+            </if>
+            <if test="bsBaosunhou != null">
+                and bs_baosunhou = #{bsBaosunhou}
+            </if>
+            <if test="spColor != null and spColor != ''">
+                and sp_color = #{spColor}
+            </if>
+            <if test="spSpecifications != null and spSpecifications != ''">
+                and sp_Specifications = #{spSpecifications}
+            </if>
+            <if test="zje != null">
+                and zje = #{zje}
+            </if>
+            <if test="spJprice != null">
+                and sp_jprice = #{spJprice}
+            </if>
+            <if test="spCompany != null and spCompany != ''">
+                and sp_Company = #{spCompany}
+            </if>
+            <if test="number != null">
+                and number = #{number}
+            </if>
+            <if test="beizu != null and beizu != ''">
+                and beizu = #{beizu}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.bs_by_shop(bs_Loss_report, sp_shopid, sp_name, sp_type_id, sk_number, bs_numbers, bs_baosunhou, sp_color, sp_Specifications, zje, sp_jprice, sp_Company, number, beizu)
+        values (#{bsLossReport}, #{spShopid}, #{spName}, #{spTypeId}, #{skNumber}, #{bsNumbers}, #{bsBaosunhou}, #{spColor}, #{spSpecifications}, #{zje}, #{spJprice}, #{spCompany}, #{number}, #{beizu})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.bs_by_shop(bs_Loss_report, sp_shopid, sp_name, sp_type_id, sk_number, bs_numbers,
+        bs_baosunhou, sp_color, sp_Specifications, zje, sp_jprice, sp_Company, number, beizu)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.bsLossReport}, #{entity.spShopid}, #{entity.spName}, #{entity.spTypeId}, #{entity.skNumber},
+            #{entity.bsNumbers}, #{entity.bsBaosunhou}, #{entity.spColor}, #{entity.spSpecifications}, #{entity.zje},
+            #{entity.spJprice}, #{entity.spCompany}, #{entity.number}, #{entity.beizu})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into projects.bs_by_shop(bs_Loss_report, sp_shopid, sp_name, sp_type_id, sk_number, bs_numbers,
+        bs_baosunhou, sp_color, sp_Specifications, zje, sp_jprice, sp_Company, number, beizu)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.bsLossReport}, #{entity.spShopid}, #{entity.spName}, #{entity.spTypeId}, #{entity.skNumber},
+            #{entity.bsNumbers}, #{entity.bsBaosunhou}, #{entity.spColor}, #{entity.spSpecifications}, #{entity.zje},
+            #{entity.spJprice}, #{entity.spCompany}, #{entity.number}, #{entity.beizu})
+        </foreach>
+        on duplicate key update
+        bs_Loss_report = values(bs_Loss_report) , sp_shopid = values(sp_shopid) , sp_name = values(sp_name) , sp_type_id
+        = values(sp_type_id) , sk_number = values(sk_number) , bs_numbers = values(bs_numbers) , bs_baosunhou =
+        values(bs_baosunhou) , sp_color = values(sp_color) , sp_Specifications = values(sp_Specifications) , zje =
+        values(zje) , sp_jprice = values(sp_jprice) , sp_Company = values(sp_Company) , number = values(number) , beizu
+        = values(beizu)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update projects.bs_by_shop
+        <set>
+            <if test="bsLossReport != null and bsLossReport != ''">
+                bs_Loss_report = #{bsLossReport},
+            </if>
+            <if test="spShopid != null">
+                sp_shopid = #{spShopid},
+            </if>
+            <if test="spName != null and spName != ''">
+                sp_name = #{spName},
+            </if>
+            <if test="spTypeId != null">
+                sp_type_id = #{spTypeId},
+            </if>
+            <if test="skNumber != null">
+                sk_number = #{skNumber},
+            </if>
+            <if test="bsNumbers != null">
+                bs_numbers = #{bsNumbers},
+            </if>
+            <if test="bsBaosunhou != null">
+                bs_baosunhou = #{bsBaosunhou},
+            </if>
+            <if test="spColor != null and spColor != ''">
+                sp_color = #{spColor},
+            </if>
+            <if test="spSpecifications != null and spSpecifications != ''">
+                sp_Specifications = #{spSpecifications},
+            </if>
+            <if test="zje != null">
+                zje = #{zje},
+            </if>
+            <if test="spJprice != null">
+                sp_jprice = #{spJprice},
+            </if>
+            <if test="spCompany != null and spCompany != ''">
+                sp_Company = #{spCompany},
+            </if>
+            <if test="number != null">
+                number = #{number},
+            </if>
+            <if test="beizu != null and beizu != ''">
+                beizu = #{beizu},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from projects.bs_by_shop where id = #{id}
+    </delete>
+
+
+
+
+</mapper>
+

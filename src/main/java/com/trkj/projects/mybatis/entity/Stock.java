@@ -1,5 +1,7 @@
 package com.trkj.projects.mybatis.entity;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -8,6 +10,7 @@ import java.io.Serializable;
  * @author makejava
  * @since 2021-06-04 14:19:25
  */
+@Data
 public class Stock implements Serializable {
     private static final long serialVersionUID = -16598816924764650L;
     /**

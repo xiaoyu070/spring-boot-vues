@@ -28,6 +28,7 @@ public interface SysUserDao {
      */
     SysUser findByPhone(String phone);
 
+    SysUser findByUid(int id);
     /**
      * 根据当前登录的用户查询他的权限
      * @param uid
