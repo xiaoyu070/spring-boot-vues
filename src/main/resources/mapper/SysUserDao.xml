@@ -70,10 +70,8 @@
     <!--根据用户名称查询用户-->
     <select id="findByNames" resultMap="SysUserMap">
         select
-          user_id, user_name, user_pass, user_sex, user_phone, user_imgs, user_cjr, user_gxr, user_state, user_error,user_statie
           *
         from projects.sys_user
-        where user_name = #{param1} and user_pass= #{param2}
         where user_name = #{userName}
     </select>
 
@@ -81,15 +79,12 @@
     <select id="findByPhone" resultMap="SysUserMap">
         SELECT * FROM `sys_user` WHERE `user_phone` = #{phone}
     </select>
-<<<<<<< HEAD
 
     <select id="findByUid" resultMap="SysUserMap">
         SELECT * FROM `sys_user` WHERE `user_id` = #{id}
     </select>
 
-=======
 <!--  根据当前登录的用户查询他的角色  -->
->>>>>>> 31a0bb7a9e10d72189cfbbc4ec39fdd8e0592478
     <select id="findByUser_roles" resultMap="Rosle_vo">
         SELECT sr.roles_lv,sr.roles_name FROM sys_user su
         SELECT su.user_id,su.user_name,sr.roles_name,su.user_state,roles_lv FROM sys_user su

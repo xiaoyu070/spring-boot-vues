@@ -80,7 +80,6 @@
         <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
         <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
         <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
-        <result property="skNumber" column="sk_number" jdbcType="INTEGER"/>
         <result property="number" column="number" jdbcType="INTEGER"/>
         <result property="lossNumber" column="loss_number" jdbcType="INTEGER"/>
         <result property="zje" column="zje" jdbcType="NUMERIC"/>
@@ -553,9 +552,6 @@
         LEFT JOIN sys_user su ON dl.admin = su.user_id
         LEFT JOIN document_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN document_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
-        LEFT JOIN branch dm ON dm.branchid = sl.companyid
-        WHERE DATE_FORMAT(dl.dl_date,'%Y-%m-%d') BETWEEN DATE_FORMAT(#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') and dl.dl_statie_id = 0 ORDER BY dl.dl_date DESC
-    </select>
         LEFT JOIN branch dm ON dm.branchid = dl.branchid
         where  (dls.dl_statie_id = 0 OR dls.dl_statie_id = 2) and
                (DATE_FORMAT(dl.dl_date,'%Y-%m-%d')
