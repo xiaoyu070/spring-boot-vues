@@ -159,8 +159,6 @@
         </where>
     </select>
 
-
-
     <!--    模糊查询-->
     <select id="selectlike" resultMap="srockvo">
         SELECT p.`sp_shopid`,p.`sp_name`,p.`sp_state`,p.`sp_bar_code`,p.`sp_Company`,p.`sp_Specifications`,p.`sp_Preset_price`,p.`sp_jprice`

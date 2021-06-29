@@ -48,7 +48,7 @@ public class XtdocumentShop implements Serializable {
     /**
      * 单价
      */
-    private String spJprice;
+    private double spPresetPrice;
     /**
      * 数量
      */

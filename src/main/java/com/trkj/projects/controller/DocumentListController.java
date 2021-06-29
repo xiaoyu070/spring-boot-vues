@@ -66,6 +66,7 @@ public class DocumentListController {
         list.setDlDate(new Date());
         //添加到订单中
         this.documentListService.insert(list);
+        System.out.println("list:"+list.toString());
         String two = jsonObject.getString("list");
         //json转list集合对象
         List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
@@ -77,7 +78,7 @@ public class DocumentListController {
      * @param DocumentlistVo
      * @return
      */
-    @Log("查询单据vo")
+    @Log("查询单据")
     @PostMapping("selectvo")
     public AjaxResponse selectvo(@RequestBody String DocumentlistVo){
         JSONObject jsonObject=JSONObject.parseObject(DocumentlistVo);
@@ -122,6 +123,7 @@ public class DocumentListController {
      * @param a
      * @return
      */
+        @Log("模糊查询单据")
         @PostMapping("likevo")
         public AjaxResponse likevo(@RequestBody String a){
             JSONObject jsonObject=JSONObject.parseObject(a);
@@ -153,6 +155,7 @@ public class DocumentListController {
         map.put("rows",list);
         return AjaxResponse.success(map);
     }
+        @Log("根据时间查询状态为待审核单据")
         //根据时间查询采购审核单中状态为待审核的单据
         @PostMapping("shenhedates")
         public AjaxResponse shenhedates(@RequestBody String b){
@@ -184,6 +187,7 @@ public class DocumentListController {
         return AjaxResponse.success(map);
     }
         //审核确认
+        @Log("单据审核通过")
         @PostMapping("shenheqr")
         public AjaxResponse shenheqr(@RequestBody String a){
             JSONObject jsonObject=JSONObject.parseObject(a);
@@ -193,11 +197,12 @@ public class DocumentListController {
             String two = jsonObject.getString("list");
             DocumentlistVo documentlistVo = JSONObject.parseObject(one, DocumentlistVo.class);
             List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
-            //将库存new出来根据商品id增加商品库存
+            System.out.println("listshop:"+listshop.toString());
+            //将银行new实例化
             Establishment establishment = new Establishment();
             establishment.setXid(xid);
             establishment.setOpening(documentlistVo.getDlsfje());
-
+            //将库存new出来根据商品id增加商品库存
             DocumentList documentList = new DocumentList();
 
             //审核通过后将该单据中包含的商品添加到库存中
@@ -251,6 +256,7 @@ public class DocumentListController {
                 }
                 //根据退货的商品减少相应商品的库存量
                 for(int b=0;b<listshop.size();b++){
+                    System.out.println("listshop:"+listshop.toString());
                     stock.setSkShopid(listshop.get(b).getSpShopid());
                     stock.setSkNumber(listshop.get(b).getNumber());
                     stock.setSkLossnumber(listshop.get(b).getLossNumber());
@@ -291,6 +297,7 @@ public class DocumentListController {
             return AjaxResponse.success("二次付款成功！");
         }
         //新增已审核单据
+        @Log("新增一个已审核单据")
         @PostMapping("insertshenhedj")
         public AjaxResponse insertshenhedj(@RequestBody String a){
             //得到json对象
@@ -359,6 +366,7 @@ public class DocumentListController {
                 //将库存new出来根据商品id和仓库减少商品库存
                 Stock stock=new Stock();
                 for(int b=0;b<listshop.size();b++){
+                    System.out.println("list:::"+listshop.get(b));
                     stock.setSkShopid(listshop.get(b).getSpShopid());
                     stock.setSkNumber(listshop.get(b).getNumber());
                     stock.setSkLossnumber(listshop.get(b).getLossNumber());
@@ -379,6 +387,7 @@ public class DocumentListController {
             return AjaxResponse.success(messus);
         }
         //查询往来账务（采购已审核和退货已审核）
+        @Log("查询往来账务")
         @PostMapping("selectwlzw")
         public AjaxResponse selectwlzw(@RequestBody String a){
             JSONObject jsonObject=JSONObject.parseObject(a);
@@ -425,6 +434,7 @@ public class DocumentListController {
         return AjaxResponse.success(map);
     }
         //查询往来账务（采购已审核和退货已审核）
+        @Log("模糊查询往来账务")
         @PostMapping("selectwlzwlike")
         public AjaxResponse selectwlzwlike(@RequestBody String txt){
             JSONObject jsonObject=JSONObject.parseObject(txt);
@@ -439,6 +449,7 @@ public class DocumentListController {
             return AjaxResponse.success(map);
         }
         //查询所选的俩个时间之内的数据
+        @Log("根据时间查询往来账务")
         @PostMapping("selectdates")
         public AjaxResponse selectdates(@RequestBody String a){
             JSONObject jsonObject=JSONObject.parseObject(a);
@@ -454,6 +465,7 @@ public class DocumentListController {
             return AjaxResponse.success(map);
         }
         //根据单据号删除单据和商品
+        @Log("删除待审核订单")
         @GetMapping("deletelistandshop")
         public AjaxResponse deletelistandshop(String number){
             this.documentListService.deleteById(number);

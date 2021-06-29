@@ -41,9 +41,23 @@
     <insert id="inserrolesidandmenusid">
         insert into sys_roles_menu(sys_roles_id,sys_menu_id) values(#{sysRolesId},#{sysMenuId})
     </insert>
+    <!-- 新增一个集合的角色菜单中间表 -->
+    <insert id="addallrolesidandmenusid">
+        insert into sys_roles_menu(sys_roles_id,sys_menu_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.sysRolesId}, #{entity.sysMenuId})
+        </foreach>
+        on duplicate key update
+        sys_roles_id = values(sys_roles_id) , sys_menu_id = values(sys_menu_id)
+    </insert>
     <!-- 根据角色id和对应菜单id删除该角色的指定菜单权限 -->
     <delete id="deleterolesidandmenusid">
         delete FROM sys_roles_menu where sys_roles_id = #{sysRolesId} and sys_menu_id = #{sysMenuId}
+    </delete>
+    <!-- 根据角色id删除该角色的所有菜单权限 -->
+    <delete id="deleterolesid">
+        delete FROM sys_roles_menu where sys_roles_id = #{sysrolesid}
     </delete>
     <!-- 根据登录的用户查询他对应的菜单 -->
     <select id="findListById" resultMap="SysMenuMap">
@@ -51,7 +65,7 @@
         LEFT JOIN sys_user_roles b ON b.user_id = a.user_id
         LEFT JOIN sys_roles_menu c ON c.sys_roles_id = b.roles_id
         LEFT JOIN sys_menu d ON d.menu_id = c.sys_menu_id
-		WHERE a.user_id=#{userid} AND d.visible = 0 ORDER BY d.order_num
+		WHERE a.user_id=#{userid} AND d.visible = 0 GROUP BY d.menu_id ORDER BY d.order_num
     </select>
 <!--  查询菜单vo  -->
     <select id="queryMenus" resultMap="MenusVO">

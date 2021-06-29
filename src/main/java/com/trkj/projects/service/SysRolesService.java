@@ -64,4 +64,6 @@ public interface SysRolesService {
 
     //模糊查询角色
     List<SysRoles> likeroles(String rolestext);
+    //根据userid查询对应的所有角色
+    List<SysRoles> findbyuseridroles(int userid);
 }

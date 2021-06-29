@@ -1,5 +1,6 @@
 package com.trkj.projects.controller;
 
+import com.trkj.projects.anntation.Log;
 import com.trkj.projects.jpa.entity.BranchEntity;
 import com.trkj.projects.mybatis.entity.Branch;
 import com.trkj.projects.service.BranchService;
@@ -43,6 +44,7 @@ public class BranchController {
     /**
      * 查询所有分店
      */
+    @Log("查询所有店面")
     @GetMapping("selectall")
     public AjaxResponse selectall(){
         AjaxResponse ajaxResponse=null;
@@ -56,6 +58,7 @@ public class BranchController {
      * 用于采购进货（只能对总店进行采购）
      * @return
      */
+    @Log("查询总店")
     @GetMapping("selectbranchand1")
     public AjaxResponse selectbranchand1(){
         List<BranchVo> list=this.branchService.selecttypeidand1();

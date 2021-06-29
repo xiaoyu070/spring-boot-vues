@@ -62,7 +62,7 @@ public class DocumentShopVo {
     /**
      * 数量
      */
-    private Integer number;
+    private Integer numbers;
     /**
      * 损耗后数量
      */
@@ -87,4 +87,8 @@ public class DocumentShopVo {
      * 单据时间
      */
     private Date dlDate;
+    /**
+     * 销售商品状态
+     */
+    private Integer xsSpState;
 }

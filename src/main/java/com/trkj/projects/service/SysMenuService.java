@@ -5,6 +5,7 @@ import com.trkj.projects.mybatis.entity.SysMenu;
 import com.trkj.projects.mybatis.entity.SysRoles;
 import com.trkj.projects.mybatis.entity.SysRolesMenu;
 import com.trkj.projects.vo.MenusVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -34,4 +35,8 @@ public interface SysMenuService {
     void inserrolesidandmenusid(SysRolesMenu sysRolesMenu);
     //根据角色id和对应菜单id删除该角色的指定菜单权限
     void deleterolesidandmenusid(SysRolesMenu sysRolesMenu);
+    //根据角色id删除该角色的所有菜单权限
+    void deleterolesid(int sysrolesid);
+    //批量新增角色菜单中间表
+    void addallrolesidandmenusid(@Param("entities") List<SysRolesMenu> entities);
 }
