@@ -4,10 +4,7 @@ package com.trkj.projects.service;
 import com.github.pagehelper.PageInfo;
 import com.trkj.projects.anntation.Log;
 import com.trkj.projects.mybatis.entity.DocumentList;
-import com.trkj.projects.vo.CghzVo;
-import com.trkj.projects.vo.DocumentlistVo;
-import com.trkj.projects.vo.SpcgmxVo;
-import com.trkj.projects.vo.SpxsmxVo;
+import com.trkj.projects.vo.*;
 
 import java.util.List;
 
@@ -57,7 +54,7 @@ public interface DocumentListService {
     /**
      * 通过主键删除数据
      *
-     * @param id 主键
+     *
      * @return 是否成功
      */
     boolean deleteById(String number);
@@ -121,10 +118,17 @@ public interface DocumentListService {
     PageInfo<SpcgmxVo> cgdj(int currentPage, int pageSize);
     PageInfo<CghzVo> cghz(int currentPage, int pageSize);
     PageInfo<CghzVo> fltj(int currentPage, int pageSize);
-    PageInfo<SpcgmxVo> djxq(int currentPage, int pageSize);
     PageInfo<SpcgmxVo> spmx(int currentPage, int pageSize);
     PageInfo<SpxsmxVo> ssdj(int currentPage, int pageSize);
     List<SpcgmxVo> ywymc();
+    List<CghzVo> xssphz();
+    List<CghzVo> xsspmx();
+    /**
+     * 根据单据号查询商品
+     */
+    List<CghzVo> selectnumberxyz(String number);
+    List<CghzVo> selectnumber1xyz(String number);
+    List<CghzVo> selectnumber2xyz(String spName);
     List<SpxsmxVo> ywymc1();
     List<SpxsmxVo> fdcx();
     List<SpxsmxVo> djlx();

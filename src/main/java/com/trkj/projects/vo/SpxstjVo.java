@@ -16,7 +16,11 @@ public class SpxstjVo {
     private Double spPresetPrice;
     private Double vTypeCk;
     private int number;
+    private int numbers;
     private Double zje;
+    private Double zjes;
+    private Double zjey;
+    private Double xswcbl;
     private String agentName;
     private String wName;
     private String spSpecifications;
@@ -24,4 +28,9 @@ public class SpxstjVo {
     private String spTypeName;
     private String beiZhu;
     private String supplierName;
+    private String typeName;
+    private String address;
+    private Double spJprice;
+    private Double xslr;
+    private Double mll;
 }

@@ -70,6 +70,11 @@
         <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
         <result property="cContacts" column="c_contacts" jdbcType="VARCHAR"/>
         <result property="dlTypeName" column="dl_type_name" jdbcType="VARCHAR"/>
+        <result property="zje" column="zje" jdbcType="NUMERIC"/>
+        <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
+        <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
+        <result property="xslr" column="xslr" jdbcType="NUMERIC"/>
+        <result property="mll" column="mll" jdbcType="NUMERIC"/>
     </resultMap>
 
     <resultMap type="com.trkj.projects.vo.CghzVo" id="CghzVo">
@@ -78,13 +83,26 @@
         <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
         <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
         <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="skNumber" column="sk_number" jdbcType="INTEGER"/>
         <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
+        <result property="sklossNumber" column="sk_loss_number" jdbcType="INTEGER"/>
         <result property="lossNumber" column="loss_number" jdbcType="INTEGER"/>
         <result property="zje" column="zje" jdbcType="NUMERIC"/>
         <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
-        <result property="spPresetPrice" column="sp_Preset_price" jdbcType="VARCHAR"/>
+        <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
         <result property="skLoss" column="sk_loss" jdbcType="VARCHAR"/>
         <result property="spTypeName" column="sp_type_name" jdbcType="VARCHAR"/>
+        <result property="spManufacturer" column="sp_Manufacturer" jdbcType="VARCHAR"/>
+        <result property="spBeizhu" column="sp_beizhu" jdbcType="VARCHAR"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+        <result property="cContacts" column="c_contacts" jdbcType="VARCHAR"/>
+        <result property="dlDate" column="dl_date" jdbcType="VARCHAR"/>
+        <result property="agentName" column="agent_name" jdbcType="VARCHAR"/>
+        <result property="wname" column="wname" jdbcType="VARCHAR"/>
+        <result property="dlStatieId" column="dl_statie_id" jdbcType="INTEGER"/>
+        <result property="xslr" column="xslr" jdbcType="NUMERIC"/>
+        <result property="mll" column="mll" jdbcType="NUMERIC"/>
     </resultMap>
     <resultMap type="com.trkj.projects.vo.SpcgmxVo" id="SpcgmxVo">
         <result property="number" column="number" jdbcType="INTEGER"/>
@@ -103,6 +121,10 @@
         <result property="agentName" column="agent_name" jdbcType="VARCHAR"/>
         <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
         <result property="dlTypeName" column="dl_type_name" jdbcType="VARCHAR"/>
+        <result property="dlYfje" column="dl_yfje" jdbcType="NUMERIC"/>
+        <result property="dlSfje" column="dl_sfje" jdbcType="NUMERIC"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="beiZhu" column="beizhu" jdbcType="VARCHAR"/>
     </resultMap>
 
 <!--    邓峄楷-->
@@ -571,33 +593,63 @@
             LEFT JOIN supplier sup ON l.supplierid=sup.supplierid
             LEFT JOIN sys_user un ON l.admin=un.user_id
     </select>
-    <select id="djxq" resultMap="CghzVo">
-        SELECT l.dl_number,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Preset_price,s.sp_Specifications,s.sp_color,kc.sk_number,kc.sk_loss  FROM shop s
-            LEFT JOIN stock kc ON s.sp_shopid=kc.sk_shopid
-            LEFT JOIN document_shop sp ON sp.sp_shopid=s.sp_shopid
-            LEFT JOIN document_list l ON  sp.dl_number=l.dl_number
-    </select>
+    <select id="xsspmx" resultMap="CghzVo">
+        SELECT s.dl_number,l.dl_date,s.sp_shopid,s.sp_name,s.sp_Preset_price,s.number,s.zje,s.zje-dsp.zje AS xslr,s.sp_Company,s.sp_Specifications,s.sp_color,w.wname,a.agent_name,c.c_contacts,s.beizhu
+         FROM xsdocument_shop s
+         INNER JOIN `xsdocument_list` l ON l.dl_number=s.dl_number
+         INNER JOIN `document_shop` dsp ON  dsp.sp_shopid=s.sp_shopid
+         INNER JOIN `warehouse` w ON w.wid=s.wid
+         INNER JOIN agent a ON l.agent_id=a.id
+         INNER JOIN `customer` c ON s.customerid=c.c_typeid
+         INNER JOIN xsdocument_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+         WHERE  dls.dl_statie_id =2
+         GROUP BY dl_number,sp_shopid,sp_name,sp_Preset_price,sp_Company,sp_Specifications,sp_color,wname,agent_name,c_contacts
+     </select>
     <select id="spmx" resultMap="SpcgmxVo">
-        SELECT sp.number,sp.loss_number,sp.zje,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Specifications,s.sp_color,l.dl_number,l.dl_date, lb.sp_type_name, w.wname,a.agent_name,sup.suppliername FROM document_shop sp
+        SELECT sp.number,sp.loss_number,sp.zje,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Specifications,s.sp_color,
+        sp.dl_number,l.dl_date, lb.sp_type_name, w.wid, w.wname,a.agent_name,sup.suppliername,dl.dl_type_name,l.dl_yfje,
+        l.dl_sfje,u.user_name,sp.beizhu
+        FROM document_shop sp
         LEFT JOIN shop s ON sp.sp_shopid=s.sp_shopid
         LEFT JOIN warehouse w ON sp.wid=w.wid
         LEFT JOIN document_list l ON sp.dl_number=l.dl_number
+        LEFT JOIN document_list_type dl ON dl.dl_type_id=l.dl_type_id
         LEFT JOIN supplier sup ON sp.supplierid=sup.supplierid
         LEFT JOIN shop_type lb ON s.sp_type_id=lb.sp_type_id
         LEFT JOIN agent a ON l.agent_id=a.id
+        LEFT JOIN sys_user u ON l.admin=u.user_id
+    </select>
+    <select id="ssdj" resultMap="SpxsmxVo">
+        SELECT sp.dl_number,l.dl_date,a.agent_name,w.wname,lt.dl_type_name,l.dl_ysje,l.dl_ssje,u.user_name,c.c_contacts,l.dl_beizhu,
+  sp.zje-dsp.zje AS xslr,(sp.sp_Preset_price-dsp.sp_jprice)/sp.sp_Preset_price AS mll
+        FROM xsdocument_shop sp
+        INNER JOIN xsdocument_list l ON l.dl_number=sp.dl_number
+        INNER JOIN agent a ON l.agent_id=a.id
+        INNER JOIN warehouse w ON l.wid=w.wid
+        INNER JOIN document_list_type lt ON l.dl_type_id=lt.dl_type_id
+        INNER JOIN sys_user u ON l.admin=u.user_id
+        INNER JOIN customer c ON l.customerid=c.c_id
+        INNER JOIN xsdocument_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+        INNER JOIN `document_shop` dsp ON  dsp.sp_shopid=sp.sp_shopid
+ WHERE  dls.dl_statie_id =2
     </select>
     <select id="ywymc" resultMap="SpcgmxVo">
         SELECT agent_name
             FROM agent
     </select>
     <select id="ywycx" resultMap="SpcgmxVo">
-        SELECT sp.number,sp.loss_number,sp.zje,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Specifications,s.sp_color,l.dl_number,l.dl_date, lb.sp_type_name, w.wname,a.agent_name,sup.suppliername FROM document_shop sp
+        SELECT sp.number,sp.loss_number,sp.zje,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Specifications,s.sp_color,
+        l.dl_number,l.dl_date, lb.sp_type_name, w.wname,a.agent_name,sup.suppliername,dl.dl_type_name,l.dl_yfje,
+        l.dl_sfje,u.user_name,sp.beizhu
+        FROM document_shop sp
         LEFT JOIN shop s ON sp.sp_shopid=s.sp_shopid
         LEFT JOIN warehouse w ON sp.wid=w.wid
         LEFT JOIN document_list l ON sp.dl_number=l.dl_number
+        LEFT JOIN document_list_type dl ON dl.dl_type_id=l.dl_type_id
         LEFT JOIN supplier sup ON sp.supplierid=sup.supplierid
         LEFT JOIN shop_type lb ON s.sp_type_id=lb.sp_type_id
         LEFT JOIN agent a ON l.agent_id=a.id
+        LEFT JOIN sys_user u ON l.admin=u.user_id
         <where>
             <if test="agentName != null">
                 and agent_name = #{agentName}
@@ -626,14 +678,7 @@
          SELECT dl_type_name
             FROM document_list_type
     </select>
-    <select id="ssdj" resultMap="SpxsmxVo">
-        SELECT l.dl_number,l.dl_date,a.agent_name,w.wname,lt.dl_type_name,l.dl_ysje,l.dl_ssje,u.user_name,c.c_contacts,l.dl_beizhu  FROM xsdocument_list l
-        LEFT JOIN agent a ON l.agent_id=a.id
-        LEFT JOIN warehouse w ON l.wid=w.wid
-        LEFT JOIN document_list_type lt ON l.dl_type_id=lt.dl_type_id
-        LEFT JOIN sys_user u ON l.admin=u.user_id
-        LEFT JOIN customer c ON l.customerid=c.c_id
-    </select>
+
     <select id="ssdjcx" resultMap="SpxsmxVo">
         SELECT l.dl_number,l.dl_date,a.agent_name,w.wname,lt.dl_type_name,l.dl_ysje,l.dl_ssje,u.user_name,c.c_contacts,l.dl_beizhu  FROM xsdocument_list l
         LEFT JOIN agent a ON l.agent_id=a.id
@@ -671,6 +716,42 @@
              d.supplierid > 0
         </where>
             GROUP BY sp_type_name
+    </select>
+    <select id="xssphz" resultMap="CghzVo">
+        SELECT sp.sp_shopid,sp.sp_name,sp.sp_Company,SUM(number) AS number,SUM(zje) AS zje,kc.sk_number,
+           sp.sp_Specifications,sp.sp_color,s.sp_Manufacturer,sp.beizhu
+           FROM xsdocument_shop sp
+           LEFT JOIN `shop` s ON sp.sp_shopid=s.sp_shopid
+           LEFT JOIN `xsdocument_list` l ON sp.dl_number=sp.dl_number
+           LEFT JOIN stock kc ON s.sp_shopid=kc.sk_shopid
+           INNER JOIN xsdocument_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+           WHERE dls.dl_statie_id = 2
+           GROUP BY sp_shopid,sp_name,sp_Company,sp_color,sp_Specifications,sp_beizhu
+    </select>
+    <select id="selectnumberxyz" resultMap="CghzVo">
+ SELECT sp.id,sp.dl_number,sp.sp_shopid,w.wid,w.wname,sp.sp_name,sp.zje,sp.sp_Company,sp.sp_jprice,sp.sp_Specifications,sp.sp_color,kc.sk_number,kc.sk_loss_number  FROM document_shop sp
+            INNER JOIN stock kc ON sp.sp_shopid=kc.sk_shopid
+            INNER JOIN warehouse w ON sp.wid = w.wid
+            INNER JOIN document_list l ON  sp.dl_number=l.dl_number
+            INNER JOIN document_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+            WHERE sp.dl_number = #{param1} AND dls.dl_statie_id =0
+    </select>
+    <select id="selectnumber1xyz" resultMap="CghzVo">
+        SELECT sp.id,sp.dl_number,sp.sp_shopid,sp.sp_name,sp.zje,sp.sp_Company,sp.sp_Specifications,sp.sp_color,kc.sk_number
+            FROM xsdocument_shop sp
+            INNER JOIN stock kc ON sp.sp_shopid=kc.sk_shopid
+            INNER JOIN xsdocument_list l ON  sp.dl_number=l.dl_number
+            INNER JOIN xsdocument_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+            WHERE sp.dl_number = #{param1} AND dls.dl_statie_id =2
+    </select>
+    <select id="selectnumber2xyz" resultMap="CghzVo">
+        SELECT sp.dl_number,l.dl_date,sp.sp_Company,sp.sp_Preset_price,sp.sp_name,kc.sk_number,sp.zje,sp.sp_Specifications,sp.sp_color,ct.c_contacts
+            FROM xsdocument_shop sp
+            INNER JOIN stock kc ON sp.sp_shopid=kc.sk_shopid
+            INNER JOIN customer ct ON sp.customerid=ct.c_typeid
+            INNER JOIN xsdocument_list l ON  sp.dl_number=l.dl_number
+            INNER JOIN xsdocument_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+            WHERE sp.sp_name = #{param1} AND dls.dl_statie_id =2
     </select>
 
 </mapper>

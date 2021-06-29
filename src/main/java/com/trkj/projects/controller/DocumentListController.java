@@ -394,6 +394,36 @@ public class DocumentListController {
             System.out.println("selectwlzw:::"+list);
             return AjaxResponse.success(map);
         }
+        //根据单据号查询
+        @GetMapping("selectnumberxyz")
+        public AjaxResponse selectnumberxyz(String number){
+            System.out.println(",,,"+number);
+            Map<String,Object> map=new HashMap<>();
+            List<CghzVo> list= this.documentListService.selectnumberxyz(number);
+            System.out.println("selectnumber:list:"+list);
+            map.put("rows",list);
+            return AjaxResponse.success(map);
+        }
+    //根据单据号查询
+    @GetMapping("selectnumber1xyz")
+    public AjaxResponse selectnumber1xyz(String number){
+        System.out.println(",,,"+number);
+        Map<String,Object> map=new HashMap<>();
+        List<CghzVo> list= this.documentListService.selectnumber1xyz(number);
+        System.out.println("selectnumber:list:"+list);
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
+    //根据单据号查询
+    @GetMapping("selectnumber2xyz")
+    public AjaxResponse selectnumber2xyz(String spName){
+        System.out.println(",,,"+spName);
+        Map<String,Object> map=new HashMap<>();
+        List<CghzVo> list= this.documentListService.selectnumber2xyz(spName);
+        System.out.println("selectnumber:list:"+list);
+        map.put("rows",list);
+        return AjaxResponse.success(map);
+    }
         //查询往来账务（采购已审核和退货已审核）
         @PostMapping("selectwlzwlike")
         public AjaxResponse selectwlzwlike(@RequestBody String txt){
@@ -450,12 +480,6 @@ public class DocumentListController {
         PageInfo<CghzVo> list= this.documentListService.fltj(currentPage,pageSize);
         return ajaxResponse.success(list);
     }
-    @GetMapping("djxq")
-    public AjaxResponse selectc1(int currentPage, int pageSize){
-        AjaxResponse ajaxResponse =null;
-        PageInfo<SpcgmxVo> list= this.documentListService.djxq(currentPage,pageSize);
-        return ajaxResponse.success(list);
-    }
     @GetMapping("spmx")
     public AjaxResponse selectc2(int currentPage, int pageSize){
         AjaxResponse ajaxResponse =null;
@@ -471,6 +495,25 @@ public class DocumentListController {
     @GetMapping("ywymc")
     public AjaxResponse selectcx1(){
         List<SpcgmxVo> list =this.documentListService.ywymc();
+        return AjaxResponse.success(list);
+    }
+
+    /**
+     * 销售商品汇总查询
+     * @return
+     */
+    @GetMapping("xssphz")
+    public AjaxResponse selectcx(){
+        List<CghzVo> list =this.documentListService.xssphz();
+        return AjaxResponse.success(list);
+    }
+    /**
+     * 销售商品明细查询
+     * @return
+     */
+    @GetMapping("xsspmx")
+    public AjaxResponse selectcx5(){
+        List<CghzVo> list =this.documentListService.xsspmx();
         return AjaxResponse.success(list);
     }
     @GetMapping("ywymc1")

@@ -265,13 +265,16 @@
         </where>
     </select>
     <select id="selectPurch" resultMap="SpcgmxVo">
-         SELECT sp.number,sp.loss_number,sp.zje,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Specifications,s.sp_color,s.sp_beizhu,l.dl_number,l.dl_date, lb.sp_type_name, w.wname,a.agent_name,sup.suppliername FROM document_shop sp
-        LEFT JOIN shop s ON sp.sp_shopid=s.sp_shopid
-        LEFT JOIN warehouse w ON sp.wid=w.wid
-        LEFT JOIN document_list l ON sp.dl_number=l.dl_number
-        LEFT JOIN supplier sup ON sp.supplierid=sup.s_id
-        LEFT JOIN shop_type lb ON s.sp_type_id=lb.sp_type_id
-        LEFT JOIN agent a ON l.agent_id=a.id
+          SELECT l.dl_number,sp.number,sp.loss_number,sp.zje,s.sp_shopid,s.sp_name,s.sp_Company,s.sp_Specifications,s.sp_color,s.sp_beizhu,l.dl_date,lb.sp_type_name, w.wname,a.agent_name,sup.suppliername FROM document_shop sp
+        INNER JOIN shop s ON sp.sp_shopid=s.sp_shopid
+        INNER JOIN warehouse w ON sp.wid=w.wid
+        INNER JOIN document_list l ON sp.dl_number=l.dl_number
+        INNER JOIN supplier sup ON sp.supplierid=sup.s_id
+        INNER JOIN shop_type lb ON s.sp_type_id=lb.sp_type_id
+        INNER JOIN agent a ON l.agent_id=a.id
+        INNER JOIN document_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+        WHERE  dls.dl_statie_id =0
+        GROUP BY loss_number,sp_shopid,sp_name,sp_Company,sp_Specifications,sp_color,wname,dl_number,sp_type_name,agent_name,suppliername
     </select>
 
     <select id="selectfltj" resultMap="FltjVo">

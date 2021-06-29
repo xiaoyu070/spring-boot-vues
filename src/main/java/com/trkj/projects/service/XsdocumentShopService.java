@@ -2,12 +2,9 @@ package com.trkj.projects.service;
 
 import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.XsdocumentShop;
-import com.trkj.projects.vo.SpcgmxVo;
-import com.trkj.projects.vo.SpxsmxVo;
-import com.trkj.projects.vo.SpxstjVo;
+import com.trkj.projects.vo.*;
 import com.trkj.projects.mybatis.entity.DocumentShop;
 import com.trkj.projects.mybatis.entity.XsdocumentShop;
-import com.trkj.projects.vo.DocumentShopVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -81,10 +78,15 @@ public interface XsdocumentShopService {
      * 销售商品明细
      */
     PageInfo<SpxstjVo> xsspmx(int currentPage, int pageSize);
+    List<SpxstjVo> khtj();
     List<SpxstjVo> xssphz();
     List<SpxstjVo> xsspfltj();
+    List<SpxstjVo> ghstj();
+    List<SpxstjVo> artj();
     List<SpxstjVo> ckcx();
     List<SpxstjVo> lbcx();
+    List<SpxstjVo> selectnumber3xyz(String ccontacts);
+    List<SpxstjVo> selectnumber4xyz(String suppliername);
     PageInfo<SpxstjVo> xsmxcx(SpxstjVo spxstjVo , int currentPage, int pageSize);
 
 }
