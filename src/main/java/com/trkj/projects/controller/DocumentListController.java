@@ -137,6 +137,20 @@ public class DocumentListController {
         map.put("rows",list);
         return AjaxResponse.success(map);
     }
+        @Log("模糊查询单据")
+        @PostMapping("likevo")
+        public AjaxResponse likevo(@RequestBody String a){
+            JSONObject jsonObject=JSONObject.parseObject(a);
+            int currenPage = jsonObject.getInteger("currenPage");
+            int pageSize = jsonObject.getInteger("pageSize");
+            String texts = jsonObject.getString("text");
+            Map<String,Object> map=new HashMap<>();
+            Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+            List<DocumentlistVo> list = this.documentListService.likevo(texts);
+            map.put("total",pg.getTotal());
+            map.put("rows",list);
+            return AjaxResponse.success(map);
+        }
     /**
      * 模糊销售查询单据
      * @param a
@@ -171,6 +185,22 @@ public class DocumentListController {
         map.put("rows",list);
         return AjaxResponse.success(map);
     }
+        @Log("根据时间查询状态为待审核单据")
+        //根据时间查询采购审核单中状态为待审核的单据
+        @PostMapping("shenhedates")
+        public AjaxResponse shenhedates(@RequestBody String b){
+            JSONObject jsonObject=JSONObject.parseObject(b);
+            int currenPage = jsonObject.getInteger("currenPage");
+            int pageSize = jsonObject.getInteger("pageSize");
+            String data1 = jsonObject.getString("data1");
+            String data2 = jsonObject.getString("data2");
+            Map<String,Object> map=new HashMap<>();
+            Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+            List<DocumentlistVo> list = this.documentListService.selectdatesdanju(data1,data2);
+            map.put("total",pg.getTotal());
+            map.put("rows",list);
+            return AjaxResponse.success(map);
+        }
     //根据时间查询销售审核单中状态为待审核的单据
     @PostMapping("xsshenhedates")
     public AjaxResponse xsshenhedates(@RequestBody String b){
@@ -204,6 +234,24 @@ public class DocumentListController {
         establishment.setOpening(documentlistVo.getDlsfje());
         //将库存new出来根据商品id增加商品库存
         DocumentList documentList = new DocumentList();
+        //审核确认
+        @Log("单据审核通过")
+        @PostMapping("shenheqr")
+        public AjaxResponse shenheqr(@RequestBody String a){
+            JSONObject jsonObject=JSONObject.parseObject(a);
+            String one = jsonObject.getString("ttt");
+            //银行id
+            int xid = jsonObject.getInteger("xid");
+            String two = jsonObject.getString("list");
+            DocumentlistVo documentlistVo = JSONObject.parseObject(one, DocumentlistVo.class);
+            List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
+            System.out.println("listshop:"+listshop.toString());
+            //将银行new实例化
+            Establishment establishment = new Establishment();
+            establishment.setXid(xid);
+            establishment.setOpening(documentlistVo.getDlsfje());
+            //将库存new出来根据商品id增加商品库存
+            DocumentList documentList = new DocumentList();
 
         //审核通过后将该单据中包含的商品添加到库存中
         Stock stock=new Stock();
@@ -272,6 +320,7 @@ public class DocumentListController {
             this.documentListService.updatestatictwo(documentList);
             mess = "退货审核通过！";
         }
+
         return AjaxResponse.success(mess);
     }
     @PostMapping("wlzwecfkqr")
@@ -309,6 +358,21 @@ public class DocumentListController {
         String two = jsonObject.getString("list");
         //将json对象one转换成实体类
         DocumentList documentlist = JSONObject.parseObject(one, DocumentList.class);
+
+        //新增已审核单据
+        @Log("新增一个已审核单据")
+        @PostMapping("insertshenhedj")
+        public AjaxResponse insertshenhedj(@RequestBody String a){
+            //得到json对象
+            JSONObject jsonObject=JSONObject.parseObject(a);
+            //根据json中的key拿到ttt对象
+            String one = jsonObject.getString("ttt");
+            //根据json中的key拿到xid对象
+            int xid = jsonObject.getInteger("xid");
+            //根据json中的key拿到list对象
+            String two = jsonObject.getString("list");
+            //将json对象one转换成实体类
+            DocumentList documentlist = JSONObject.parseObject(one, DocumentList.class);
 
         //new出银行
         Establishment establishment = new Establishment();
@@ -351,6 +415,7 @@ public class DocumentListController {
                     this.stockService.insert(stocks);
                 }
             }
+
             //应付金额减去实付金额得到欠款金额
             double x = documentlist.getDlYfje() - documentlist.getDlSfje();
             documentlist.setDlDate(new Date());
@@ -378,6 +443,69 @@ public class DocumentListController {
                 this.supplierService.numbersmoneyjian(listshop.get(z).getZje(), listshop.get(z).getSupperlierid());
             }
             messus = "新增退货已审核单成功！";
+
+            //新增一个已审核状态的单据
+            this.documentListService.insert(documentlist);
+            //将list集合中的商品添加到单据商品表中
+            this.documentShopService.insertBatch(listshop);
+            return AjaxResponse.success(messus);
+        }
+        //查询往来账务（采购已审核和退货已审核）
+        @Log("查询往来账务")
+        @PostMapping("selectwlzw")
+        public AjaxResponse selectwlzw(@RequestBody String a){
+            JSONObject jsonObject=JSONObject.parseObject(a);
+            int currenPage = jsonObject.getInteger("currenPage");
+            int pageSize = jsonObject.getInteger("pageSize");
+            String vo=jsonObject.getString("DocumentlistVo");
+            DocumentlistVo documentlistVo=JSON.parseObject(vo,DocumentlistVo.class);
+            Map<String,Object> map=new HashMap<>();
+            Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+            List<DocumentlistVo> list = this.documentListService.selectwlzw(documentlistVo);
+            map.put("total",pg.getTotal());
+            map.put("rows",list);
+            System.out.println("selectwlzw:::"+list);
+            return AjaxResponse.success(map);
+        }
+        //查询往来账务（采购已审核和退货已审核）
+        @Log("模糊查询往来账务")
+        @PostMapping("selectwlzwlike")
+        public AjaxResponse selectwlzwlike(@RequestBody String txt){
+            JSONObject jsonObject=JSONObject.parseObject(txt);
+            int currenPage = jsonObject.getInteger("currenPage");
+            int pageSize = jsonObject.getInteger("pageSize");
+            String vo=jsonObject.getString("txt");
+            Map<String,Object> map=new HashMap<>();
+            Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+            List<DocumentlistVo> list = this.documentListService.selectwlzwlike(vo);
+            map.put("total",pg.getTotal());
+            map.put("rows",list);
+            return AjaxResponse.success(map);
+        }
+        //查询所选的俩个时间之内的数据
+        @Log("根据时间查询往来账务")
+        @PostMapping("selectdates")
+        public AjaxResponse selectdates(@RequestBody String a){
+            JSONObject jsonObject=JSONObject.parseObject(a);
+            int currenPage = jsonObject.getInteger("currenPage");
+            int pageSize = jsonObject.getInteger("pageSize");
+            String data1 = jsonObject.getString("data1");
+            String data2 = jsonObject.getString("data2");
+            Map<String,Object> map=new HashMap<>();
+            Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
+            List<DocumentlistVo> list = this.documentListService.selectdate(data1,data2);
+            map.put("total",pg.getTotal());
+            map.put("rows",list);
+            return AjaxResponse.success(map);
+        }
+        //根据单据号删除单据和商品
+        @Log("删除待审核订单")
+        @GetMapping("deletelistandshop")
+        public AjaxResponse deletelistandshop(String number){
+            this.documentListService.deleteById(number);
+            this.documentShopService.deleteshoplist(number);
+            return AjaxResponse.success("删除成功！");
+
         }
         //新增一个已审核状态的单据
         this.documentListService.insert(documentlist);

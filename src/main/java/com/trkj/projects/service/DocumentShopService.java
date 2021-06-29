@@ -3,9 +3,7 @@ package com.trkj.projects.service;
 
 import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.DocumentShop;
-import com.trkj.projects.vo.CgdjVo;
-import com.trkj.projects.vo.DocumentShopVo;
-import com.trkj.projects.vo.SpcgmxVo;
+import com.trkj.projects.vo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -78,6 +76,20 @@ public interface DocumentShopService {
      * 根据单据号查询商品
      */
     List<DocumentShopVo> selectnumbers(String djh);
+
+    /**
+     * 查询商品汇总表(状态为已审核状态的单据)
+     */
+    List<Documentlistshopstatiezreovo> huizoshop();
+    /**
+     * 根据商品名称查询明细单据vo
+     */
+    List<Documentlistshopstatiezreojinhuomingxivo> selectshopnamehuizovo(String txxt);
+
+    /**
+     * 模糊查询商品汇总表(状态为已审核状态的单据)
+     */
+    List<Documentlistshopstatiezreovo> huizoshoplike(String ttt);
     /**
      * 根据单据号查询商品
      */

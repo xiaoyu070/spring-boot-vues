@@ -1,6 +1,7 @@
 package com.trkj.projects.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.trkj.projects.anntation.Log;
 import com.trkj.projects.mybatis.entity.Establishment;
 import com.trkj.projects.service.EstablishmentService;
 import com.trkj.projects.vo.AjaxResponse;
@@ -30,6 +31,7 @@ public class EstablishmentController {
     /**
      * 通过店面外键查询银行
      */
+    @Log("通过店面id查询该店面下的所有商品")
     @GetMapping("selectestab")
     public AjaxResponse selectestab(int id){
         System.out.println("id:"+id);
@@ -43,6 +45,7 @@ public class EstablishmentController {
     /**
      * 根据分店查询所有的银行账户
      */
+    @Log("根据店面查询该店面的所有账户")
     @GetMapping("selectbyid")
     public AjaxResponse selectbyid(Integer id){
         List<Establishment> list = establishmentService.selectbybranchid(id);

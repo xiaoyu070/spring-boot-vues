@@ -62,6 +62,36 @@
         <result property="supplierName" column="suppliername" jdbcType="VARCHAR"/>
     </resultMap>
 
+<!--  商品汇总表  -->
+    <resultMap id="shophuizoVo" type="com.trkj.projects.vo.Documentlistshopstatiezreovo">
+        <result property="spshoppid" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spname" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spcompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="numbers" column="number" jdbcType="INTEGER"/>
+        <result property="zje" column="zje" jdbcType="NUMERIC"/>
+        <result property="sknumber" column="sk_number" jdbcType="INTEGER"/>
+        <result property="specifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spcolor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+    </resultMap>
+<!--  根据商品名称查询单据vo  -->
+    <resultMap id="shophuizomingxiVo" type="com.trkj.projects.vo.Documentlistshopstatiezreojinhuomingxivo">
+        <result property="suppliername" column="suppliername" jdbcType="VARCHAR"/>
+        <result property="dldate" column="dl_date" jdbcType="TIMESTAMP"/>
+        <result property="dlnumber" column="dl_number" jdbcType="VARCHAR"/>
+        <result property="spshopid" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spname" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spPresetprice" column="sp_Preset_price" jdbcType="NUMERIC"/>
+        <result property="spspecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spjprice" column="sp_jprice" jdbcType="NUMERIC"/>
+        <result property="zje" column="zje" jdbcType="NUMERIC"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="spcompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="spcolor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="beizhu" column="beizhu" jdbcType="VARCHAR"/>
+        <result property="agentname" column="agent_name" jdbcType="VARCHAR"/>
+        <result property="wname" column="wname" jdbcType="VARCHAR"/>
+    </resultMap>
 
 
     <update id="uptxsshopstate">
@@ -217,6 +247,32 @@
         where id = #{id}
     </update>
 
+<!--  查询商品汇总表(状态为已审核状态的单据)  -->
+<select id="huizoshop" resultMap="shophuizoVo">
+        SELECT dsp.sp_shopid,dsp.sp_name,dsp.sp_Company,SUM(dsp.number) AS number,SUM(dsp.zje) AS zje,sk.`sk_number`,dsp.sp_Specifications,dsp.sp_color,dsp.beizhu FROM `document_list` dl
+		LEFT JOIN `document_shop` dsp ON dsp.dl_number = dl.dl_number
+		LEFT JOIN `stock` sk ON sk.sk_shopid = dsp.sp_shopid AND sk.`sp_Warehouse_id` = dsp.wid
+		WHERE dl.dl_statie_id = 0 GROUP BY dsp.sp_name
+</select>
+<!--  模糊查询商品汇总表(状态为已审核状态的单据)  -->
+<select id="huizoshoplike" resultMap="shophuizoVo">
+        SELECT dsp.sp_shopid,dsp.sp_name,dsp.sp_Company,SUM(dsp.number) AS number,SUM(dsp.zje) AS zje,sk.`sk_number`,dsp.sp_Specifications,dsp.sp_color,dsp.beizhu FROM `document_list` dl
+		LEFT JOIN `document_shop` dsp ON dsp.dl_number = dl.dl_number
+		LEFT JOIN `stock` sk ON sk.sk_shopid = dsp.sp_shopid AND sk.`sp_Warehouse_id` = dsp.wid
+		where (dsp.sp_shopid LIKE CONCAT('%',#{ttt},'%') or dsp.sp_name LIKE CONCAT('%',#{ttt},'%')) and dl.dl_statie_id = 0
+        GROUP BY dsp.sp_name
+</select>
+<!--  根据商品名称查询明细单据vo  -->
+<select id="selectshopnamehuizovo" resultMap="shophuizomingxiVo">
+    SELECT sl.suppliername,dl.dl_date,dsp.sp_Specifications,dl.dl_number,dsp.sp_shopid,dsp.sp_name,sp.sp_Preset_price,dsp.sp_jprice,dsp.number,dsp.zje,dsp.sp_Company,dsp.sp_color,dsp.beizhu,ag.agent_name,ws.`wname` FROM `document_list` dl
+		LEFT JOIN `document_shop` dsp ON dsp.dl_number = dl.dl_number
+		LEFT JOIN `stock` sk ON sk.sk_shopid = dsp.sp_shopid AND sk.`sp_Warehouse_id` = dsp.wid
+		LEFT JOIN `shop` sp ON sp.sp_shopid = dsp.sp_shopid AND sp.Warehouse_id = dsp.wid
+		LEFT JOIN `supplier` sl ON sl.supplierid = sp.s_id
+		LEFT JOIN `agent` ag ON ag.agent_id = dl.agent_id
+		LEFT JOIN `warehouse` ws ON ws.`wid` = dl.wid
+		WHERE dsp.sp_name = #{txxt} AND dl.dl_statie_id = 0 GROUP BY dl.dl_number ORDER BY dl.dl_date DESC
+</select>
     <!--通过主键删除-->
     <delete id="deleteById">
         delete from projects.document_shop where id = #{id}
@@ -254,7 +310,6 @@
 <!--    WHERE dsp.dl_number =  #{param1} and dsp.wid = #{param2} and sk.sp_Warehouse_id = #{param2}-->
 
     <select id="selectstatezreonumber" resultMap="DocumentShopVo">
-
         SELECT * FROM `document_shop` dsp
 		LEFT JOIN warehouse ws ON ws.`wid` = dsp.wid
 		LEFT JOIN branch dm ON dm.branchid = ws.branchid
