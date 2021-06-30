@@ -115,10 +115,30 @@ public interface XsdocumentShopDao {
     List<SpxstjVo> xsspfltj();
     List<SpxstjVo> ghstj();
     List<SpxstjVo> artj();
+    List<SpxstjVo> aytj();
     List<SpxstjVo> ckcx();
     List<SpxstjVo> lbcx();
     List<SpxstjVo> selectnumber3xyz(String ccontacts);
     List<SpxstjVo> selectnumber4xyz(String suppliername);
     List<SpxstjVo> xsmxcx(SpxstjVo spxstjVo);
+
+    /**
+     * 统计
+     * @return
+     */
+    List<SpxstjVo> cgqk1();
+    List<SpxstjVo> cgqk2();
+    List<SpxstjVo> cgqk3();
+    List<SpxstjVo> xsqk1();
+    List<SpxstjVo> xsqk2();
+    List<SpxstjVo> xsqk3();
+    List<SpxstjVo> bsbyqk();
+    List<SpxstjVo> bsbyqk1();
+    List<SpxstjVo> kcqk();
+    List<SpxstjVo> fkshqk();
+    List<SpxstjVo> fkshqk1();
+    List<SpxstjVo> fkshqk2();
+    List<SpxstjVo> fkshqk3();
+    List<SpxstjVo> cwfx();
 }
 

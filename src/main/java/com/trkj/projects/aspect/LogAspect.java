@@ -125,7 +125,7 @@ public class LogAspect {
 //         request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         journal.setAddressip(ip);
         //调用service保存SysLog实体类到数据库
-        journalService.insert(journal);
+        //journalService.insert(journal);
     }
 
 }

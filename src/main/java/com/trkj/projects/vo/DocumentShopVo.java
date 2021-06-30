@@ -91,4 +91,5 @@ public class DocumentShopVo {
      * 销售商品状态
      */
     private Integer xsSpState;
+    private Integer number;
 }
