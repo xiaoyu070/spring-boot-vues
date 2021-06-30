@@ -11,6 +11,8 @@ import com.aliyuncs.profile.DefaultProfile;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class yan {
 	/**
@@ -18,46 +20,63 @@ public class yan {
 	 * @author Administrator
 	 *
 	 */
-	private static String phones;
-	private static String codes;
-	public String yanzheng(String phone,int i) {
 
-		// TODO Auto-generated method stub
-		String accessKeyId = "LTAI4GJzEsuZpaGDRimsLJob";
-		String accessSecret ="lI9uFR6RD9AOLS6LRfbAvvjHFHZDRp";
-		String code = vcode();
-		System.out.println(code);
-		DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessSecret);
-        IAcsClient client = new DefaultAcsClient(profile);
-        CommonRequest request = new CommonRequest();
-        request.setSysMethod(MethodType.POST);
-        request.setSysDomain("dysmsapi.aliyuncs.com");
-        request.setSysVersion("2021-06-08");
-        request.setSysAction("SendSms");
-        request.putQueryParameter("RegionId", "cn-hangzhou");
-        request.putQueryParameter("PhoneNumbers", phone);
-        request.putQueryParameter("SignName","ABC商城");
-		this.phones=phone;
-		this.codes=code;
-        if(i==1) {
-        	request.putQueryParameter("TemplateCode", "SMS_204107462");
-        }
-        if(i==2) {
-        	request.putQueryParameter("TemplateCode", "SMS_218170894");
-        }
-        if(i==3) {
-        	request.putQueryParameter("TemplateCode", "SMS_204112431");
-        }
-        request.putQueryParameter("TemplateParam", "{\"code\":"+code+"}");
-        try {
-            CommonResponse response = client.getCommonResponse(request);
-            System.out.println(response.getData());
-        } catch (ServerException e) {
-            e.printStackTrace();
-        } catch (ClientException e) {
-            e.printStackTrace();
-        }
-		return code;
+	Map<String,String> map=new HashMap<>();
+	public String yanzheng(String phone,int i) {
+			//LTAI4Fgzwq2Q6LfhWhpRJQL8
+			String accessKeyId=null;
+			//kw2ekRkeTrncBBq8ZVplflZq19QTls
+			String accessSecret=null;
+			String SignName="星际进销存";
+			DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou",accessKeyId,accessSecret);
+			IAcsClient client = new DefaultAcsClient(profile);
+			CommonRequest request=new CommonRequest();
+			request.setSysMethod(MethodType.POST);
+			request.setSysDomain("dysmsapi.aliyuncs.com");
+			request.setSysVersion("2017-05-25");
+			request.setSysAction("SendSms");
+			request.putQueryParameter("PhoneNumbers", phone);
+			request.putQueryParameter("SignName",SignName);
+			if (i==1){
+				request.putQueryParameter("TemplateCode","SMS_199600531");//注册
+			}else if(i==2){
+				request.putQueryParameter("TemplateCode","SMS_199771688");//快速登录
+			}else if(i==3){
+				request.putQueryParameter("TemplateCode","SMS_199791543");//修改手机号
+			}else if(i==4){
+				request.putQueryParameter("TemplateCode","SMS_201651159");//修改密码
+			}
+			String code=smsCode(phone);
+			map.put(phone,code);
+			request.putQueryParameter("TemplateParam", "{\"code\":"+code+"}");
+			trydel(map,phone);
+			try {
+				CommonResponse response=client.getCommonResponse(request);
+				System.out.println(response.getData());
+			} catch (ClientException e) {
+				//e.printStackTrace();
+			}
+			return code;
+	}
+	//创建验证码
+	public static String smsCode(String phone){
+		String random=(int)((Math.random()*9+1)*100000)+"";
+		System.out.print("验证码:"+random);
+		return random;
+	}
+	public static void trydel(Map map,String phone) {
+		System.out.println("当前所有有效验证码" + map);
+		System.out.println("键："+map.get(phone));
+		//1分钟后删除验证码
+		final Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				System.out.println(map.get(phone) + "------验证码已失效");
+				map.remove(phone);
+				timer.cancel();
+			}
+		}, 60 * 1000);
 	}
 	/**	 *生成6位随机数验证码* @return	 */	
 	public static String vcode(){		
@@ -67,14 +86,12 @@ public class yan {
 			}        
 		return vcode;
 	}
-	/**
-	 * 手机号对应验证码
-	 * @return
-	 */
-	public static Map<String,String> mm(){
-		Map<String,String> map=new HashMap<>();
-		map.put("phone",phones);
-		map.put("code",codes);
-		return map;
+	//判断验证码是否过期 以及是否有效
+	public String isphonecode(String phone) {
+		if (map.size() >0 && map.containsKey(phone)){
+			return map.get(phone);
+		}else {
+			return null;
+		}
 	}
 }

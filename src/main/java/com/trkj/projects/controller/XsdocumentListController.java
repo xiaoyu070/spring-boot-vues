@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.*;
 import com.trkj.projects.service.*;
 import com.trkj.projects.vo.AjaxResponse;
@@ -165,8 +166,10 @@ public class XsdocumentListController {
         JSONObject jsonObject = JSONObject.parseObject(aa);
         String ss = jsonObject.getString("aa");
         String bb = jsonObject.getString("list");
+        int xid = jsonObject.getInteger("xid");
         XsdocumentList xsdocumentList = JSON.parseObject(ss,XsdocumentList.class);
         System.out.println("退货信息："+xsdocumentList);
+
         this.xsdocumentListService.insert(xsdocumentList);
 
         List<XtdocumentShop> list = JSON.parseArray(bb,XtdocumentShop.class);
@@ -176,7 +179,25 @@ public class XsdocumentListController {
         for(int a=0;a<list.size();a++){
             this.xsdocumentShopService.uptshopstate(list.get(a).getId(),list.get(a).getDlNumber(),list.get(a).getYsDlNumber());
         }
+        //如果退货状态为2（已审核）就直接改变库存数量
+        if(xsdocumentList.getDlStatieId()==2){
+            Stock stock = new Stock();
+            for(int i=0;i<list.size();i++){
+                stock.setSkShopid(list.get(i).getSpShopid());
+                stock.setSkNumber(list.get(i).getNumber());
+                stock.setSkLossnumber(list.get(i).getLossNumber());
+                this.stockService.xsupdate2(stock);
+            }
+            //退货增加银行账户的余额
+            Establishment establishment = new Establishment();
+            establishment.setXid(xid);
+            establishment.setOpening(xsdocumentList.getDlSsje());
+            //银行余额减少实付金额
+            this.establishmentService.updateestab(establishment);
+            //退货减少客户的我方应收金额
+            this.customerService.updatemoney2(xsdocumentList.getDlzonje(),xsdocumentList.getCustomerid());
 
+        }
         return AjaxResponse.success("退货成功");
 
     }
@@ -193,29 +214,48 @@ public class XsdocumentListController {
         System.out.println(documentlistVo.getDlYsje()+",,,"+documentlistVo.getDlSsje());
         System.out.println(documentlistVo);
         System.out.println(xid);
-        this.xsdocumentListService.updatestaticzore(documentlistVo);
-        Establishment establishment = new Establishment();
-        establishment.setXid(xid);
-        establishment.setOpening(documentlistVo.getDlSsje());
-        //银行余额减去实付金额
-        this.establishmentService.updateestab(establishment);
         List<XsdocumentShop> listshop = JSONArray.parseArray(two, XsdocumentShop.class);
-
-        //审核通过后将该单据中包含的商品从库存减库存量
-        Stock stock=new Stock();
-        for(int b=0;b<listshop.size();b++){
-            stock.setSkShopid(listshop.get(b).getSpShopid());
-            stock.setSkNumber(listshop.get(b).getNumber());
-            stock.setSkLossnumber(listshop.get(b).getLossNumber());
-            this.stockService.xsupdate(stock);
+        if(documentlistVo.getDlTypeId()==1){
+            this.xsdocumentListService.updatestaticzore(documentlistVo);
+            Establishment establishment = new Establishment();
+            establishment.setXid(xid);
+            establishment.setOpening(documentlistVo.getDlSsje());
+            //银行余额加入实付金额
+            this.establishmentService.updateestabjia(establishment);
+            //审核通过后将该单据中包含的商品从库存减库存量
+            Stock stock=new Stock();
+            for(int b=0;b<listshop.size();b++){
+                stock.setSkShopid(listshop.get(b).getSpShopid());
+                stock.setSkNumber(listshop.get(b).getNumber());
+                stock.setSkLossnumber(listshop.get(b).getLossNumber());
+                this.stockService.xsupdate(stock);
+            }
+            //获取销售商品里的客户和单价加到客户的我方应收里
+            this.customerService.updatemoney2(documentlistVo.getDlzonje(),documentlistVo.getCustomerid());
+            return AjaxResponse.success("销售审核通过！");
         }
-//        double x = documentlistVo.getDlysje() - documentlistVo.getDlssje();
+        //退货审核操作
+        if(documentlistVo.getDlTypeId()==2){
+            this.xsdocumentListService.updatestaticzoret(documentlistVo);
+            Establishment establishment = new Establishment();
+            establishment.setXid(xid);
+            establishment.setOpening(documentlistVo.getDlSsje());
+            //银行余额减实付金额
+            this.establishmentService.updateestab(establishment);
+            //审核通过后将该单据中包含的商品从库存加库存量
+            Stock stock=new Stock();
+            for(int b=0;b<listshop.size();b++){
+                stock.setSkShopid(listshop.get(b).getSpShopid());
+                stock.setSkNumber(listshop.get(b).getNumber());
+                stock.setSkLossnumber(listshop.get(b).getLossNumber());
+                this.stockService.xsupdate2(stock);
+            }
+            //获取销售商品里的客户和单价减到客户的我方应收里
+            this.customerService.updatemoney2(documentlistVo.getDlzonje(),documentlistVo.getCustomerid());
+            return AjaxResponse.success("退货审核通过！");
 
-        //获取销售商品里的客户和单价加到客户的我方应收里
-        for (int i =0;i<listshop.size();i++){
-            this.customerService.updatemoney(listshop.get(i).getSpPresetPrice(),listshop.get(i).getCustomerid());
         }
-        return AjaxResponse.success("审核通过！");
+        return AjaxResponse.success("审核未通过！");
     }
     //销售审核确认
     @PostMapping("xsshenheqr")
@@ -226,7 +266,7 @@ public class XsdocumentListController {
         int xid = jsonObject.getInteger("xid");
         String two = jsonObject.getString("list");
         XsdocumentList documentlistVo = JSONObject.parseObject(one, XsdocumentList.class);
-        System.out.println("应收："+documentlistVo.getDlYsje()+",,,实收："+documentlistVo.getDlSsje());
+        System.out.println("应收："+documentlistVo.getDlYsje()+",,,实收："+documentlistVo.getDlSsje()+"...欠款："+documentlistVo.getDlQkje());
         System.out.println("单据信息："+documentlistVo);
         this.xsdocumentListService.insert(documentlistVo);
         //获取银行id去减银行账户余额
@@ -234,8 +274,8 @@ public class XsdocumentListController {
         Establishment establishment = new Establishment();
         establishment.setXid(xid);
         establishment.setOpening(documentlistVo.getDlSsje());
-        //银行余额减去实付金额
-        this.establishmentService.updateestab(establishment);
+        //银行余额加去实付金额
+        this.establishmentService.updateestabjia(establishment);
         //单据下的所有商品进行循环添加
         List<XsdocumentShop> listshop = JSONArray.parseArray(two, XsdocumentShop.class);
         System.out.println(listshop);
@@ -251,6 +291,57 @@ public class XsdocumentListController {
         //获取销售商品里的客户和单价加到客户的我方应收里
         this.customerService.updatemoney(documentlistVo.getDlzonje(),documentlistVo.getCustomerid());
         return AjaxResponse.success("审核通过！");
+    }
+
+    /**
+     * 往来账务查询单据已审核的销售单据
+     * @param dlNumber
+     * @param cid
+     * @param wid
+     * @param agentid
+     * @param userid
+     * @param branchid
+     * @param date1
+     * @param date2
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("findwlzw")
+    public AjaxResponse findwlzw(Integer cid, Integer wid, Integer agentid, Integer userid, Integer branchid,Integer currentPage, Integer pageSize,String dlNumber, String date1, String date2){
+        System.out.println("Integer"+ cid+"Integer"+ wid+"Integer" + agentid+"Integer"+ userid+ "Integer"+ branchid+"Integer"+ currentPage+" currentPage"+ pageSize+"String"+ dlNumber+ "String"+ date1+"String"+ date2);
+        System.out.println("cid"+cid+"dlNumber："+dlNumber+date1);
+        PageInfo<XsDocumentlistVo> info = xsdocumentListService.finxsdwlzw(dlNumber,cid,wid,agentid,userid,branchid,date1,date2,currentPage,pageSize);
+        return AjaxResponse.success(info);
+    }
+
+    /**
+     * 往来账务二次付款
+     * @param two
+     * @return
+     */
+    @PostMapping("updatetwolist")
+    public AjaxResponse updatetwolist(@RequestBody String two){
+        JSONObject jsonObject=JSONObject.parseObject(two);
+        String aa = jsonObject.getString("two");
+        Integer xid = jsonObject.getInteger("xid");
+        XsdocumentList documentlistVo = JSONObject.parseObject(aa, XsdocumentList.class);
+        System.out.println("二次提交单据："+documentlistVo);
+        //计算实付金额将欠款金额归0
+        XsdocumentList xsdocumentList = new XsdocumentList();
+        xsdocumentList.setDlNumber(documentlistVo.getDlNumber());
+        xsdocumentList.setDlSsje(documentlistVo.getDlSsje() + documentlistVo.getDlQkje());
+        xsdocumentList.setDlQkje(0.0);
+        this.xsdocumentListService.update(xsdocumentList);
+        //二次付款成功后加入选择的银行账户中的余额
+        Establishment establishment=new Establishment();
+        establishment.setXid(xid);
+        establishment.setOpening(documentlistVo.getDlQkje());
+        this.establishmentService.update(establishment);
+        //计算客户的我方应收金额
+        this.customerService.updatemoney(documentlistVo.getDlQkje(),documentlistVo.getCustomerid());
+
+        return AjaxResponse.success("二次付款成功");
     }
 
 

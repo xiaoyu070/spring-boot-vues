@@ -8,13 +8,12 @@ import com.trkj.projects.mybatis.entity.SysRoles;
 import com.trkj.projects.mybatis.entity.SysRolesMenu;
 import com.trkj.projects.service.SysMenuService;
 import com.trkj.projects.service.SysRolesService;
+import com.trkj.projects.service.SysUserService;
 import com.trkj.projects.vo.AjaxResponse;
 import com.trkj.projects.vo.MenusVo;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -95,9 +94,24 @@ public class SysMenuController {
         return AjaxResponse.success(treemenu);
     }
     @PostMapping("updateMenus")
-    public AjaxResponse updateMenus(@RequestBody SysMenu sysMenu){
+    public AjaxResponse updateMenus(@RequestBody String a){
+        Map<String,Object> map = new HashMap<>();
+        JSONObject jsonObject = JSON.parseObject(a);
+        String sysmenus = jsonObject.getString("from");
+        int uid = jsonObject.getInteger("uid");
+        SysMenu sysMenu = JSON.parseObject(sysmenus,SysMenu.class);
+        System.out.println("sysmenus:"+sysmenus.toString());
         this.sysMenuService.updateMenus(sysMenu);
-        return AjaxResponse.success("修改成功！");
+        List<SysMenu> list = this.sysMenuService.queryListById(uid);
+        List<SysMenu> treemenu = list.stream().filter(m -> m.getParentId() == 0).map(
+                (m) -> {
+                    m.setChildMenu(getChildrens(m, list));
+                    return m;
+                }
+        ).collect(Collectors.toList());
+        map.put("message","修改成功！");
+        map.put("sysMenu",treemenu);
+        return AjaxResponse.success(map);
     }
 //    //修改角色的菜单权限
 //    @PostMapping("updateRolesMenus")
@@ -136,5 +150,37 @@ public class SysMenuController {
         //然后将传过来的角色id和菜单权限进行批量新增
         this.sysMenuService.addallrolesidandmenusid(sysRolesMenuList);
         return AjaxResponse.success("修改角色权限成功！");
+    }
+    //修改菜单为启用状态
+    @GetMapping("updatemenusvisiblezero")
+    public AjaxResponse updatemenusvisiblezero(int munesid,int userid){
+        Map<String,Object> map = new HashMap<>();
+        this.sysMenuService.updatemenuszero(munesid);
+        List<SysMenu> list = this.sysMenuService.queryListById(userid);
+        List<SysMenu> treemenu = list.stream().filter(m -> m.getParentId() == 0).map(
+                (m) -> {
+                    m.setChildMenu(getChildrens(m, list));
+                    return m;
+                }
+        ).collect(Collectors.toList());
+        map.put("success","该菜单状态已启用！");
+        map.put("sysMenu",treemenu);
+        return AjaxResponse.success(map);
+    }
+    //修改菜单为禁用状态
+    @GetMapping("updatemenusvisibleone")
+    public AjaxResponse updatemenusvisibleone(int munesid,int userid){
+        Map<String,Object> map = new HashMap<>();
+        this.sysMenuService.updatemenusone(munesid);
+        List<SysMenu> list = this.sysMenuService.queryListById(userid);
+        List<SysMenu> treemenu = list.stream().filter(m -> m.getParentId() == 0).map(
+                (m) -> {
+                    m.setChildMenu(getChildrens(m, list));
+                    return m;
+                }
+        ).collect(Collectors.toList());
+        map.put("success","该菜单状态已禁用！");
+        map.put("sysMenu",treemenu);
+        return AjaxResponse.success(map);
     }
 }

@@ -33,9 +33,13 @@
         <result property="vTypeCk" column="v_type_ck" jdbcType="NUMERIC"/>
         <result property="number" column="number" jdbcType="INTEGER"/>
         <result property="numbers" column="numbers" jdbcType="INTEGER"/>
-        <result property="zje" column="zje" jdbcType="NUMERIC"/>
+        <result property="zsl" column="zsl" jdbcType="INTEGER"/>
+            <result property="zsls" column="zsls" jdbcType="INTEGER"/>
+            <result property="zje" column="zje" jdbcType="NUMERIC"/>
         <result property="zjes" column="zjes" jdbcType="NUMERIC"/>
         <result property="zjey" column="zjey" jdbcType="NUMERIC"/>
+            <result property="yskh" column="yskh" jdbcType="NUMERIC"/>
+            <result property="sskh" column="sskh" jdbcType="NUMERIC"/>
         <result property="agentName" column="agent_name" jdbcType="VARCHAR"/>
         <result property="wName" column="wname" jdbcType="VARCHAR"/>
         <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
@@ -49,6 +53,34 @@
         <result property="xslr" column="xslr" jdbcType="NUMERIC"/>
         <result property="mll" column="mll" jdbcType="NUMERIC"/>
         <result property="xswcbl" column="xswcbl" jdbcType="NUMERIC"/>
+            <result property="rq" column="rq" jdbcType="VARCHAR"/>
+            <result property="kcsl" column="kcsl" jdbcType="NUMERIC"/>
+            <result property="kcje" column="kcje" jdbcType="NUMERIC"/>
+            <result property="cgsl" column="cgsl" jdbcType="NUMERIC"/>
+            <result property="cgje" column="cgje" jdbcType="NUMERIC"/>
+            <result property="xssl" column="xssl" jdbcType="NUMERIC"/>
+            <result property="xsje" column="xsje" jdbcType="NUMERIC"/>
+            <result property="xscb" column="xscb" jdbcType="NUMERIC"/>
+            <result property="yfghs" column="yfghs" jdbcType="NUMERIC"/>
+            <result property="sfghs" column="sfghs" jdbcType="NUMERIC"/>
+            <result property="thds" column="thds" jdbcType="INTEGER"/>
+            <result property="thsl" column="thsl" jdbcType="INTEGER"/>
+            <result property="thje" column="thje" jdbcType="NUMERIC"/>
+            <result property="thdss" column="thdss" jdbcType="INTEGER"/>
+            <result property="thsls" column="thsls" jdbcType="INTEGER"/>
+            <result property="thjes" column="thjes" jdbcType="NUMERIC"/>
+            <result property="bsds" column="bsds" jdbcType="INTEGER"/>
+            <result property="bssl" column="bssl" jdbcType="INTEGER"/>
+            <result property="bsje" column="bsje" jdbcType="NUMERIC"/>
+            <result property="byds" column="byds" jdbcType="INTEGER"/>
+            <result property="bysl" column="bysl" jdbcType="INTEGER"/>
+            <result property="byje" column="byje" jdbcType="NUMERIC"/>
+            <result property="xsds" column="xsds" jdbcType="INTEGER"/>
+            <result property="cgds" column="cgds" jdbcType="INTEGER"/>
+            <result property="kczl" column="kczl" jdbcType="INTEGER"/>
+            <result property="xghsfkds" column="xghsfkds" jdbcType="INTEGER"/>
+            <result property="xkhskds" column="xkhskds" jdbcType="INTEGER"/>
+            <result property="kczj" column="kczj" jdbcType="NUMERIC"/>
     </resultMap>
 
     <resultMap id="DocumentShopVo" type="com.trkj.projects.vo.DocumentShopVo">
@@ -61,10 +93,12 @@
         <result property="customerid" column="customerid" jdbcType="INTEGER"/>
         <result property="wid" column="wid" jdbcType="INTEGER"/>
         <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spShopId" column="sp_shopid" jdbcType="INTEGER"/>
         <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
         <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
         <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
         <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="numbers" column="number" jdbcType="INTEGER"/>
         <result property="lossNumber" column="loss_number" jdbcType="INTEGER"/>
         <result property="zje" column="zje" jdbcType="NUMERIC"/>
         <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
@@ -271,6 +305,9 @@
             <if test="xsSpState != null">
                 xs_sp_state = #{xsSpState},
             </if>
+            <if test="ysDlNumber != null and ysDlNumber != ''">
+                ys_dl_number = #{ysDlNumber},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -382,6 +419,18 @@
      WHERE  dls.dl_statie_id =2 AND dlsc.dl_statie_id = 0
      GROUP BY dl_date
     </select>
+    <select id="aytj" resultMap="SpxstjVo">
+     SELECT DATE_FORMAT( l.dl_date, '%Y-%m' ) AS rq,SUM(sk.sk_number) AS kcsl,(SUM(sk.sk_number))*sp.sp_jprice AS kcje,
+	SUM(sp.number) AS cgsl,SUM(sp.zje)AS cgje,SUM(s.number) AS xssl,SUM(l.dl_ssje) AS xsje,s.zje,sp.sp_jprice*s.number AS xscb,s.zje-sp.zje AS xslr,
+	(s.sp_Preset_price-sp.sp_jprice)/s.sp_Preset_price AS mll
+	FROM xsdocument_list l
+	 INNER JOIN `xsdocument_shop` s ON s.dl_number=l.dl_number
+	 INNER JOIN `stock` sk ON sk.sk_shopid=s.sp_shopid
+         INNER JOIN `document_shop` sp ON sp.sp_shopid=s.sp_shopid
+         INNER JOIN xsdocument_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+	WHERE YEAR(dl_date) = 2021 AND dls.dl_statie_id =2
+	 GROUP BY MONTH(dl_date);
+    </select>
     <select id="ckcx" resultMap="SpxstjVo">
          SELECT wname
             FROM warehouse
@@ -419,6 +468,106 @@
         sp_Specifications,sp_color
     </select>
 
-
+    <select id="cgqk1" resultMap="SpxstjVo">
+     SELECT COUNT(l.id) AS thds,SUM(s.number) AS thsl,SUM(zje) AS thje
+	 FROM `document_list` l
+	 INNER JOIN `document_shop` s ON s.dl_number=l.dl_number
+	 INNER JOIN document_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+	 WHERE dls.dl_statie_id =2
+    </select>
+    <select id="cgqk2" resultMap="SpxstjVo">
+      SELECT COUNT(l.id) AS cgds,SUM(s.number) AS cgsl,SUM(zje) AS cgje
+	 FROM `document_list` l
+	 INNER JOIN `document_shop` s ON s.dl_number=l.dl_number
+	 INNER JOIN document_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+	 WHERE dls.dl_statie_id =0
+    </select>
+    <select id="cgqk3" resultMap="SpxstjVo">
+     SELECT SUM(s.number) AS zsl,SUM(zje) AS zje
+	 FROM `document_list` l
+	 INNER JOIN `document_shop` s ON s.dl_number=l.dl_number
+	 INNER JOIN document_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+	 WHERE dls.dl_statie_id =0 OR dls.dl_statie_id =2
+    </select>
+    <select id="xsqk1" resultMap="SpxstjVo">
+     SELECT COUNT(l.id) AS thdss,SUM(s.number) AS thsls,SUM(zje) AS thjes
+	 FROM `xsdocument_list` l
+	 INNER JOIN `xsdocument_shop` s ON s.dl_number=l.dl_number
+	 INNER JOIN xsdocument_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+	 WHERE dls.dl_statie_id =1
+    </select>
+    <select id="xsqk2" resultMap="SpxstjVo">
+      SELECT COUNT(l.id) AS xsds,SUM(s.number) AS xssl,SUM(zje) AS xsje
+	 FROM `xsdocument_list` l
+	 INNER JOIN `xsdocument_shop` s ON s.dl_number=l.dl_number
+	 INNER JOIN xsdocument_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+	 WHERE dls.dl_statie_id =2
+    </select>
+    <select id="xsqk3" resultMap="SpxstjVo">
+     SELECT SUM(s.number) AS zsls,SUM(zje) AS zjes
+	 FROM `xsdocument_list` l
+	 INNER JOIN `xsdocument_shop` s ON s.dl_number=l.dl_number
+	 INNER JOIN xsdocument_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+	 WHERE dls.dl_statie_id =2
+    </select>
+    <select id="bsbyqk" resultMap="SpxstjVo">
+     SELECT COUNT(bs.id) AS bsds,SUM(bs.bs_numbers) AS bssl,SUM(bs.zje) AS bsje
+	 FROM `bs_by_shop` bs
+	 INNER JOIN `bs_report` br ON  br.bs_Loss_report=bs.bs_Loss_report
+	 INNER JOIN `bs_by_type` bt ON bt.Documents_type_id=br.Documents_type_id
+	 WHERE bt.Documents_type_id =1
+    </select>
+    <select id="bsbyqk1" resultMap="SpxstjVo">
+     SELECT COUNT(bs.id) AS byds,SUM(bs.bs_numbers) AS bysl,SUM(bs.zje) AS byje
+	 FROM `bs_by_shop` bs
+	 INNER JOIN `bs_report` br ON  br.bs_Loss_report=bs.bs_Loss_report
+	 INNER JOIN `bs_by_type` bt ON bt.Documents_type_id=br.Documents_type_id
+	 WHERE bt.Documents_type_id =2
+    </select>
+    <select id="kcqk" resultMap="SpxstjVo">
+     SELECT SUM(kc.sk_number) AS kczl,(SUM(kc.sk_number))*sp_jprice AS kczj
+	 FROM `stock` kc
+	 INNER JOIN `document_shop` s ON kc.sk_shopid=s.sp_shopid
+	 INNER JOIN `document_list` l ON s.dl_number=l.dl_number
+	 INNER JOIN document_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+	 WHERE dls.dl_statie_id =0
+    </select>
+    <select id="fkshqk" resultMap="SpxstjVo">
+     SELECT COUNT(l.id) AS xghsfkds
+	 FROM `document_list` l
+	 INNER JOIN `document_shop` s ON s.dl_number=l.dl_number
+	 INNER JOIN document_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+	 WHERE dls.dl_statie_id =0 OR dls.dl_statie_id =2
+    </select>
+    <select id="fkshqk1" resultMap="SpxstjVo">
+     SELECT COUNT(l.id) AS xkhskds
+	 FROM `xsdocument_list` l
+	 INNER JOIN `xsdocument_shop` s ON s.dl_number=l.dl_number
+	 INNER JOIN xsdocument_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+	 WHERE dls.dl_statie_id =2
+    </select>
+    <select id="fkshqk2" resultMap="SpxstjVo">
+     SELECT SUM(l.dl_yfje) AS yfghs,SUM(l.dl_sfje)AS sfghs
+	 FROM `document_list` l
+	 INNER JOIN `document_shop` s ON s.dl_number=l.dl_number
+	 INNER JOIN document_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+	 WHERE dls.dl_statie_id =0
+    </select>
+    <select id="fkshqk3" resultMap="SpxstjVo">
+     SELECT SUM(l.dl_ysje) AS yskh,SUM(l.dl_ssje)AS sskh
+	 FROM `xsdocument_list` l
+	 INNER JOIN `xsdocument_shop` s ON s.dl_number=l.dl_number
+	 INNER JOIN xsdocument_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+	 WHERE dls.dl_statie_id =2
+    </select>
+    <select id="cwfx" resultMap="SpxstjVo">
+     SELECT SUM(sp.sp_jprice) AS xscb,SUM(s.sp_Preset_price-sp.sp_jprice)AS xslr,(s.sp_Preset_price-sp.sp_jprice)/s.sp_Preset_price AS mll
+	 FROM `xsdocument_list` l
+	 INNER JOIN `xsdocument_shop` s ON s.dl_number=l.dl_number
+	 INNER JOIN `document_shop` sp ON s.sp_shopid=sp.sp_shopid
+	 INNER JOIN document_list_static dlsc ON  dlsc.dl_statie_id=l.dl_statie_id
+	 INNER JOIN xsdocument_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+	 WHERE dls.dl_statie_id =2 OR dlsc.dl_statie_id =0
+    </select>
 </mapper>
 

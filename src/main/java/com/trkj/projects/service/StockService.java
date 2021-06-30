@@ -52,6 +52,7 @@ public interface StockService {
      * @return
      */
     int xsupdate(Stock stock);
+    int xsupdate2(Stock stock);
 
     PageInfo<StockVov> findallbytypeandlike(String nameandid, int currentPage, int pageSize);
     /**

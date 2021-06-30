@@ -31,7 +31,13 @@ public interface SysUserDao {
      * @return
      */
     SysUser findByNames(SysUser sysUser);
-
+    /**
+     * 根据账户密码查询用户
+     * @param name
+     * @param pass
+     * @return
+     */
+    SysUser findByName(String userName);
     /**
      * 根据手机号查询用户
      */
@@ -50,7 +56,7 @@ public interface SysUserDao {
      * @return
      */
     List<SysUser_roles> selectuserall();
-
+    List<SysUser> findByuserAll();
     //修改用户状态为0
     void updateuserstatezero(int id);
     //修改用户状态为1

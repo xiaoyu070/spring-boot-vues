@@ -22,6 +22,8 @@ public class XsDocumentlistVo {
      * 供货商名称
      */
     private String suppliername;
+
+    private Integer cid;
     /**
      * 客户名称
      */
@@ -58,10 +60,14 @@ public class XsDocumentlistVo {
      * 总金额
      */
     private double dlzonje;
+
+    private Integer agentid;
     /**
      * 员工名称
      */
     private String agentname;
+
+    private Integer userid;
     /**
      * 操作员名称
      */
@@ -70,6 +76,8 @@ public class XsDocumentlistVo {
      * 单据状态名称
      */
     private String dlstatiename;
+
+    private Integer dltypeid;
     /**
      * 单据类型名称
      */

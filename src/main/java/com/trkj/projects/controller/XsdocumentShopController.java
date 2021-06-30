@@ -27,11 +27,6 @@ import java.util.Map;
  * (XsdocumentShop)表控制层
  *
  * @author makejava
-<<<<<<< HEAD
- * @since 2021-06-18 17:07:15
-=======
- * @since 2021-06-18 15:47:03
->>>>>>> 588e348bed5392313284cf3e74f05d9c902b1699
  */
 @RestController
 @RequestMapping("xsdocumentShop")
@@ -95,6 +90,12 @@ public class XsdocumentShopController {
     public AjaxResponse selectcx7() {
         AjaxResponse ajaxResponse = null;
         List<SpxstjVo> list = this.xsdocumentShopService.artj();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("aytj")
+    public AjaxResponse selectcx8() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.aytj();
         return ajaxResponse.success(list);
     }
 
@@ -176,6 +177,12 @@ public class XsdocumentShopController {
         map.put("rows",list);
         return AjaxResponse.success(map);
     }
+    @GetMapping("findbydlnumber")
+    public AjaxResponse findbydlnumber(String number, int wid, int branchid){
+        List<DocumentShopVo> list= this.xsdocumentShopService.selectnumber(number,wid,branchid);
+        System.out.println("selectnumber:list:"+list);
+        return AjaxResponse.success(list);
+    }
     /**
      *
      * 修改商品更新该单据的金额
@@ -254,5 +261,91 @@ public class XsdocumentShopController {
             return AjaxResponse.success("删除失败！");
         }
     }
-
+    /**
+     * 统计
+     */
+    @GetMapping("cgqk1")
+    public AjaxResponse selectcx9() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.cgqk1();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("cgqk2")
+    public AjaxResponse selectcx10() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.cgqk2();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("cgqk3")
+    public AjaxResponse selectcx11() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.cgqk3();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("xsqk1")
+    public AjaxResponse selectcx12() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.xsqk1();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("xsqk2")
+    public AjaxResponse selectcx13() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.xsqk2();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("xsqk3")
+    public AjaxResponse selectcx14() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.xsqk3();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("bsbyqk")
+    public AjaxResponse selectcx15() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.bsbyqk();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("bsbyqk1")
+    public AjaxResponse selectcx16() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.bsbyqk1();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("kcqk")
+    public AjaxResponse selectcx17() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.kcqk();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("fkshqk")
+    public AjaxResponse selectcx18() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.fkshqk();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("fkshqk1")
+    public AjaxResponse selectcx19() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.fkshqk1();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("fkshqk2")
+    public AjaxResponse selectcx20() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.fkshqk2();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("fkshqk3")
+    public AjaxResponse selectcx21() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.fkshqk3();
+        return ajaxResponse.success(list);
+    }
+    @GetMapping("cwfx")
+    public AjaxResponse selectcx22() {
+        AjaxResponse ajaxResponse = null;
+        List<SpxstjVo> list = this.xsdocumentShopService.cwfx();
+        return ajaxResponse.success(list);
+    }
 }

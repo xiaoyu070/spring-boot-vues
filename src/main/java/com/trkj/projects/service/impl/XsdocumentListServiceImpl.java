@@ -1,6 +1,10 @@
 package com.trkj.projects.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.DocumentList;
+import com.trkj.projects.mybatis.entity.Shops;
 import com.trkj.projects.mybatis.entity.XsdocumentList;
 import com.trkj.projects.mybatis.dao.XsdocumentListDao;
 import com.trkj.projects.service.XsdocumentListService;
@@ -87,6 +91,14 @@ public class XsdocumentListServiceImpl implements XsdocumentListService {
     public void updatestaticzore(XsdocumentList xsdocumentList) {
         this.xsdocumentListDao.updatestaticzore(xsdocumentList);
     }
+    /**
+     * 审核通过更改销售状态为出库
+     * @param xsdocumentList
+     */
+    @Override
+    public void updatestaticzoret(XsdocumentList xsdocumentList) {
+        this.xsdocumentListDao.updatestaticzoret(xsdocumentList);
+    }
 
     /**
      * 通过主键删除数据
@@ -122,4 +134,35 @@ public class XsdocumentListServiceImpl implements XsdocumentListService {
     public List<XsDocumentlistVo> xsselectdate(String date1, String date2) {
         return this.xsdocumentListDao.xsselectdate(date1,date2);
     }
+
+    /**
+     * 根据条件查询往来账务的单据
+     * @param dlNumber
+     * @param cid
+     * @param wid
+     * @param agentid
+     * @param userid
+     * @param branchid
+     * @param date1
+     * @param date2
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public PageInfo<XsDocumentlistVo> finxsdwlzw(String dlNumber, Integer cid, Integer wid, Integer agentid, Integer userid, Integer branchid, String date1, String date2,Integer currentPage, Integer pageSize) {
+        List<XsDocumentlistVo> list = xsdocumentListDao.findxswlzh(dlNumber,cid,wid,agentid,userid,branchid,date1,date2);
+        Page<XsDocumentlistVo> page= PageHelper.startPage(currentPage,pageSize,true);
+        List<XsDocumentlistVo> list2 = xsdocumentListDao.findxswlzh(dlNumber,cid,wid,agentid,userid,branchid,date1,date2);
+        PageInfo<XsDocumentlistVo> info = new PageInfo<>(list2);
+        info.setTotal(list.size());
+        System.out.println("往来账务数据："+info);
+        return info;
+    }
+
+    @Override
+    public void updatetwo(XsdocumentList documentlistVo) {
+
+    }
+
 }

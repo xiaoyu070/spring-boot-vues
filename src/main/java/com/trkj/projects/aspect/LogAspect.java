@@ -73,6 +73,8 @@ public class LogAspect {
         Object[] str = joinPoint.getArgs();
         SysUser sysUser=this.sysUserService.findByPhone(str[0].toString());
         username = sysUser.getUserName();
+        System.out.println("Before:sys:"+sysUser.toString());
+        userId = sysUser.getUserId();
     }
 
     //定义切点 @Pointcut
@@ -120,12 +122,19 @@ public class LogAspect {
 
 
         journal.setUserName(username);
+        journal.setUserId(userId);
         //获取用户ip地址
         String ip= InetAddress.getLocalHost().getHostAddress();
 //         request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+//      request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         journal.setAddressip(ip);
         //调用service保存SysLog实体类到数据库
         //journalService.insert(journal);
+<<<<<<< HEAD
+=======
+        System.out.println("userid"+userId);
+        journalService.insert(journal);
+>>>>>>> ef460b4a47dc95733da782600bc231f279cdb049
     }
 
 }
