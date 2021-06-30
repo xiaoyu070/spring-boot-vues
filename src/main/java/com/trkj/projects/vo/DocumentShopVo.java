@@ -40,6 +40,10 @@ public class DocumentShopVo {
      */
     private Integer spShopid;
     /**
+     * 商品编号
+     */
+    private Integer spShopId;
+    /**
      * 商品名称
      */
     private String spName;
@@ -63,6 +67,10 @@ public class DocumentShopVo {
      * 数量
      */
     private Integer numbers;
+    /**
+     * 数量
+     */
+    private Integer number;
     /**
      * 损耗后数量
      */

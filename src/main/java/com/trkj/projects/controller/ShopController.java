@@ -57,6 +57,7 @@ public class ShopController {
     //退货中老商品添加中的商品信息查询
     @GetMapping("shopandstockvotuihuo")
     public AjaxResponse shopandstockvotuihuo(Integer currenPage,Integer pageSize,int value){
+        System.out.println("-------:"+value);
         Map<String,Object> map=new HashMap<>();
         Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
         List<Shopandstock> list=this.shopService.queryshopanstocktuihuo(value);

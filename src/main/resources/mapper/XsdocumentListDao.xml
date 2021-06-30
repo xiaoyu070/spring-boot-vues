@@ -73,7 +73,7 @@
         limit #{offset}, #{limit}
     </select>
     <select id="findxswlzh" resultMap="DocumentListVOMap">
-        SELECT ws.wid,dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_id,sl.c_contacts,ws.wname,dl.dl_zonje, dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_id,su.user_name,dls.dl_statie_name,dlt.dl_type_id,dlt.dl_type_name,dl.dl_beizhu
+        SELECT ws.wid,dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,sl.c_id,sl.c_contacts,v.`v_type_ck`,ws.wname,dl.dl_zonje, dl.dl_ysje,dl.dl_ssje,dl.dl_qkje,dl.dl_yhje,dl.agent_id,ag.agent_name,su.user_id,su.user_name,dls.dl_statie_name,dlt.dl_type_id,dlt.dl_type_name,dl.dl_beizhu
         FROM xsdocument_list dl
         LEFT JOIN customer sl ON dl.customerid = sl.c_id
         LEFT JOIN warehouse ws ON dl.wid = ws.wid
@@ -82,6 +82,7 @@
         LEFT JOIN xsdocument_list_static dls  ON dl.dl_statie_id = dls.dl_statie_id
         LEFT JOIN xsdocument_list_type dlt ON dl.dl_type_id = dlt.dl_type_id
         LEFT JOIN branch dm ON dm.branchid = dl.branchid
+        LEFT JOIN vip_type v ON sl.`v_type_id` = v.`v_type_id`
         <where>
             dls.dl_statie_id = 2
             <if test="dlNumber != null or dlNumber != ''">

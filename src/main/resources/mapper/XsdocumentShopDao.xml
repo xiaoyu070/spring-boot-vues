@@ -61,9 +61,11 @@
         <result property="customerid" column="customerid" jdbcType="INTEGER"/>
         <result property="wid" column="wid" jdbcType="INTEGER"/>
         <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spShopId" column="sp_shopid" jdbcType="INTEGER"/>
         <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
         <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
         <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
         <result property="numbers" column="number" jdbcType="INTEGER"/>
         <result property="lossNumber" column="loss_number" jdbcType="INTEGER"/>
         <result property="zje" column="zje" jdbcType="NUMERIC"/>
