@@ -113,10 +113,16 @@
     </insert>
 
     <select id="selectddh" resultMap="PdResponseVo">
-        SELECT p.`pd_id`,p.`pd_date`,w.`wname`,s.`user_name` ,p.`beizhu` ,sp.`pd_number` FROM pd_report p
-        LEFT JOIN warehouse w ON w.`wid` =p.`wid`
-        LEFT JOIN sys_user s ON s.`user_id`=p.`user_id`
-        LEFT JOIN pd_shop sp ON sp.`pd_number` =p.`pd_number`
+
+
+   SELECT pd.pd_id,pd.pd_date ,sp.pd_number,w.wname,su.user_name,pd.beizhu
+FROM  pd_report pd
+LEFT JOIN pd_shop sp ON sp.pd_number =pd.pd_number
+LEFT JOIN warehouse w ON w.wid= pd.wid
+LEFT JOIN `sys_user` su ON su.user_id=pd.user_id
+GROUP BY pd.pd_id,  pd.pd_id ORDER BY pd.pd_id
+
+
     </select>
 
     <select id="selectpdid" resultMap="PdResponseVo">
@@ -127,11 +133,12 @@
     </select>
 
     <select id="selectpddone" resultMap="PdResponseVo">
-        SELECT pd.pd_id,pd.pd_date ,sp.pd_number,w.wname,su.user_name
+           SELECT pd.pd_id,pd.pd_date ,sp.pd_number,w.wname,su.user_name,pd.beizhu
 FROM  pd_report pd
 LEFT JOIN pd_shop sp ON sp.pd_number =pd.pd_number
 LEFT JOIN warehouse w ON w.wid= pd.wid
 LEFT JOIN `sys_user` su ON su.user_id=pd.user_id
+GROUP BY pd.pd_id,  pd.pd_id ORDER BY pd.pd_id
 
     </select>
 
@@ -142,6 +149,7 @@ LEFT JOIN pd_shop sp ON sp.pd_number =pd.pd_number
 LEFT JOIN warehouse w ON w.wid= pd.wid
 LEFT JOIN sys_user su ON su.user_id=pd.user_id
 where pd.wid=#{w}
+GROUP BY pd.pd_id,  pd.pd_id ORDER BY pd.pd_id
     </select>
 
 
@@ -153,19 +161,30 @@ WHERE pe.pd_id=#{pd}
     </select>
 
 <select id="selectpddh" resultMap="PdResponseVo">
-SELECT pd.pd_id, pd.sp_shopid, pd.sp_name, pd.sp_jprice, pd.sp_Company, pd.sp_Specifications ,pd.sp_color,w.`wname`,pr.`pd_date`,pd.`pd_number`,pd.`sk_number` FROM pd_shop pd
-LEFT JOIN `pd_report` pr ON pr.`pd_id` =pd.`pd_id`
-LEFT JOIN `warehouse` w ON w.`wid` =pd.`wid`
+-- SELECT pd.pd_id, pd.sp_shopid, pd.sp_name, pd.sp_jprice, pd.sp_Company, pd.sp_Specifications ,pd.sp_color,w.`wname`,pr.`pd_date`,pd.`pd_number`,pd.`sk_number` FROM pd_shop pd
+-- LEFT JOIN `pd_report` pr ON pr.`pd_id` =pd.`pd_id`
+-- LEFT JOIN `warehouse` w ON w.`wid` =pd.`wid`
 
+SELECT pr.pd_date,pd.pd_id , pd.sp_shopid, pd.sp_name, pd.sp_jprice, pd.sp_Company, pd.sp_Specifications
+,pd.sp_color,w.`wname`,pd.`pd_number`,pd.`sk_number`
+FROM `pd_report` pr
+LEFT JOIN pd_shop pd ON pd.pd_id =pr.pd_id
+LEFT JOIN `warehouse` w ON w.`wid` =pd.`wid`
+GROUP BY pd.pd_id,  pd.pd_id ORDER BY pd.pd_id
 
 </select>
 
     <select id="selectpadate" resultMap="PdResponseVo">
-         SELECT pd.pd_id, pd.sp_shopid, pd.sp_name, pd.sp_jprice, pd.sp_Company, pd.sp_Specifications ,pd.sp_color,w.`wname`,pr.`pd_date`,pd.`pd_number`,pd.`sk_number` FROM pd_shop pd
-LEFT JOIN `pd_report` pr ON pr.`pd_id` =pd.`pd_id`
-LEFT JOIN `warehouse` w ON w.`wid` =pd.`wid`
-where  DATE_FORMAT(pr.pd_date,'%Y-%m-%d') BETWEEN DATE_FORMAT (#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') ORDER BY pr.pd_date DESC
-    </select>
+--          SELECT pd.pd_id,pd.pd_date, pd.sp_shopid, pd.sp_name, pd.sp_jprice, pd.sp_Company, pd.sp_Specifications ,pd.sp_color,w.`wname`,pr.`pd_date`,pd.`pd_number`,pd.`sk_number` FROM pd_shop pd
+-- LEFT JOIN `pd_report` pr ON pr.`pd_id` =pd.`pd_id`
+-- LEFT JOIN `warehouse` w ON w.`wid` =pd.`wid`
+-- where  DATE_FORMAT(pr.pd_date,'%Y-%m-%d') BETWEEN DATE_FORMAT (#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') ORDER BY pr.pd_date DESC
 
+SELECT pd.pd_id,pd.pd_date, sp.sp_shopid, sp.sp_name, sp.sp_jprice, sp.sp_Company, sp.sp_Specifications ,sp.sp_color,w.`wname`,sp.`pd_number`,sp.sk_number FROM pd_report pd
+LEFT JOIN pd_shop sp ON sp.`pd_id` =pd.`pd_id`
+LEFT JOIN `warehouse` w  ON w.`wid` =pd.`wid`
+WHERE  DATE_FORMAT(pd.pd_date,'%Y-%m-%d') BETWEEN DATE_FORMAT (#{param1},'%Y-%m-%d') and DATE_FORMAT(#{param2},'%Y-%m-%d') ORDER BY pd.pd_date DESC
+
+    </select>
 </mapper>
 

@@ -8,6 +8,7 @@ import com.trkj.projects.mybatis.entity.Dbshop;
 import com.trkj.projects.service.DbdanjuService;
 import com.trkj.projects.service.DbshopService;
 import com.trkj.projects.vo.AjaxResponse;
+import com.trkj.projects.vo.DbdanjuVo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -38,11 +39,15 @@ public class DbdanjuController {
         Dbdanju list = JSON.parseObject(aaa,Dbdanju.class);
         list.setDbdate(new Date());
         this.dbdanjuService.insert(list);
-
         String bbb=jsonObject.getString("bbb");
         List<Dbshop> listshop = JSONArray.parseArray(bbb,Dbshop.class);
         this.dbshopService.insertBatch(listshop);
         return AjaxResponse.success("新增审核单成功！");
-
+    }
+    @GetMapping("selectdbcx")
+    public AjaxResponse  selectdbcx(){
+           List<DbdanjuVo> list =this.dbdanjuService.selectdbcx();
+           System.out.println(list);
+            return AjaxResponse.success(list);
     }
 }

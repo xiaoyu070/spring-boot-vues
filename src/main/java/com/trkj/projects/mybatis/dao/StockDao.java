@@ -120,11 +120,11 @@ public interface StockDao {
 
     /**
      * 修改库存报警中的最低库存
-     * @param skid
+     * @param
      * @param kcbj
      * @return
      */
-    int Kcbjupdate(@Param("skid") int skid,@Param("kcbj") int kcbj);
+    int Kcbjupdate(@Param("spShopid") String spShopid,@Param("kcbj") int kcbj);
 
     /**
      * 根据店面和仓库查询库存和商品
@@ -154,10 +154,7 @@ public interface StockDao {
     List<StockVo>typeselect(int param1);
 
     /**
-     * 根据店面仓库 商品编号修改库存数量
-     * @param shopid
-     * @param wids
-     * @param dianid
+
      * @return
      */
     int updatestocknumber(Stock stock);

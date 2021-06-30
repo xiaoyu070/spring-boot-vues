@@ -236,13 +236,13 @@ public class StockServiceImpl implements StockService {
 
     /**
      * 库存报警修改最低库存数量
-     * @param skid
+     * @param
      * @param kcbj
      * @return
      */
     @Override
-    public int Kcbjupdate(int skid, int kcbj) {
-        return this.stockDao.Kcbjupdate(skid,kcbj);
+    public int Kcbjupdate(String spShopid, int kcbj) {
+        return this.stockDao.Kcbjupdate(spShopid,kcbj);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.trkj.projects.service;
 
 import com.trkj.projects.mybatis.entity.Dbdanju;
+import com.trkj.projects.vo.DbdanjuVo;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ import java.util.List;
  */
 public interface DbdanjuService {
     Dbdanju insert(Dbdanju dbdanju);
+
+    List<DbdanjuVo>selectdbcx();
 }
