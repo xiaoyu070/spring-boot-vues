@@ -89,11 +89,17 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     public void updateestab(Establishment establishment) {
         this.establishmentDao.updateestab(establishment);
     }
+//    @Override
+//    public void updateestab2(Establishment establishment) {
+//        this.establishmentDao.updateestab2(establishment);
+//    }
 
     @Override
     public void updateestabjia(Establishment establishment) {
         this.establishmentDao.updateestabjia(establishment);
     }
+
+
 
     @Override
     public List<Establishment> selectbybranchid(Integer branchid) {

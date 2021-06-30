@@ -31,12 +31,19 @@ public interface SysUserDao {
      * @return
      */
     SysUser findByNames(SysUser sysUser);
-
+    /**
+     * 根据账户密码查询用户
+     * @param name
+     * @param pass
+     * @return
+     */
+    SysUser findByName(String userName);
     /**
      * 根据手机号查询用户
      */
     SysUser findByPhone(String phone);
 
+    SysUser findByUid(int id);
     /**
      * 根据当前登录的用户查询他的权限
      * @param uid

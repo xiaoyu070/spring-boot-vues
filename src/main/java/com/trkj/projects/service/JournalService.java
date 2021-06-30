@@ -20,7 +20,10 @@ public interface JournalService {
      * @return 实例对象
      */
     Journal queryById(Integer id);
-
+    /**
+     * 查询全部
+     */
+    List<Journal> findAll();
     /**
      * 查询多条数据
      *

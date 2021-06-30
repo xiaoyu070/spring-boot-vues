@@ -96,7 +96,7 @@
         <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
         <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
         <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
-        <result property="number" column="number" jdbcType="INTEGER"/>
+        <result property="numbers" column="number" jdbcType="INTEGER"/>
         <result property="lossNumber" column="loss_number" jdbcType="INTEGER"/>
         <result property="zje" column="zje" jdbcType="NUMERIC"/>
         <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
@@ -302,6 +302,9 @@
             </if>
             <if test="xsSpState != null">
                 xs_sp_state = #{xsSpState},
+            </if>
+            <if test="ysDlNumber != null and ysDlNumber != ''">
+                ys_dl_number = #{ysDlNumber},
             </if>
         </set>
         where id = #{id}

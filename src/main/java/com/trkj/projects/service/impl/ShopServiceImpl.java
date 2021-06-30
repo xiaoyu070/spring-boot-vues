@@ -174,8 +174,6 @@ public class ShopServiceImpl implements ShopService {
         return count;
     }
 
-
-
     @Override
     public PageInfo<ShopVo> queryAllByType(Integer shopstatic,String shopname,String shoptypename,Integer currentPage, Integer pageSize) {
         List<Shops> list1=this.shopDao.queryAllByType(shoptypename,shopname,shopstatic);

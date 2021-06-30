@@ -24,6 +24,10 @@ public interface JournalDao {
     Journal queryById(Integer id);
 
     /**
+     * 查询全部
+     */
+    List<Journal> findAll();
+    /**
      * 查询指定行数据
      *
      * @param offset 查询起始位置

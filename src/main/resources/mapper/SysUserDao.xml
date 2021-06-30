@@ -15,6 +15,7 @@
         <result property="userstate" column="user_state" jdbcType="INTEGER"/>
         <result property="userError" column="user_error" jdbcType="TIMESTAMP"/>
         <result property="userStatie" column="user_statie" jdbcType="INTEGER"/>
+        <result property="user_remark" column="user_remark" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="Rosle_vo" type="com.trkj.projects.vo.SysUser_roles">
@@ -46,11 +47,14 @@
         (#{userName},#{userPass},#{userSex},#{userPhone},#{userImgs},#{create_date},#{userCjr},#{userstate})
     </insert>
 <!--  编辑用户  -->
-    <update id="updateusers" >
+    <update id="updateusers">
         update sys_user
         <set>
             <if test="userName != null">
                 user_name = #{userName},
+            </if>
+            <if test="userPass != null">
+                user_pass = #{userPass},
             </if>
             <if test="userSex != null">
                 user_sex = #{userSex},
@@ -64,27 +68,45 @@
             <if test="userGxr != null">
                 user_gxr = #{userGxr}
             </if>
+            <if test="user_remark != null">
+                user_remark = #{user_remark}
+            </if>
         </set>
         where user_id = #{userId}
     </update>
+<!--  修改头像  -->
+
     <!--根据用户名称查询用户-->
     <select id="findByNames" resultMap="SysUserMap">
         select
           *
-        from projects.sys_user
-        where user_name = #{userName}
+        from projects.sys_user where user_name = #{userName} and user_pass = #{userPass}
     </select>
+    <!--根据用户名称查询用户-->
+    <select id="findByName" resultMap="SysUserMap">
+        select
+          *
+        from projects.sys_user where user_name = #{userName}
+    </select>
+
     <!--根据手机号查询用户-->
     <select id="findByPhone" resultMap="SysUserMap">
         SELECT * FROM `sys_user` WHERE `user_phone` = #{phone}
     </select>
+
+    <select id="findByUid" resultMap="SysUserMap">
+        SELECT * FROM `sys_user` WHERE `user_id` = #{id}
+    </select>
+
 <!--  根据当前登录的用户查询他的角色  -->
     <select id="findByUser_roles" resultMap="Rosle_vo">
+        SELECT sr.roles_lv,sr.roles_name FROM sys_user su
         SELECT su.user_id,su.user_name,sr.roles_name,su.user_state,roles_lv FROM sys_user su
         LEFT JOIN sys_user_roles sur ON su.user_id = sur.user_id
         LEFT JOIN sys_roles sr ON sr.roles_id = sur.roles_id
         WHERE su.user_id=#{uid}
     </select>
+
 <!-- 查询所有用户vo -->
     <select id="selectuserall" resultMap="SysUserMap">
         	SELECT su.* FROM sys_user su
@@ -122,5 +144,6 @@
     <select id="likeusers" resultMap="SysUserMap">
         select * from sys_user where user_name like CONCAT('%',#{ttt},'%') or user_id like CONCAT('%',#{ttt},'%')
     </select>
+
 </mapper>
 

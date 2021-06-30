@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.trkj.projects.mybatis.dao.DocumentListDao">
 
-<!--  欧阳渗的实体类  -->
+    <!--  欧阳渗的实体类  -->
     <resultMap type="com.trkj.projects.mybatis.entity.DocumentList" id="DocumentListMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
@@ -22,7 +22,7 @@
         <result property="dlBeizhu" column="dl_beizhu" jdbcType="VARCHAR"/>
     </resultMap>
 
-<!--  欧阳渗的VO  -->
+    <!--  欧阳渗的VO  -->
     <resultMap type="com.trkj.projects.vo.DocumentlistVo" id="DocumentListVOMap">
         <result property="dlNumber" column="dl_number" jdbcType="VARCHAR"/>
         <result property="dlDate" column="dl_date" jdbcType="TIMESTAMP"/>
@@ -127,7 +127,7 @@
         <result property="beiZhu" column="beizhu" jdbcType="VARCHAR"/>
     </resultMap>
 
-<!--    邓峄楷-->
+    <!--    邓峄楷-->
     <select id="findallbyfdandkhanduserandgjz" resultMap="DocumentListVOMap">
         SELECT dm.branchid,dl.dl_number,dm.branchname,dl.dl_date,c.c_contacts,ws.wname,dl.dl_yfje,dl.dl_sfje,dl.dl_qkje,dl.dl_yhje,ag.agent_name,su.user_name,dls.dl_statie_name,dlt.dl_type_name,dl.dl_beizhu
         FROM document_list dl
@@ -324,37 +324,37 @@
         <where>
             (dl.dl_statie_id = 1 or dl.dl_statie_id = 3)
             <if test="dlNumber != null  and dlNumber != ''">
-              AND dl.dl_number LIKE CONCAT('%',#{dlNumber},'%')
+                AND dl.dl_number LIKE CONCAT('%',#{dlNumber},'%')
             </if>
             <if test="suppliername != null and  suppliername != ''">
-              AND sl.suppliername LIKE CONCAT('%',#{suppliername},'%')
+                AND sl.suppliername LIKE CONCAT('%',#{suppliername},'%')
             </if>
             <if test="supplierid != null and  supplierid != ''">
-              AND sl.supplierid = #{supplierid}
+                AND sl.supplierid = #{supplierid}
             </if>
             <if test="wname != null and wname != ''">
-              AND ws.wname LIKE CONCAT('%',#{wname},'%')
+                AND ws.wname LIKE CONCAT('%',#{wname},'%')
             </if>
             <if test="agentname != null and agentname != ''">
-              AND ag.agent_name LIKE CONCAT('%',#{agentname},'%')
+                AND ag.agent_name LIKE CONCAT('%',#{agentname},'%')
             </if>
             <if test="username != null and username != ''">
-              AND su.user_name LIKE CONCAT('%',#{username},'%')
+                AND su.user_name LIKE CONCAT('%',#{username},'%')
             </if>
             <if test="dltypename != null and dltypename != ''">
-              AND dlt.dl_type_name LIKE CONCAT('%',#{dltypename},'%')
+                AND dlt.dl_type_name LIKE CONCAT('%',#{dltypename},'%')
             </if>
             <if test="dlstatiename != null and dlstatiename != ''">
-               AND dls.dl_statie_name LIKE CONCAT('%',#{dlstatiename},'%')
+                AND dls.dl_statie_name LIKE CONCAT('%',#{dlstatiename},'%')
             </if>
             <if test="dlbeizhu != null and dlbeizhu != ''">
-               AND dl.dl_beizhu LIKE CONCAT('%',#{dlbeizhu},'%')
+                AND dl.dl_beizhu LIKE CONCAT('%',#{dlbeizhu},'%')
             </if>
             <if test="branchname != null and branchname != ''">
-              AND dm.branchname LIKE CONCAT('%',#{branchname},'%')
+                AND dm.branchname LIKE CONCAT('%',#{branchname},'%')
             </if>
             <if test="branchid != null and branchid != ''">
-               AND dm.branchid = #{branchid}
+                AND dm.branchid = #{branchid}
             </if>
             ORDER BY dl.dl_date DESC
         </where>
@@ -687,35 +687,35 @@
         LEFT JOIN sys_user u ON l.admin=u.user_id
         LEFT JOIN customer c ON l.customerid=c.c_id
         <where>
-        <if test="agentName != null">
-            and agent_name = #{agentName}
-        </if>
-        <if test="WName != null">
-            and wname = #{WName}
-        </if>
-        <if test="dlTypeName != null">
-            and dl_type_name = #{dlTypeName}
-        </if>
+            <if test="agentName != null">
+                and agent_name = #{agentName}
+            </if>
+            <if test="WName != null">
+                and wname = #{WName}
+            </if>
+            <if test="dlTypeName != null">
+                and dl_type_name = #{dlTypeName}
+            </if>
         </where>
     </select>
     <select id="cghz" resultMap="CghzVo">
         SELECT sp_shopid ,sp_name,sp_Company,sp_Specifications,sp_color,SUM(number) AS number ,SUM(loss_number) AS loss_number,SUM(zje) AS zje,s.suppliername
-            FROM document_shop d
-            LEFT JOIN supplier s ON d.supplierid = s.s_id
-            <where>
-             d.supplierid > 0
-             </where>
-            GROUP BY sp_shopid,sp_name,sp_Company,sp_Specifications,sp_color,s.suppliername
+        FROM document_shop d
+        LEFT JOIN supplier s ON d.supplierid = s.s_id
+        <where>
+            d.supplierid > 0
+        </where>
+        GROUP BY sp_shopid,sp_name,sp_Company,sp_Specifications,sp_color,s.suppliername
     </select>
     <select id="fltj" resultMap="CghzVo">
         SELECT  sp_type_name,SUM(number) AS number ,SUM(loss_number) AS loss_number,SUM(zje) AS zje
-            FROM document_shop d
-            LEFT JOIN shop s ON d.sp_shopid=s.sp_shopid
-            LEFT JOIN shop_type sp ON s.sp_type_id=sp.sp_type_id
+        FROM document_shop d
+        LEFT JOIN shop s ON d.sp_shopid=s.sp_shopid
+        LEFT JOIN shop_type sp ON s.sp_type_id=sp.sp_type_id
         <where>
-             d.supplierid > 0
+            d.supplierid > 0
         </where>
-            GROUP BY sp_type_name
+        GROUP BY sp_type_name
     </select>
     <select id="xssphz" resultMap="CghzVo">
         SELECT sp.sp_shopid,sp.sp_name,sp.sp_Company,SUM(number) AS number,SUM(zje) AS zje,kc.sk_number,

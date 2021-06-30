@@ -52,6 +52,7 @@ public interface StockService {
      * @return
      */
     int xsupdate(Stock stock);
+    int xsupdate2(Stock stock);
 
     PageInfo<StockVov> findallbytypeandlike(String nameandid, int currentPage, int pageSize);
     /**
@@ -137,4 +138,51 @@ public interface StockService {
      * @return
      */
     PageInfo<StockVo>baosunbaoyiselect(int currentPage, int pageSize,int param1, int param2);
+
+    /**
+     * 根据店面和仓库查询所有库存商品
+     */
+    PageInfo<StockVo>selectdiancnag(int currentPage, int pageSize,int param1, int param2,int param3);
+
+    /**
+     * 根据店面仓库查询库存报警商品
+     * @param currentPage
+     * @param pageSize
+     * @param param1
+     * @param param2
+     * @return
+     */
+    PageInfo<StockVo>kucunbaojin(int currentPage, int pageSize,int param1, int param2,int param3);
+
+    /**
+     * 根据商品类型查询所有店面
+     * @param currentPage
+     * @param pageSize
+     * @param param1
+     * @return
+     */
+    PageInfo <StockVo>typeselect(int currentPage, int pageSize,int param1);
+
+
+    /**
+     * 根据店面仓库 商品编号修改库存数量
+     * @return
+     */
+    int updatestocknumber(Stock stock);
+
+    /**
+     * 查询所有库存报警商品
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    PageInfo<StockVo> selectjhck(int currentPage, int pageSize);
+
+    PageInfo<StockVo>selecttypejhck(int currentPage, int pageSize,int typeid);
+
+
+
+    public Integer updatepilian(Integer stocks,Integer shopid);
+
+
 }

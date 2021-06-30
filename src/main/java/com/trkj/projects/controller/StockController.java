@@ -5,10 +5,12 @@ import com.trkj.projects.mybatis.entity.Shop;
 import com.trkj.projects.mybatis.entity.Stock;
 import com.trkj.projects.service.StockService;
 import com.trkj.projects.vo.AjaxResponse;
+import com.trkj.projects.vo.PdResponseVo;
 import com.trkj.projects.vo.StockVo;
 import com.trkj.projects.vo.StockVov;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * (Stock)表控制层
@@ -156,16 +158,97 @@ public class StockController {
      */
     @GetMapping("Kcbjupdate")
     public int Kcbjupdate(Integer skid,Integer kcbj ){
-        Stock stock =new Stock();
         System.out.println("bianhao"+skid+kcbj);
         return  this.stockService.Kcbjupdate(skid,kcbj);
     }
 
+
+
+    /**
+     * 根据店面和仓库查询报损报溢商品
+     * @param currentPage
+     * @param pageSize
+     * @param param1
+     * @param param2
+     * @return
+     */
     @GetMapping("selectbaosunbaoyi")
     public AjaxResponse selectbaosunbaoyi(int currentPage, int pageSize, int param1, int param2){
-
         PageInfo<StockVo> info =stockService.baosunbaoyiselect(currentPage,pageSize,param1,param2);
+        System.out.println("商品信息"+info);
         return AjaxResponse.success(info);
+    }
+
+    /**
+     * 根据店面和仓库,类别，查询所有库存商品
+     * @param currentPage
+     * @param pageSize
+
+     * @return
+     */
+    @GetMapping("selectcangdian")
+    public AjaxResponse selectcangdian(int currentPage, int pageSize, Integer dm, Integer ck,Integer lb){
+        PageInfo<StockVo> info=stockService.selectdiancnag(currentPage,pageSize,dm,ck,lb);
+        System.out.println("dm:"+dm+",,"+"ck:"+ck+",,"+"lb"+lb);
+        System.out.println("selectcangdian:"+info);
+        return AjaxResponse.success(info);
+    }
+
+    @GetMapping("baoojindmck")
+    public AjaxResponse baoojindmck(int currentPage, int pageSize, Integer dm, Integer ck,Integer lb){
+        PageInfo<StockVo>info =stockService.kucunbaojin(currentPage,pageSize,dm,ck,lb);
+        System.out.println("dm:"+dm+",,"+"ck:"+ck+",,"+"lb"+lb);
+        System.out.println("selectcangdian:"+info);
+        return AjaxResponse.success(info);
+    }
+
+    /**
+     * 根据商品类型查询
+     * @param currentPage
+     * @param pageSize
+     * @param lb
+     * @return
+     */
+    @GetMapping("typeselect")
+    public  AjaxResponse typeselect(int currentPage, int pageSize, Integer lb){
+        PageInfo<StockVo> info =stockService.typeselect(currentPage,pageSize,lb);
+        System.out.println("lb"+lb);
+        return  AjaxResponse.success(info);
+    }
+
+    /**
+     * 查询所有进或参考
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("selectjhck")
+    public  AjaxResponse selectjhck(int currentPage, int pageSize){
+        PageInfo<StockVo> info =stockService.selectjhck(currentPage,pageSize);
+        System.out.println(info);
+        return  AjaxResponse.success(info);
+    }
+
+    @GetMapping("selecttypejhck")
+    public  AjaxResponse selecttypejhck(int currentPage, int pageSize,int typeid){
+        System.out.println(currentPage+",,,");
+        System.out.println(pageSize+"....");
+        System.out.println(typeid);
+        PageInfo<StockVo> info =stockService.selecttypejhck(currentPage,pageSize,typeid);
+        System.out.println(info);
+        return  AjaxResponse.success(info);
+    }
+
+    @PostMapping("updatepilian")
+    public Integer updatepilian(@RequestBody List<PdResponseVo> stocks){
+        System.out.println("盘点："+stocks);
+        if(stocks != null) {
+            for (int i = 0; i < stocks.size(); i++) {
+                this.stockService.updatepilian(stocks.get(i).getPdNumber(), stocks.get(i).getSpShopid());
+                return 1;
+            }
+        }
+        return 0;
     }
 
 

@@ -83,6 +83,7 @@ public interface CustomerDao {
      * @param
      */
     void updatemoney(@Param("money") double money,@Param("customerid") int customerid);
+    void updatemoney2(@Param("money")Double dlzonje, @Param("customerid")Integer customerid);
 
     /**
      * 通过主键删除数据
@@ -96,5 +97,7 @@ public interface CustomerDao {
      * 批量删除
      */
     Integer pildelsup(@Param("cid")Integer[] supplierid);
+
+
 }
 

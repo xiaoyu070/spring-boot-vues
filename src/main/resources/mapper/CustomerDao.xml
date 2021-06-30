@@ -203,6 +203,9 @@
     <update id="updatemoney">
         UPDATE  customer SET c_money = c_money + #{money} WHERE c_id = #{customerid}
     </update>
+    <update id="updatemoney2">
+        UPDATE  customer SET c_money = c_money - #{money} WHERE c_id = #{customerid}
+    </update>
 
     <!--通过主键删除-->
     <delete id="deleteById">

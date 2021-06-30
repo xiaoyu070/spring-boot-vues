@@ -40,8 +40,18 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
+    public SysUser findByUid(int id) {
+        return this.sysUserDao.findByUid(id);
+    }
+
+    @Override
     public SysUser findByPhone(String phone) {
         return this.sysUserDao.findByPhone(phone);
+    }
+
+    @Override
+    public SysUser findByName(String userName) {
+        return this.sysUserDao.findByName(userName);
     }
 
     @Override

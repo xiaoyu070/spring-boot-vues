@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.PdShopDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.PdShop" id="PdShopMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="pdId" column="pd_id" jdbcType="VARCHAR"/>
+        <result property="spShopid" column="sp_shopid" jdbcType="VARCHAR"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="skNumber" column="sk_number" jdbcType="INTEGER"/>
+        <result property="pdNumber" column="pd_number" jdbcType="INTEGER"/>
+        <result property="pdJiner" column="pd_jiner" jdbcType="NUMERIC"/>
+        <result property="kcJiner" column="kc_jiner" jdbcType="NUMERIC"/>
+        <result property="wid" column="wid" jdbcType="INTEGER"/>
+        <result property="slchaer" column="slchaer" jdbcType="NUMERIC"/>
+    </resultMap>
+
+    <update id="updatepdnumber">
+              UPDATE pd_shop SET pd_number =#{pdNumber}  WHERE pd_id=#{pdId}
+    </update>
+
+    <delete id="delectshop">
+             DELETE   FROM pd_shop  WHERE id =#{id}
+    </delete>
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="PdShopMap">
+        select
+          id, pd_id, sp_shopid, sp_name, sp_jprice, sp_Company, sp_Specifications, sp_color, sk_number, pd_number, pd_jiner, kc_jiner, wid, slchaer
+        from projects.pd_shop
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="PdShopMap">
+        select
+        id, pd_id, sp_shopid, sp_name, sp_jprice, sp_Company, sp_Specifications, sp_color, sk_number, pd_number,
+        pd_jiner, kc_jiner, wid, slchaer
+        from projects.pd_shop
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="pdId != null and pdId != ''">
+                and pd_id = #{pdId}
+            </if>
+            <if test="spShopid != null and spShopid != ''">
+                and sp_shopid = #{spShopid}
+            </if>
+            <if test="spName != null and spName != ''">
+                and sp_name = #{spName}
+            </if>
+            <if test="spJprice != null">
+                and sp_jprice = #{spJprice}
+            </if>
+            <if test="spCompany != null and spCompany != ''">
+                and sp_Company = #{spCompany}
+            </if>
+            <if test="spSpecifications != null and spSpecifications != ''">
+                and sp_Specifications = #{spSpecifications}
+            </if>
+            <if test="spColor != null and spColor != ''">
+                and sp_color = #{spColor}
+            </if>
+            <if test="skNumber != null">
+                and sk_number = #{skNumber}
+            </if>
+            <if test="pdNumber != null">
+                and pd_number = #{pdNumber}
+            </if>
+            <if test="pdJiner != null">
+                and pd_jiner = #{pdJiner}
+            </if>
+            <if test="kcJiner != null">
+                and kc_jiner = #{kcJiner}
+            </if>
+            <if test="wid != null">
+                and wid = #{wid}
+            </if>
+            <if test="slchaer != null">
+                and slchaer = #{slchaer}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+        insert into projects.pd_shop(id, pd_id, sp_shopid, sp_name, sp_jprice, sp_Company, sp_Specifications, sp_color, sk_number, pd_number, pd_jiner, kc_jiner, wid, slchaer)
+        values (#{id}, #{pdId}, #{spShopid}, #{spName}, #{spJprice}, #{spCompany}, #{spSpecifications}, #{spColor}, #{skNumber}, #{pdNumber}, #{pdJiner}, #{kcJiner}, #{wid}, #{slchaer})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="" useGeneratedKeys="true">
+        insert into projects.pd_shop(id, pd_id, sp_shopid, sp_name, sp_jprice, sp_Company, sp_Specifications, sp_color,
+        sk_number, pd_number, pd_jiner, kc_jiner, wid, slchaer)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.pdId}, #{entity.spShopid}, #{entity.spName}, #{entity.spJprice},
+            #{entity.spCompany}, #{entity.spSpecifications}, #{entity.spColor}, #{entity.skNumber}, #{entity.pdNumber},
+            #{entity.pdJiner}, #{entity.kcJiner}, #{entity.wid}, #{entity.slchaer})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="" useGeneratedKeys="true">
+        insert into projects.pd_shop(id, pd_id, sp_shopid, sp_name, sp_jprice, sp_Company, sp_Specifications, sp_color,
+        sk_number, pd_number, pd_jiner, kc_jiner, wid, slchaer)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id}, #{entity.pdId}, #{entity.spShopid}, #{entity.spName}, #{entity.spJprice},
+            #{entity.spCompany}, #{entity.spSpecifications}, #{entity.spColor}, #{entity.skNumber}, #{entity.pdNumber},
+            #{entity.pdJiner}, #{entity.kcJiner}, #{entity.wid}, #{entity.slchaer})
+        </foreach>
+        on duplicate key update
+        id = values(id) , pd_id = values(pd_id) , sp_shopid = values(sp_shopid) , sp_name = values(sp_name) , sp_jprice
+        = values(sp_jprice) , sp_Company = values(sp_Company) , sp_Specifications = values(sp_Specifications) , sp_color
+        = values(sp_color) , sk_number = values(sk_number) , pd_number = values(pd_number) , pd_jiner = values(pd_jiner)
+        , kc_jiner = values(kc_jiner) , wid = values(wid) , slchaer = values(slchaer)
+    </insert>
+
+
+
+
+
+</mapper>
+

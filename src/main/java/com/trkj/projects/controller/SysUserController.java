@@ -27,6 +27,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -67,7 +68,6 @@ public class SysUserController {
         ).collect(Collectors.toList());
         return children;
     }
-    @Log("用户登入")
     @PostMapping("Login")
     public AjaxResponse getChildrens(@RequestBody SysUser sysUser) {
         SysUser sysUser1=sysUserService.findByNames(sysUser);
@@ -95,13 +95,14 @@ public class SysUserController {
                 return AjaxResponse.success("该用户已禁用，请联系管理员后进行登录！");
             }
         }else{
-            return AjaxResponse.success("没有该用户！");
+            return AjaxResponse.success("账户或密码有误，请检查后登入！");
         }
         return AjaxResponse.success(sysUserVo);
     }
     @GetMapping("Logincode")
     public AjaxResponse queryByPhone(String phone){
         Map<String,Object> map=new HashMap<>();
+        System.out.println("phone:"+phone);
         SysUser list = this.sysUserService.findByPhone(phone);
         if(list.equals(null)){
             return AjaxResponse.success("没有该用户！");
@@ -123,44 +124,44 @@ public class SysUserController {
                 ((ServletRequestAttributes) RequestContextHolder.
                         getRequestAttributes()).getRequest();
         HttpSession session=request.getSession();
-        Map<String,String> mapyz=yan.mm();
+        SysUserVo sysUserVo = new SysUserVo();
+        yan yan = new yan();
         Map<String,Object> map=new HashMap<>();
-        if(mapyz.get("phone").equals(phone) && mapyz.get("code").equals(code)){
-            SysUserVo sysUserVo = new SysUserVo();
-            SysUser list = this.sysUserService.findByPhone(phone);
-            if (!list.equals(null)) {
-                if (list.getUserstate() == 0 && list.getUserStatie() == 0) {
-                    list.setUserError(new Date());
-                    this.sysUserService.updateerror(new Date(),list.getUserId());
+        if(yan.isphonecode(phone) == null || !yan.isphonecode(phone).equals(code)){
+            SysUser sysUser1 = this.sysUserService.findByPhone(phone);
+            if (!sysUser1.equals(null)) {
+                if (sysUser1.getUserstate() == 0 && sysUser1.getUserStatie() == 0) {
+                    sysUser1.setUserError(new Date());
+                    this.sysUserService.updateerror(new Date(),sysUser1.getUserId());
                     //获取父菜单
-                    List<SysMenu> usermenu = sysMenuService.queryListById(list.getUserId());
-                    List<SysMenu> treemenu = usermenu.stream().filter(m -> m.getParentId() == 0 && m.getVisible() == 0).map(
+                    List<SysMenu> usermenu = sysMenuService.queryListById(sysUser1.getUserId());
+                    List<SysMenu> treemenu = usermenu.stream().filter(m -> m.getParentId() == 0).map(
                             (m) -> {
                                 m.setChildMenu(getChildrens(m, usermenu));
                                 return m;
                             }
                     ).collect(Collectors.toList());
-                    System.out.println(treemenu);
-                    String Token = jwtTokenUtil.generateToken(list.getUserName(), list.getUserId() + "");
-                    session.setAttribute("username",list.getUserName());
+                    String Token=jwtTokenUtil.generateToken(sysUser1.getUserName(),sysUser1.getUserId()+"");
                     sysUserVo.setToken(Token);
-                    sysUserVo.setSysUser(list);
+                    sysUserVo.setSysUser(sysUser1);
                     sysUserVo.setVatedata(true);
                     sysUserVo.setSysMenu(treemenu);
-                    map.put("vo",sysUserVo);
-                }else if(list.getUserstate() == 1){
+                }else if(sysUser1.getUserstate() == 1){
                     map.put("success","该用户已被禁用！");
-                }else if(list.getUserStatie() == 1){
+                    return AjaxResponse.success(map);
+                }else if(sysUser1.getUserStatie() == 1){
                     map.put("success","该用户已被删除！");
+                    return AjaxResponse.success(map);
                 }
             } else {
                 map.put("success","没有该用户！");
+                return AjaxResponse.success(map);
             }
         }else{
             map.put("success","该手机号与验证码不匹配！");
+            return AjaxResponse.success(map);
         }
-
-        return AjaxResponse.success(map);
+        return AjaxResponse.success(sysUserVo);
     }
     //根据当前登录的用户查询该用户的角色
     @GetMapping("findByUser_roles")
@@ -180,6 +181,16 @@ public class SysUserController {
         map.put("total",pg.getTotal());
         map.put("rows",list);
         return AjaxResponse.success(map);
+    }
+
+    /**
+     * 查询所有用户没有参数
+     * @return
+     */
+    @GetMapping("findalluser")
+    public AjaxResponse findalluser(){
+        List<SysUser_roles> list = this.sysUserService.selectuserall();
+        return AjaxResponse.success(list);
     }
 
     @PostMapping("selectallroles")
@@ -212,7 +223,6 @@ public class SysUserController {
     //删除用户
     @GetMapping("deleteroles")
     public AjaxResponse deleteroles(Integer id){
-
         List<SysUserRoles> list = this.sysRolesService.selectuseranroles(id);
         String message = "";
         if(list.size()<=0){
@@ -264,7 +274,6 @@ public class SysUserController {
 
         //修改用户修改的信息
         this.sysUserService.updateuserandroles(rolesid,userid);
-
         return AjaxResponse.success("修改角色成功！");
     }
     //新增用户
@@ -330,6 +339,17 @@ public class SysUserController {
         this.sysUserService.updateusers(sysUser);
         return AjaxResponse.success("修改成功！");
     }
+    //修改个人信息
+    @PostMapping("updateusersjc")
+    public AjaxResponse userusersjc(@RequestBody String a){
+        JSONObject jsonObject = JSON.parseObject(a);
+        String users = jsonObject.getString("users");
+        SysUser sysUser = JSONObject.parseObject(users,SysUser.class);
+        System.out.println("sys:"+sysUser.toString());
+        this.sysUserService.updateusers(sysUser);
+        SysUser sysUser1 =this.sysUserService.findByUid(sysUser.getUserId());
+        return AjaxResponse.success(getChildrens(sysUser1));
+    }
     //根据userid查询对应的所有角色
     @PostMapping("findbyuseridroles")
     public AjaxResponse findbyuseridroles(@RequestBody String a){
@@ -345,5 +365,10 @@ public class SysUserController {
         map.put("total",pg.getTotal());
         map.put("rows",list);
         return AjaxResponse.success(map);
+    }
+    //根据用户id查询用户
+    @GetMapping("findByuseruids")
+    public AjaxResponse findByuseruids(Integer uid){
+        return AjaxResponse.success(this.sysUserService.findByUid(uid));
     }
 }

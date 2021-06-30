@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.trkj.projects.mybatis.dao.DbtypeDao">
+
+    <resultMap type="com.trkj.projects.mybatis.entity.Dbtype" id="DbtypeMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="dbname" column="dbname" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+
+
+
+
+
+    <select id="selectdbtype" resultMap="DbtypeMap">
+        select * from projects.dbtype
+    </select>
+
+</mapper>
+

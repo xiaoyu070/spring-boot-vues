@@ -177,8 +177,6 @@ public class ShopController {
 
     @GetMapping("jinyons")
     public Integer updateshopstatic(@RequestParam(value = "shopids")Integer[] shopid){
-        // Integer[] shopid2={12224,12225};
-        //System.out.println(shopid2);
         return this.shopService.updatePil(shopid);
     }
 

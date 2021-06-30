@@ -52,6 +52,7 @@ public interface CustomerService {
     Customer update(Customer customer);
     //修改客户我方收款金额
     void updatemoney(double money,int customerid);
+    void updatemoney2(Double dlzonje, Integer customerid);
     Integer deletepl(Integer[] supplierid);
 
     /**
@@ -67,4 +68,6 @@ public interface CustomerService {
  * 修改
  */
 Boolean upsupplier(Customer customer);
+
+
 }
