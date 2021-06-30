@@ -41,7 +41,7 @@ public class LogAspect {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    private static String username;
+    private static int userId;
     //.service.SysUserService.findByNames
     @Pointcut("execution(public * com.trkj.projects.controller.SysUserController.getChildrens(..))")
     public void webLog(){
@@ -58,7 +58,7 @@ public class LogAspect {
         int index=xx.indexOf("userName");
         int index2=xx.indexOf('"'+","+'"'+"userPass");
         String cha=xx.substring(index+11,index2);
-        username = cha;
+
     }
     @Pointcut("execution(public * com.trkj.projects.controller.SysUserController.queryByPhoneandCode(..))")
     public void webLog1(){
@@ -72,7 +72,7 @@ public class LogAspect {
         String xx=JSONObject.toJSONString(joinPoint.getArgs());
         Object[] str = joinPoint.getArgs();
         SysUser sysUser=this.sysUserService.findByPhone(str[0].toString());
-        username = sysUser.getUserName();
+        //username = sysUser.getUserName();
         System.out.println("Before:sys:"+sysUser.toString());
         userId = sysUser.getUserId();
     }
@@ -121,7 +121,7 @@ public class LogAspect {
         journal.setCreateDate(new Date());
 
 
-        journal.setUserName(username);
+
         journal.setUserId(userId);
         //获取用户ip地址
         String ip= InetAddress.getLocalHost().getHostAddress();
@@ -130,11 +130,8 @@ public class LogAspect {
         journal.setAddressip(ip);
         //调用service保存SysLog实体类到数据库
         //journalService.insert(journal);
-<<<<<<< HEAD
-=======
         System.out.println("userid"+userId);
         journalService.insert(journal);
->>>>>>> ef460b4a47dc95733da782600bc231f279cdb049
     }
 
 }
