@@ -28,12 +28,18 @@ public interface SysUserService {
      * @return
      */
     SysUser findByNames(SysUser sysUser);
-
+    SysUser findByUid(int id);
     /**
      * 根据手机号查询用户
      */
     SysUser findByPhone(String phone);
-
+    /**
+     * 根据账户密码查询用户
+     * @param name
+     * @param pass
+     * @return
+     */
+    SysUser findByName(String userName);
     /**
      * 根据当前登录的用户查询他的权限
      * @param uid
@@ -45,8 +51,8 @@ public interface SysUserService {
      * @return
      */
     List<SysUser_roles> selectuserall();
-    
 
+    List<SysUser> findByuserAll();
     //修改用户状态为0
     void updateuserstatezero(int id);
     //修改用户状态为1

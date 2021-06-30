@@ -3,6 +3,7 @@ package com.trkj.projects.service.impl;
 import com.trkj.projects.mybatis.dao.JournalDao;
 import com.trkj.projects.mybatis.entity.Journal;
 import com.trkj.projects.service.JournalService;
+import com.trkj.projects.vo.JournalVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -30,6 +31,11 @@ public class JournalServiceImpl implements JournalService {
         return this.journalDao.queryById(id);
     }
 
+    @Override
+    public List<Journal> findAll() {
+        return this.journalDao.findAll();
+    }
+
     /**
      * 查询多条数据
      *
@@ -40,6 +46,11 @@ public class JournalServiceImpl implements JournalService {
     @Override
     public List<Journal> queryAllByLimit(int offset, int limit) {
         return this.journalDao.queryAllByLimit(offset, limit);
+    }
+
+    @Override
+    public List<JournalVo> selectdates(String createDate) {
+        return this.journalDao.selectdates(createDate);
     }
 
     /**
@@ -54,6 +65,11 @@ public class JournalServiceImpl implements JournalService {
         return journal;
     }
 
+    @Override
+    public List<Journal> findByuserId(int userid) {
+        return this.journalDao.findByuserId(userid);
+    }
+
     /**
      * 修改数据
      *
@@ -64,6 +80,11 @@ public class JournalServiceImpl implements JournalService {
     public Journal update(Journal journal) {
         this.journalDao.update(journal);
         return this.queryById(journal.getId());
+    }
+
+    @Override
+    public List<Journal> findAlllike(String text) {
+        return this.journalDao.findAlllike(text);
     }
 
     /**

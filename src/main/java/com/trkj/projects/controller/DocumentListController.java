@@ -195,7 +195,9 @@ public class DocumentListController {
         //银行id
         int xid = jsonObject.getInteger("xid");
         String two = jsonObject.getString("list");
+        //单据实体类
         DocumentlistVo documentlistVo = JSONObject.parseObject(one, DocumentlistVo.class);
+        //单据商品
         List<DocumentShop> listshop = JSONArray.parseArray(two, DocumentShop.class);
         System.out.println("listshop:"+listshop.toString());
         //将银行new实例化

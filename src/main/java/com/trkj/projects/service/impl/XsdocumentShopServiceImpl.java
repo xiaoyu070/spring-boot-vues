@@ -168,6 +168,11 @@ public class XsdocumentShopServiceImpl implements XsdocumentShopService {
         return list2;
     }
     @Override
+    public List<SpxstjVo> aytj() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.aytj();
+        return list2;
+    }
+    @Override
     public List<SpxstjVo> ckcx() {
         List<SpxstjVo> list2 = this.xsdocumentShopDao.ckcx();
         return list2;
@@ -198,5 +203,78 @@ public class XsdocumentShopServiceImpl implements XsdocumentShopService {
         info.setTotal(list.size());
         System.out.println(list);
         return info;
+    }
+    /**
+     * 统计
+     */
+    @Override
+    public List<SpxstjVo> cgqk1() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.cgqk1();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> cgqk2() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.cgqk2();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> cgqk3() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.cgqk3();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> xsqk1() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.xsqk1();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> xsqk2() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.xsqk2();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> xsqk3() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.xsqk3();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> bsbyqk() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.bsbyqk();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> bsbyqk1() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.bsbyqk1();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> kcqk() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.kcqk();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> fkshqk() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.fkshqk();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> fkshqk1() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.fkshqk1();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> fkshqk2() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.fkshqk2();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> fkshqk3() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.fkshqk3();
+        return list2;
+    }
+    @Override
+    public List<SpxstjVo> cwfx() {
+        List<SpxstjVo> list2 = this.xsdocumentShopDao.cwfx();
+        return list2;
     }
 }

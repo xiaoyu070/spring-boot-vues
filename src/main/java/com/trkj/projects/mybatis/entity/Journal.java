@@ -33,7 +33,7 @@ public class Journal implements Serializable {
     /**
      * 操作员
      */
-    private String userName;
+    private int userId;
     /**
      * 操作的方法
      */
@@ -48,60 +48,6 @@ public class Journal implements Serializable {
     private String addressip;
 
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getParamsname() {
-        return paramsname;
-    }
-
-    public void setParamsname(String paramsname) {
-        this.paramsname = paramsname;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getFunctions() {
-        return functions;
-    }
-
-    public void setFunctions(String functions) {
-        this.functions = functions;
-    }
-
-    public String getParamslength() {
-        return paramslength;
-    }
-
-    public void setParamslength(String paramslength) {
-        this.paramslength = paramslength;
-    }
-
-    public String getAddressip() {
-        return addressip;
-    }
-
-    public void setAddressip(String addressip) {
-        this.addressip = addressip;
-    }
 
 }
