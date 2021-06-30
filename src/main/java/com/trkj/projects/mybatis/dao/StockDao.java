@@ -118,11 +118,11 @@ public interface StockDao {
 
     /**
      * 修改库存报警中的最低库存
-     * @param skid
+     * @param
      * @param kcbj
      * @return
      */
-    int Kcbjupdate(@Param("skid") int skid,@Param("kcbj") int kcbj);
+    int Kcbjupdate(@Param("branchname") String branchname,@Param("kcbj") int kcbj);
 
     /**
      * 根据店面和仓库查询库存和商品

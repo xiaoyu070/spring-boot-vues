@@ -124,13 +124,21 @@
 <!-- 一哥的 -->
     <!--库存所有库存报警查询-->
     <select id="selectKuCunBaoJin" resultMap="srockvo">
-        SELECT s.`sk_number`,s.`sp_number`,sp.`sp_shopid`,sp.`sp_name`,sp.`sp_Company`,sp.`sp_Specifications`
-        ,sp.`sp_color`, bc.`branchname`,ws.`wname`
-        FROM stock s
-        LEFT JOIN shop sp ON s.`sk_shopid` = sp.`sp_shopid`
-        LEFT JOIN branch bc ON bc.`branchid` = s.`sp_storefront_id`
-        LEFT JOIN warehouse ws ON ws.`wid` = s.`sp_Warehouse_id`
-        where s.sk_number &lt;= s.sp_number
+
+SELECT  ws.wname,
+	s.`sp_shopid`, s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,
+	s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS sk_number,s.`sp_Manufacturer`,
+	s.`sp_beizhu`,s.`sp_bar_code`,tp.sp_type_name,s.sp_Preset_price,b.`branchname`,sk.sp_number,sk.sk_number
+        FROM shop s
+        LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid AND s.Warehouse_id = sk.sp_Warehouse_id
+        LEFT JOIN `warehouse` ws ON ws.`wid` = s.`Warehouse_id`
+        LEFT JOIN supplier sl ON sl.supplierid = s.s_id
+        LEFT JOIN `branch` b ON b.`branchid` =sk.sp_storefront_id
+
+        where sk.sk_number &lt;= sk.sp_number
+        GROUP BY s.`sp_shopid`,s.`s_id` ORDER BY s.`sp_shopid`
+
   </select>
 
     <!--显示禁用商品    -->
@@ -198,17 +206,16 @@
 
     <!--查询所有库存-->
     <select id="queryall" resultMap="srockvo">
-        SELECT p.sp_shopid,p.sp_name,p.sp_state,p.sp_bar_code,p.sp_Company,p.sp_Specifications,p.sp_Preset_price,p.sp_jprice
-        ,p.sp_Manufacturer,p.sp_color,p.sp_beizhu ,p.sp_time ,w.wname,b.branchname,op.sp_type_name,s.sp_number,s.sk_number
-        FROM stock s
-        LEFT JOIN
-        projects.shop p ON s.sk_shopid=p.sp_shopid
-        LEFT JOIN
-        projects.warehouse w ON s.sp_Warehouse_id=w.wid
-        LEFT JOIN
-        projects.branch b ON s.sp_storefront_id=b.branchid
-        LEFT JOIN
-        projects.shop_type op ON p.sp_type_id=op.sp_type_id
+     SELECT ws.wid,ws.wname,sl.suppliername,sk.sp_Warehouse_id,
+	    s.`sp_shopid`, s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,
+	    s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS sk_number,s.`sp_Manufacturer`,
+	    s.`sp_beizhu`,s.`sp_bar_code`,tp.sp_type_name,s.sp_Preset_price
+        FROM shop s
+        LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid AND s.Warehouse_id = sk.sp_Warehouse_id
+        LEFT JOIN `warehouse` ws ON ws.`wid` = s.`Warehouse_id`
+        LEFT JOIN supplier sl ON sl.supplierid = s.s_id
+        GROUP BY s.`sp_shopid`,s.`s_id` ORDER BY s.`sp_shopid`
     </select>
 
     <!--    库存查询只显示为0 的库存 显示全部库存-->
@@ -220,7 +227,7 @@
         LEFT JOIN shop_type st ON st.`sp_type_id` = p.`sp_type_id`
         <where>
             <if test="test22 == 1">
-                s.sk_number = 0
+                s.sk_number &lt;= 0
             </if>
             <if test="test22 == 2">
                 s.sk_number > 0
@@ -234,49 +241,63 @@
             sp_number = #{kcbj}
         </if>
         <where>
-            <if test="skid !=null">
-                sk_shopid=#{skid}
+            <if test="branchname !=null">
+                branchname=#{branchname}
             </if>
         </where>
     </update>
 
 <!-- 根据店面和仓库查询要添加报损报溢的商品-->
 <select id="baosunbaoyiselect" resultMap="srockvo">
-    SELECT p.`sp_shopid`,p.`sp_name`,p.`sp_color`,p.`sp_Specifications`,
-    p.`sp_Company`,k.`sk_number`,w.`wname`,b.`branchname`,p.`sp_beizhu`, p.`sp_jprice`
-    FROM stock k
-    LEFT JOIN shop p ON k.`sk_shopid`=p.`sp_shopid`
-    LEFT JOIN warehouse w ON  w.wid =k.sp_warehouse_id
-    LEFT JOIN branch b ON b.`branchid` =k.sp_storefront_id
-    WHERE w.wid=#{param1} AND b.branchid=#{param2}
-
+SELECT ws.wid,ws.wname,sl.suppliername,sk.sp_Warehouse_id,
+	s.`sp_shopid`, s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,
+	s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS sk_number,s.`sp_Manufacturer`,
+	s.`sp_beizhu`,s.`sp_bar_code`,tp.sp_type_name,s.sp_Preset_price,b.`branchname`
+        FROM shop s
+        LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid AND s.Warehouse_id = sk.sp_Warehouse_id
+        LEFT JOIN `warehouse` ws ON ws.`wid` = s.`Warehouse_id`
+        LEFT JOIN supplier sl ON sl.supplierid = s.s_id
+        LEFT JOIN `branch` b ON b.`branchid` =sk.sp_storefront_id
+        WHERE ws.wid=#{param1} AND  b.branchid=#{param2}
+        GROUP BY s.`sp_shopid`,s.`s_id` ORDER BY s.`sp_shopid`
 </select>
 <!--    根据店面和仓库，商品类型查询所有商品-->
     <select id="selectdiancnag" resultMap="srockvo">
-           SELECT p.`sp_shopid`,p.`sp_name`,p.`sp_color`,p.`sp_Specifications`,k.`sk_number`,w.`wname`,b.`branchname`,p.`sp_beizhu`
-           ,p.sp_state,p.sp_bar_code,p.sp_Company,p.sp_Preset_price,p.sp_jprice
-        ,p.sp_Manufacturer,p.sp_color,p.sp_beizhu ,p.sp_time,st.sp_type_name
-FROM stock k
-LEFT JOIN shop p ON k.`sk_shopid`=p.`sp_shopid`
-LEFT JOIN warehouse w ON  w.wid =k.sp_warehouse_id
-LEFT JOIN branch b ON b.`branchid` =k.sp_storefront_id
-LEFT JOIN shop_type  st ON st.sp_type_id=p.sp_type_id
-WHERE b.branchid =#{param1} AND w.wid=#{param2} AND st.sp_type_id=#{param3}
+SELECT ws.wid,ws.wname,sl.suppliername,sk.sp_Warehouse_id,
+	s.`sp_shopid`, s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,
+	s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS sk_number,s.`sp_Manufacturer`,
+	s.`sp_beizhu`,s.`sp_bar_code`,tp.sp_type_name,s.sp_Preset_price,b.`branchname`
+        FROM shop s
+        LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid AND s.Warehouse_id = sk.sp_Warehouse_id
+        LEFT JOIN `warehouse` ws ON ws.`wid` = s.`Warehouse_id`
+        LEFT JOIN supplier sl ON sl.supplierid = s.s_id
+        LEFT JOIN `branch` b ON b.`branchid` =sk.sp_storefront_id
+        WHERE b.branchid=#{param1} AND ws.wid=#{param2} AND tp.sp_type_id=#{param3}
+        GROUP BY s.`sp_shopid`,s.`s_id` ORDER BY s.`sp_shopid`
     </select>
 
 
 <!--    根据店面仓库商品类型查询库存商品-->
     <select id="kucunbaojin" resultMap="srockvo">
-  SELECT s.`sk_number`,s.`sp_number`,sp.`sp_shopid`,sp.`sp_name`,sp.`sp_Company`,sp.`sp_Specifications`
-        ,sp.`sp_color`, bc.`branchname`,ws.`wname`,sp_type_name,s.sp_number
-        FROM stock s
-        LEFT JOIN shop sp ON s.`sk_shopid` = sp.`sp_shopid`
-        LEFT JOIN branch bc ON bc.`branchid` = s.`sp_storefront_id`
-        LEFT JOIN warehouse ws ON ws.`wid` = s.`sp_Warehouse_id`
-        LEFT JOIN shop_type  st ON st.sp_type_id=sp.sp_type_id
-       WHERE bc.branchid =#{param1} AND ws.wid=#{param2} AND st.sp_type_id=#{param3}
-        AND  s.sk_number &lt;= s.sp_number
+SELECT  ws.wname,
+	s.`sp_shopid`, s.`sp_name`,s.`sp_Company`,s.`sp_Specifications`,
+	s.`sp_color`,s.`sp_jprice`,SUM(sk.`sk_number`) AS sk_number,s.`sp_Manufacturer`,
+	s.`sp_beizhu`,s.`sp_bar_code`,tp.sp_type_name,s.sp_Preset_price,b.`branchname`,sk.sp_number,sk.sk_number
+        FROM shop s
+        LEFT JOIN shop_type tp ON s.sp_type_id = tp.sp_type_id
+        LEFT JOIN stock sk ON s.sp_shopid = sk.sk_shopid AND s.Warehouse_id = sk.sp_Warehouse_id
+        LEFT JOIN `warehouse` ws ON ws.`wid` = s.`Warehouse_id`
+        LEFT JOIN supplier sl ON sl.supplierid = s.s_id
+        LEFT JOIN `branch` b ON b.`branchid` =sk.sp_storefront_id
+        WHERE b.branchid =#{param1} AND ws.wid=#{param2} AND tp.sp_type_id=#{param3}
+        AND  sk.sk_number &lt;= sk.sp_number
+        GROUP BY s.`sp_shopid`,s.`s_id` ORDER BY s.`sp_shopid`
+
     </select>
+
+
 
     <select id="typeselect" resultMap="srockvo">
          SELECT s.`sk_number`,s.`sp_number`,sp.`sp_shopid`,sp.`sp_name`,sp.`sp_Company`,sp.`sp_Specifications`

@@ -125,11 +125,11 @@ public interface StockService {
 
     /**
      * 库存报警修改最低库存数量
-     * @param skid
+     * @param
      * @param kcbj
      * @return
      */
-    int Kcbjupdate (int skid,int kcbj);
+    int Kcbjupdate (String branchname,int kcbj);
 
 
     /**
