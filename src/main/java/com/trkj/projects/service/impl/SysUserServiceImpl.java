@@ -65,6 +65,11 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
+    public List<SysUser> findByuserAll() {
+        return this.sysUserDao.findByuserAll();
+    }
+
+    @Override
     public void updateuserstatezero(int id) {
         this.sysUserDao.updateuserstatezero(id);
     }

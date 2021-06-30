@@ -33,7 +33,10 @@ public interface SysMenuDao {
     List<SysMenu> findListByRolesId(SysRoles sysRoles);
     //修改菜单
     void updateMenus(SysMenu sysMenu);
-
+    //修改菜单状态为启用
+    void updatemenuszero(int meunsid);
+    //修改菜单状态为禁用
+    void updatemenusone(int meunsid);
     //根据角色id新增菜单id的中间表
     void inserrolesidandmenusid(SysRolesMenu sysRolesMenu);
 

@@ -24,7 +24,22 @@
 <!--  查询操作日志  -->
 <select id="findAll" resultMap="JournalMapVo">
         SELECT j.paramsname,j.create_date,su.user_name,j.functions,j.Addressip,j.paramslength FROM `journal` j
-        LEFT JOIN `sys_user` su ON su.user_id = j.userId
+        LEFT JOIN `sys_user` su ON su.user_id = j.userId ORDER BY j.create_date
+</select>
+<!--  查询操作日志  -->
+<select id="findAlllike" resultMap="JournalMapVo">
+        SELECT j.paramsname,j.create_date,su.user_name,j.functions,j.Addressip,j.paramslength FROM `journal` j
+        LEFT JOIN `sys_user` su ON su.user_id = j.userId where su.user_name LIKE CONCAT('%',#{text},'%') or j.paramsname LIKE CONCAT('%',#{text},'%') ORDER BY j.create_date
+</select>
+<!--  查询操作日志  -->
+<select id="findByuserId" resultMap="JournalMapVo">
+        SELECT j.paramsname,j.create_date,su.user_name,j.functions,j.Addressip,j.paramslength FROM `journal` j
+        LEFT JOIN `sys_user` su ON su.user_id = j.userId where j.userId=#{userid} ORDER BY j.create_date
+</select>
+<!-- 根据时间查询日志 -->
+<select id="selectdates" resultMap="JournalMapVo">
+    SELECT j.paramsname,j.create_date,su.user_name,j.functions,j.Addressip,j.paramslength FROM `journal` j
+    LEFT JOIN `sys_user` su ON su.user_id = j.userId WHERE j.create_date like #{createDate} ORDER BY j.create_date
 </select>
     <!--查询单个-->
     <select id="queryById" resultMap="JournalMap">

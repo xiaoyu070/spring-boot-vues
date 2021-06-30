@@ -28,7 +28,10 @@ public interface SysMenuService {
     List<SysMenu> selectMenusall();
     //修改菜单
     void updateMenus(SysMenu sysMenu);
-
+    //修改菜单状态为启用
+    void updatemenuszero(int meunsid);
+    //修改菜单状态为禁用
+    void updatemenusone(int meunsid);
     //根据角色id查询该角色是否存在该菜单id
     List<SysRolesMenu> selectrolesidandmenusid(SysRolesMenu sysRolesMenu);
     //根据角色id新增菜单id的中间表

@@ -82,6 +82,9 @@
           *
         from projects.sys_user where user_name = #{userName} and user_pass = #{userPass}
     </select>
+    <select id="findByuserAll" resultMap="SysUserMap">
+        	SELECT su.* FROM sys_user su
+    </select>
     <!--根据用户名称查询用户-->
     <select id="findByName" resultMap="SysUserMap">
         select

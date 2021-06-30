@@ -49,6 +49,16 @@ public class SysMenuServiceImpl implements SysMenuService {
     }
 
     @Override
+    public void updatemenuszero(int meunsid) {
+        this.sysMenuDao.updatemenuszero(meunsid);
+    }
+
+    @Override
+    public void updatemenusone(int meunsid) {
+        this.sysMenuDao.updatemenusone(meunsid);
+    }
+
+    @Override
     public List<SysRolesMenu> selectrolesidandmenusid(SysRolesMenu sysRolesMenu) {
         return this.sysMenuDao.selectrolesidandmenusid(sysRolesMenu);
     }

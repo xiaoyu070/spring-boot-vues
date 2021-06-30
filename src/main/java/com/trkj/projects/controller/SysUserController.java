@@ -283,13 +283,10 @@ public class SysUserController {
         String sys = jsonObject.getString("form");
         String roles = jsonObject.getString("roles");
         SysUser sysUser = JSONArray.parseObject(sys,SysUser.class);
-        System.out.println("sysuser:"+sysUser.toString());
         String str = roles.substring(roles.indexOf("[")+1,roles.indexOf("]"));
         String[] rolesid = str.split(",");
         SysUser list = this.sysUserService.findByNames(sysUser);
-        System.out.println("list:"+list);
         SysUser list2 = this.sysUserService.findByPhone(sysUser.getUserPhone());
-        System.out.println("list2:"+list2);
         String message = "";
         if(!StringUtils.isEmpty(list)){
             message = "该用户名已被使用!";
@@ -300,6 +297,7 @@ public class SysUserController {
         }else{
             //新增成功后再查詢出該用戶的數據，添加他選擇的角色
             sysUser.setCreate_date(new Date());
+            System.out.println("sysUser:users"+sysUser.toString());
             this.sysUserService.insertuser(sysUser);
             SysUser sss = this.sysUserService.findByNames(sysUser);
             System.out.println("sss"+sss.toString());
@@ -322,6 +320,7 @@ public class SysUserController {
     //编辑用户信息
     @PostMapping("updateusers")
     public AjaxResponse updateusers(@RequestBody String a){
+        Map<String,Object> map = new HashMap<>();
         JSONObject jsonObject = JSON.parseObject(a);
         String sys= jsonObject.getString("form");
         String roles= jsonObject.getString("roles");
@@ -329,15 +328,22 @@ public class SysUserController {
         String[] rolesid = str.split(",");
         SysUser sysUser = JSONArray.parseObject(sys,SysUser.class);
         //根据用户id删除中间表中所有的数据
-        System.out.println("sys:"+sysUser.toString());
         this.sysUserService.deleteuserandroles(sysUser.getUserId());
         for(int i = 0;i<rolesid.length;i++){
-            System.out.println("rolesid:"+rolesid[i]);
             //新增用户选择的所有角色
             this.sysUserService.insertuserandroles(sysUser.getUserId(),Integer.parseInt(rolesid[i]));
         }
+        List<SysMenu> menulist = this.sysMenuService.queryListById(sysUser.getUserId());
+        List<SysMenu> treemenu = menulist.stream().filter(m -> m.getParentId() == 0).map(
+                (m) -> {
+                    m.setChildMenu(getChildrens(m, menulist));
+                    return m;
+                }
+        ).collect(Collectors.toList());
+        map.put("message","修改成功！");
+        map.put("sysMenu",treemenu);
         this.sysUserService.updateusers(sysUser);
-        return AjaxResponse.success("修改成功！");
+        return AjaxResponse.success(map);
     }
     //修改个人信息
     @PostMapping("updateusersjc")

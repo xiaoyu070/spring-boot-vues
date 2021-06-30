@@ -1,6 +1,7 @@
 package com.trkj.projects.mybatis.dao;
 
 import com.trkj.projects.mybatis.entity.Journal;
+import com.trkj.projects.vo.JournalVo;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -27,6 +28,18 @@ public interface JournalDao {
      * 查询全部
      */
     List<Journal> findAll();
+    /**
+     * 模糊查询
+     */
+    List<Journal> findAlllike(String text);
+    /**
+     * 根据userid查询
+     */
+    List<Journal> findByuserId(int userid);
+    /**
+     * 根据时间查询日志
+     */
+    List<JournalVo> selectdates(String createDate);
     /**
      * 查询指定行数据
      *
