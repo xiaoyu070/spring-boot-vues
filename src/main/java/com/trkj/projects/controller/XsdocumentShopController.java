@@ -177,6 +177,12 @@ public class XsdocumentShopController {
         map.put("rows",list);
         return AjaxResponse.success(map);
     }
+    @GetMapping("findbydlnumber")
+    public AjaxResponse findbydlnumber(String number, int wid, int branchid){
+        List<DocumentShopVo> list= this.xsdocumentShopService.selectnumber(number,wid,branchid);
+        System.out.println("selectnumber:list:"+list);
+        return AjaxResponse.success(list);
+    }
     /**
      *
      * 修改商品更新该单据的金额
