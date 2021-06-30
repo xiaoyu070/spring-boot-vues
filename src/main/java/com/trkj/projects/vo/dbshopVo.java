@@ -1,43 +1,12 @@
 package com.trkj.projects.vo;
 
-import lombok.Data;
-
 import java.util.Date;
 
-@Data
-public class DbdanjuVo {
+public class dbshopVo {
     /**
      * 调拨单据id
      */
     private Integer id;
-    /**
-     * 调拨单号
-     */
-    private String dbid;
-    /**
-     * 调出仓库id
-     */
-    private Integer wid;
-    /**
-     * 调入仓库id
-     */
-    private Integer widR;
-    /**
-     * 经办人id
-     */
-    private Integer jingbanren;
-    /**
-     * 操作员id
-     */
-    private Integer adminid;
-    /**
-     * 备注
-     */
-    private String beizu;
-    /**
-     * 调拨日期
-     */
-    private Date dbdate;
     /**
      * 商品编号
      */
@@ -76,6 +45,34 @@ public class DbdanjuVo {
      */
     private String dbname;
     /**
+     * 调拨单号
+     */
+    private String dbid;
+    /**
+     * 调出仓库id
+     */
+    private Integer wid;
+    /**
+     * 调入仓库id
+     */
+    private Integer widR;
+    /**
+     * 经办人id
+     */
+    private Integer jingbanren;
+    /**
+     * 操作员id
+     */
+    private Integer adminid;
+    /**
+     * 备注
+     */
+    private String beizu;
+    /**
+     * 调拨日期
+     */
+    private Date dbdate;
+    /**
      * 员工姓名
      */
     private String agentName;
@@ -84,7 +81,4 @@ public class DbdanjuVo {
      */
     private String userName;
 
-    private String outwarehouse;
-
-    private String ininwarehouse;
 }

@@ -1,6 +1,8 @@
 package com.trkj.projects.mybatis.dao;
 
+import com.github.pagehelper.PageInfo;
 import com.trkj.projects.mybatis.entity.Dbdanju;
+import com.trkj.projects.vo.DbdanjuVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -41,6 +43,8 @@ public interface DbdanjuDao {
      */
     int insertOrUpdateBatch(@Param("entities") List<Dbdanju> entities);
 
+
+    List<DbdanjuVo> selectdbcx11();
 
 
 }

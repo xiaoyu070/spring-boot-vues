@@ -129,7 +129,7 @@ public interface StockService {
      * @param kcbj
      * @return
      */
-    int Kcbjupdate (String branchname,int kcbj);
+    int Kcbjupdate (String spShopid,int kcbj);
 
 
     /**

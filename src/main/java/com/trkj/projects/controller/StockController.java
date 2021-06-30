@@ -157,12 +157,10 @@ public class StockController {
      * @return
      */
     @GetMapping("Kcbjupdate")
-    public int Kcbjupdate(String branchname,Integer kcbj ){
-        System.out.println("bianhao"+branchname+kcbj);
-        return  this.stockService.Kcbjupdate(branchname,kcbj);
+    public int Kcbjupdate(String spShopid,Integer kcbj ){
+        System.out.println("bianhao"+spShopid+kcbj);
+        return  this.stockService.Kcbjupdate(spShopid,kcbj);
     }
-
-
 
     /**
      * 根据店面和仓库查询报损报溢商品

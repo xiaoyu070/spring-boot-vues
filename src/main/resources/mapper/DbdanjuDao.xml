@@ -31,6 +31,10 @@
         <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
         <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
         <result property="dbname" column="dbname" jdbcType="VARCHAR"/>
+        <result property="agentName" column="agent_name" jdbcType="VARCHAR"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="outwarehouse" column="outwarehouse" jdbcType="VARCHAR"/>
+        <result property="ininwarehouse" column="ininwarehouse" jdbcType="VARCHAR"/>
     </resultMap>
 
 
@@ -65,7 +69,11 @@
         values(jingbanren) , adminid = values(adminid) , beizu = values(beizu) , dbdate = values(dbdate)
     </insert>
 
-
-
+    <select id="selectdbcx11" resultMap="DbdanjuVo">
+        SELECT d.id,d.dbid,w.`wname` AS outwarehouse,a.`wname` AS ininwarehouse,d.wid,d.wid_r,d.jingbanren,d.adminid,d.beizu,d.dbdate,sy.`user_name`,ag.`agent_name`
+        FROM dbdanju d,warehouse w,warehouse a,`sys_user` sy ,agent ag
+        WHERE d.`wid`=w.`wid` AND d.`wid_r`=a.`wid` AND sy.`user_id` = d.`adminid`
+        GROUP BY d.dbid
+    </select>
 </mapper>
 

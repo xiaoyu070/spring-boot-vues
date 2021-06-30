@@ -137,7 +137,7 @@ SELECT  ws.wname,
         LEFT JOIN `branch` b ON b.`branchid` =sk.sp_storefront_id
 
         where sk.sk_number &lt;= sk.sp_number
-        GROUP BY s.`sp_shopid`,s.`s_id` ORDER BY s.`sp_shopid`
+        GROUP BY s.`sp_shopid`
 
   </select>
 
@@ -199,8 +199,9 @@ SELECT  ws.wname,
             or sp.`sp_shopid` like concat('%',#{testkike2},'%')
             and s.sk_number &lt;= s.sp_number
         </if>
-        </where>
 
+        </where>
+        GROUP BY sp.`sp_shopid`
 
     </select>
 
@@ -241,9 +242,10 @@ SELECT  ws.wname,
             sp_number = #{kcbj}
         </if>
         <where>
-            <if test="branchname !=null">
-                branchname=#{branchname}
+            <if test="spShopid !=null">
+                sp_shopid=#{spShopid}
             </if>
+
         </where>
     </update>
 

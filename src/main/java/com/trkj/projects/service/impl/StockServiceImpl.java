@@ -231,8 +231,8 @@ public class StockServiceImpl implements StockService {
      * @return
      */
     @Override
-    public int Kcbjupdate(String branchname, int kcbj) {
-        return this.stockDao.Kcbjupdate(branchname,kcbj);
+    public int Kcbjupdate(String spShopid, int kcbj) {
+        return this.stockDao.Kcbjupdate(spShopid,kcbj);
     }
 
     /**

@@ -88,10 +88,10 @@ public class PdShopController {
 
     @GetMapping("updatepdnum")
     public int updatepdnum(Integer pdnum,String pddh){
-        PdShop pdShop =new PdShop();
         System.out.println("盘点数量"+pdnum+"商品编号"+pddh);
         return  this.pdShopService.updatepdnumber(pdnum,pddh);
     }
+
     @GetMapping("deletesp")
     public void deleteshop(@RequestParam ("id") int delect){
         System.out.println("删除成功"+delect);

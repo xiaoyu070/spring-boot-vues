@@ -13,6 +13,16 @@
         <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
         <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
     </resultMap>
+    <resultMap id="dbshopVo" type="com.trkj.projects.vo.dbshopVo">
+        <result property="spShopid" column="sp_shopid" jdbcType="VARCHAR"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="shulian" column="shulian" jdbcType="INTEGER"/>
+        <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
+        <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
+    </resultMap>
 
 
     <!--新增所有列-->
