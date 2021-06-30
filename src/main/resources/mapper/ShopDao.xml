@@ -37,6 +37,27 @@
         <result property="supperliername" column="suppliername" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <resultMap id="ShopVo" type="com.trkj.projects.vo.ShopVo">
+        <result property="spId" column="sp_id" jdbcType="INTEGER"/>
+        <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
+        <result property="spBarCode" column="sp_bar_code" jdbcType="VARCHAR"/>
+        <result property="spTypeId" column="sp_type_id" jdbcType="INTEGER"/>
+        <result property="spState" column="sp_state" jdbcType="INTEGER"/>
+        <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
+        <result property="spSpecifications" column="sp_Specifications" jdbcType="VARCHAR"/>
+        <result property="spColor" column="sp_color" jdbcType="VARCHAR"/>
+        <result property="spJprice" column="sp_jprice" jdbcType="NUMERIC"/>
+        <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
+        <result property="spManufacturer" column="sp_Manufacturer" jdbcType="VARCHAR"/>
+        <result property="spBeizhu" column="sp_beizhu" jdbcType="VARCHAR"/>
+        <result property="spTime" column="sp_time" jdbcType="TIMESTAMP"/>
+        <result property="shImg" column="sh_img" jdbcType="VARCHAR"/>
+        <result property="spTypeName" column="sp_type_name" jdbcType="VARCHAR"/>
+        <result property="sId" column="s_id" jdbcType="INTEGER"/>
+        <result property="suppliername" column="suppliername" jdbcType="VARCHAR"/>
+    </resultMap>
+
     <resultMap type="com.trkj.projects.mybatis.entity.Shops" id="ShopMap">
         <result property="spId" column="sp_id" jdbcType="INTEGER"/>
         <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
@@ -56,6 +77,10 @@
         <association property="shopType" javaType="com.trkj.projects.mybatis.entity.ShopType">
             <id property="spTypeId" column="sp_type_id" jdbcType="INTEGER"/>
             <result property="spTypeName" column="sp_type_name" jdbcType="VARCHAR"/>
+        </association>
+        <association property="supplier" javaType="com.trkj.projects.mybatis.entity.Supplier">
+            <id property="sId" column="sId" jdbcType="INTEGER"/>
+            <result property="suppliername" column="suppliername" jdbcType="VARCHAR"/>
         </association>
     </resultMap>
 
@@ -302,21 +327,20 @@
 
 <!--  楷楷的  -->
     <select id="queryById" resultMap="ShopMap">
-        select
+       select
           s.sp_id, s.sp_shopid, s.sp_name, s.sp_bar_code, s.sp_type_id, s.sp_state, s.sp_Company, s.sp_Specifications, s.sp_color, s.sp_Preset_price, s.sp_jprice, s.sp_Manufacturer, s.sp_beizhu, s.sp_time, s.sh_img
           ,y.sp_type_id,y.sp_type_name
         from projects.shop s,projects.shop_type y
-        where s.sp_type_id=y.sp_type_id
-        and s.sp_id = #{spid}
+        where s.sp_type_id=y.sp_type_id and s.sp_id = #{spid}
     </select>
     <!--可利用分页插件查询指定行数据-->
-    <select id="queryAllByPage" resultMap="ShopMap">
-        select
+    <select id="queryAllByPage" resultMap="ShopVo">
+        SELECT
          s.sp_id, s.sp_shopid, s.sp_name, s.sp_bar_code, s.sp_type_id, s.sp_state, s.sp_Company, s.sp_Specifications, s.sp_color, s.sp_Preset_price, s.sp_jprice, s.sp_Manufacturer, s.sp_beizhu, s.sp_time, s.sh_img
-          ,y.sp_type_id,y.sp_type_name
-        from projects.shop_type y
-        INNER JOIN projects.shop s
-        on s.sp_type_id=y.sp_type_id
+          ,y.sp_type_name,s.s_id,su.suppliername
+        FROM projects.shop s
+        LEFT JOIN projects.shop_type y ON y.sp_type_id=s.sp_type_id
+        LEFT JOIN supplier su ON su.s_id=s.s_id
     </select>
     <!--新增所有列-->
     <insert id="insertShop" keyProperty="spId" useGeneratedKeys="true">
@@ -374,9 +398,13 @@
         where sp_id = #{spId}
     </update>
 
-    <select id="queryAllByType" resultMap="ShopMap">
-        select
+    <select id="queryAllByType" resultMap="ShopVo">
+        SELECT
         s.sp_id, s.sp_shopid, s.sp_name, s.sp_bar_code, s.sp_type_id, s.sp_state, s.sp_Company, s.sp_Specifications, s.sp_color, s.sp_Preset_price, s.sp_jprice, s.sp_Manufacturer, s.sp_beizhu, s.sp_time, s.sh_img
+        ,y.sp_type_id,y.sp_type_name,s.s_id,su.suppliername
+        FROM projects.shop s
+        LEFT JOIN projects.shop_type y ON y.sp_type_id=s.sp_type_id
+        LEFT JOIN supplier su ON su.s_id=s.s_id
         ,y.sp_type_id,y.sp_type_name
         from projects.shop_type y
         INNER JOIN projects.shop s
@@ -395,13 +423,13 @@
             </if>
         </where>
     </select>
-    <select id="queryAllByStatic" resultMap="ShopMap">
-        select
+    <select id="queryAllByStatic" resultMap="ShopVo">
+        SELECT
         s.sp_id, s.sp_shopid, s.sp_name, s.sp_bar_code, s.sp_type_id, s.sp_state, s.sp_Company, s.sp_Specifications, s.sp_color, s.sp_Preset_price, s.sp_jprice, s.sp_Manufacturer, s.sp_beizhu, s.sp_time, s.sh_img
-        ,y.sp_type_id,y.sp_type_name
-        from projects.shop_type y
-        INNER JOIN projects.shop s
-        on s.sp_type_id=y.sp_type_id
+        ,y.sp_type_id,y.sp_type_name,s.s_id,su.suppliername
+        FROM projects.shop s
+        LEFT JOIN projects.shop_type y ON y.sp_type_id=s.sp_type_id
+        LEFT JOIN supplier su ON su.s_id=s.s_id
         <where>
             <if test="shopstatic == 0 or shopstatic == 1 ">
                 and sp_state = #{shopstatic}
@@ -422,13 +450,13 @@
         from projects.shop
 
     </select>
-    <select id="queryBytypelike" resultMap="ShopMap">
-        select
+    <select id="queryBytypelike" resultMap="ShopVo">
+        SELECT
         s.sp_id, s.sp_shopid, s.sp_name, s.sp_bar_code, s.sp_type_id, s.sp_state, s.sp_Company, s.sp_Specifications, s.sp_color, s.sp_Preset_price, s.sp_jprice, s.sp_Manufacturer, s.sp_beizhu, s.sp_time, s.sh_img
-        ,y.sp_type_id,y.sp_type_name
-        from projects.shop_type y
-        INNER JOIN projects.shop s
-        on s.sp_type_id=y.sp_type_id
+        ,y.sp_type_id,y.sp_type_name,s.s_id,su.suppliername
+        FROM projects.shop s
+        LEFT JOIN projects.shop_type y ON y.sp_type_id=s.sp_type_id
+        LEFT JOIN supplier su ON su.s_id=s.s_id
         <where>
             <if test="shopstatic == 0 or shopstatic == 1">
                 and sp_state = #{shopstatic}

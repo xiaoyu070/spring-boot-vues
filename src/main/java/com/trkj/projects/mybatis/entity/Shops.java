@@ -52,4 +52,6 @@ public class Shops {
 
     private ShopType shopType;
 
+    private Supplier supplier;
+
 }

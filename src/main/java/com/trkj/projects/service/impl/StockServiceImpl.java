@@ -68,6 +68,16 @@ public class StockServiceImpl implements StockService {
     }
 
     /**
+     * 退货加库存数量
+     * @param stock
+     * @return
+     */
+    @Override
+    public int xsupdate2(Stock stock) {
+        return this.stockDao.xsupdateadd2(stock);
+    }
+
+    /**
      * 根据商品类型以及关键字查询
      */
     @Override
@@ -327,6 +337,8 @@ public class StockServiceImpl implements StockService {
     public Integer updatepilian(Integer stocks,Integer shopid) {
         return this.stockDao.updatepilian(stocks,shopid);
     }
+
+
 
 
 }

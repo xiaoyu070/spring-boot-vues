@@ -47,6 +47,7 @@ public interface StockDao {
      * @return 影响行数
      */
     int updateadd(Stock stock);
+
     /**
      * 修改数据
      *
@@ -54,6 +55,7 @@ public interface StockDao {
      * @return 影响行数xs
      */
     int xsupdateadd(Stock stock);
+    int xsupdateadd2(Stock stock);
 
     /**
      * 修改数据
@@ -169,5 +171,6 @@ public interface StockDao {
     List<StockVo>selecttypejhck(int typeid);
 
     Integer updatepilian(@Param("skNumber") Integer stocks,@Param("skShopid")Integer shopid);
+
 }
 

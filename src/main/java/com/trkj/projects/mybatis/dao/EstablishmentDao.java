@@ -92,6 +92,12 @@ public interface EstablishmentDao {
     void updateestab(Establishment establishment);
 
     /**
+     * 通过id增加银行金额
+     * @param establishment
+     */
+//    void updateestab2(Establishment establishment);
+
+    /**
      * 通过id增加银行金额（退货后供货商的实付金额）
      */
     void updateestabjia(Establishment establishment);
@@ -118,6 +124,7 @@ public interface EstablishmentDao {
     List<Establishment> selectByAll();
 
     Integer delete(@Param("xid")Integer[] xid);
+
 
 }
 

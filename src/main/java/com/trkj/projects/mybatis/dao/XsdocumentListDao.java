@@ -28,6 +28,8 @@ public interface XsdocumentListDao {
 
     XsDocumentlistVo queryBydlnumber(String dlnumber);
 
+    List<XsDocumentlistVo> findxswlzh(@Param("dlNumber")String dlNumber,@Param("cid")Integer cid,@Param("wid")Integer wid, @Param("agentid")Integer agentid,@Param("userid")Integer userid,@Param("branchid")Integer branchid, @Param("date1")String date1,@Param("date2")String date2);
+
     /**
      * 查询指定行数据
      *
@@ -98,6 +100,10 @@ public interface XsdocumentListDao {
      * 将未审核的单据状态改为已审核
      */
     void updatestaticzore(XsdocumentList xsdocumentList);
+    /**
+     * 将未审核的单据状态改为已审核
+     */
+    void updatestaticzoret(XsdocumentList xsdocumentList);
 
 }
 

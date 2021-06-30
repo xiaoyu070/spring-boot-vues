@@ -69,7 +69,14 @@ public interface EstablishmentService {
      */
     void updateestabjia(Establishment establishment);
 
+    /**
+     * 增加银行金额
+     * @param
+     */
+//    void updateestab2(Establishment establishment);
+
     List<Establishment> selectbybranchid(Integer branchid);
+
 
     //-------------------------老弟的
     PageInfo<Establishment> findAll(int pageSize, int size);
@@ -80,5 +87,6 @@ public interface EstablishmentService {
     public Integer delect(Integer[] xid);
     //查询所有付款账户
     public List<Establishment> finAll();
+
 
 }
