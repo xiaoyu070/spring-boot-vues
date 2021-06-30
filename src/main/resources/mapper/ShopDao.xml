@@ -33,7 +33,7 @@
         <result property="spManufacturer" column="sp_Manufacturer" jdbcType="VARCHAR"/>
         <result property="spBeizhu" column="sp_beizhu" jdbcType="VARCHAR"/>
         <result property="number" column="sk_number" javaType="INTEGER"/>
-        <result property="numbers" column="sk_number" javaType="INTEGER"/>
+<!--        <result property="numbers" column="sk_number" javaType="INTEGER"/>-->
         <result property="spBarCode" column="sp_bar_code" jdbcType="VARCHAR"/>
         <result property="supperlierid" column="s_id" jdbcType="INTEGER"/>
         <result property="supperliername" column="suppliername" jdbcType="VARCHAR"/>
@@ -401,16 +401,11 @@
     </update>
 
     <select id="queryAllByType" resultMap="ShopVo">
-        SELECT
-        s.sp_id, s.sp_shopid, s.sp_name, s.sp_bar_code, s.sp_type_id, s.sp_state, s.sp_Company, s.sp_Specifications, s.sp_color, s.sp_Preset_price, s.sp_jprice, s.sp_Manufacturer, s.sp_beizhu, s.sp_time, s.sh_img
+        SELECT s.sp_id, s.sp_shopid, s.sp_name, s.sp_bar_code, s.sp_type_id, s.sp_state, s.sp_Company, s.sp_Specifications, s.sp_color, s.sp_Preset_price, s.sp_jprice, s.sp_Manufacturer, s.sp_beizhu, s.sp_time, s.sh_img
         ,y.sp_type_id,y.sp_type_name,s.s_id,su.suppliername
         FROM projects.shop s
         LEFT JOIN projects.shop_type y ON y.sp_type_id=s.sp_type_id
         LEFT JOIN supplier su ON su.s_id=s.s_id
-        ,y.sp_type_id,y.sp_type_name
-        from projects.shop_type y
-        INNER JOIN projects.shop s
-        on s.sp_type_id=y.sp_type_id
         <where>
             <if test="shoptypename != null and shoptypename != '所有类别' ">
                 and sp_type_name = #{shoptypename}

@@ -12,7 +12,6 @@ public class Shopandstock {
     private Double spJprice;//商品进价
     private Double spPresetPrice;
     private Integer number;//商品库存
-    private Integer numbers;//商品库存
     private Integer wid;//所在仓库外键id
     private String spBarCode;//商品条码
     private String spManufacturer;//生产厂商
