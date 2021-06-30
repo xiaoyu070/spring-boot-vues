@@ -41,7 +41,8 @@ public class LogAspect {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    private static String username;
+    private static int userId;
+
     //.service.SysUserService.findByNames
     @Pointcut("execution(public * com.trkj.projects.controller.SysUserController.getChildrens(..))")
     public void webLog(){
@@ -58,7 +59,8 @@ public class LogAspect {
         int index=xx.indexOf("userName");
         int index2=xx.indexOf('"'+","+'"'+"userPass");
         String cha=xx.substring(index+11,index2);
-        username = cha;
+        SysUser sysUser=this.sysUserService.findByName(cha);
+        userId = sysUser.getUserId();
     }
     @Pointcut("execution(public * com.trkj.projects.controller.SysUserController.queryByPhoneandCode(..))")
     public void webLog1(){
@@ -72,7 +74,8 @@ public class LogAspect {
         String xx=JSONObject.toJSONString(joinPoint.getArgs());
         Object[] str = joinPoint.getArgs();
         SysUser sysUser=this.sysUserService.findByPhone(str[0].toString());
-        username = sysUser.getUserName();
+        System.out.println("Before:sys:"+sysUser.toString());
+        userId = sysUser.getUserId();
     }
 
     //定义切点 @Pointcut
@@ -98,13 +101,11 @@ public class LogAspect {
             String value = myLog.value();
             journal.setParamsname(value);//保存获取的操作
         }
-
         //获取请求的类名
         String className = joinPoint.getTarget().getClass().getName();
         //获取请求的方法名
         String methodName = method.getName();
         journal.setFunctions(className + "." + methodName);
-
         //请求的参数
         Object[] args = joinPoint.getArgs();
         //将参数所在的数组转换成json
@@ -117,15 +118,13 @@ public class LogAspect {
         journal.setParamslength(params.length()+"");
         //获取操作时间
         journal.setCreateDate(new Date());
-
-
-        journal.setUserName(username);
+        journal.setUserId(userId);
         //获取用户ip地址
         String ip= InetAddress.getLocalHost().getHostAddress();
-//         request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+//      request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         journal.setAddressip(ip);
         //调用service保存SysLog实体类到数据库
+        System.out.println("userid"+userId);
         journalService.insert(journal);
     }
-
 }

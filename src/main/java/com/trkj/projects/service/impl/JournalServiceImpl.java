@@ -30,6 +30,11 @@ public class JournalServiceImpl implements JournalService {
         return this.journalDao.queryById(id);
     }
 
+    @Override
+    public List<Journal> findAll() {
+        return this.journalDao.findAll();
+    }
+
     /**
      * 查询多条数据
      *

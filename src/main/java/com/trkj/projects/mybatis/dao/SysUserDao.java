@@ -31,7 +31,13 @@ public interface SysUserDao {
      * @return
      */
     SysUser findByNames(SysUser sysUser);
-
+    /**
+     * 根据账户密码查询用户
+     * @param name
+     * @param pass
+     * @return
+     */
+    SysUser findByName(String userName);
     /**
      * 根据手机号查询用户
      */
