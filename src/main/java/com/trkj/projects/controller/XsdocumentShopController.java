@@ -169,6 +169,7 @@ public class XsdocumentShopController {
      */
     @GetMapping("selectnumber")
     public AjaxResponse selectnumber(Integer currenPage, Integer pageSize, String number, int wid, int branchid){
+        System.out.println(currenPage+"   "+pageSize+"   "+number+"   "+wid+"  "+branchid);
         Map<String,Object> map=new HashMap<>();
         Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
         List<DocumentShopVo> list= this.xsdocumentShopService.selectnumber(number,wid,branchid);

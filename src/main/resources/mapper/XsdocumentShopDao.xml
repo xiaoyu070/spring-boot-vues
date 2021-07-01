@@ -146,7 +146,7 @@
         LEFT JOIN warehouse ws ON dsp.wid = ws.wid
         LEFT JOIN stock sk ON sk.sk_shopid = dsp.sp_shopid
         LEFT JOIN `branch` dm ON dm.branchid = ws.branchid
-        WHERE dsp.dl_number =  #{param1} and dsp.wid = #{param2} and sk.sp_Warehouse_id = #{param2}
+        WHERE dsp.dl_number =  #{param1} and dsp.wid = #{param2}
     </select>
     <!--查询单个-->
     <select id="queryById" resultMap="XsdocumentShopMap">
