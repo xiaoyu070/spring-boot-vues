@@ -152,17 +152,15 @@ public class StockController {
 
     /**
      * 库存报警修改最低库存数量
-     * @param skid
+     * @param
      * @param kcbj
      * @return
      */
     @GetMapping("Kcbjupdate")
-    public int Kcbjupdate(Integer skid,Integer kcbj ){
-        System.out.println("bianhao"+skid+kcbj);
-        return  this.stockService.Kcbjupdate(skid,kcbj);
+    public int Kcbjupdate(String spShopid,Integer kcbj ){
+        System.out.println("bianhao"+spShopid+kcbj);
+        return  this.stockService.Kcbjupdate(spShopid,kcbj);
     }
-
-
 
     /**
      * 根据店面和仓库查询报损报溢商品

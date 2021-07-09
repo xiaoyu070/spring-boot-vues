@@ -159,9 +159,6 @@ public class ShopServiceImpl implements ShopService {
         BeanTools.copyList(list,vos,ShopVo.class);
         PageInfo<ShopVo> info = new PageInfo<>(vos);
         info.setTotal((long)list1.size());
-        for(Shops shop1:list1) {
-            System.out.println(shop1);
-        }
         System.out.println("88888888888888888888888888888888888888     :"+this.shopDao.selectCount(shopname));
 
         return info;

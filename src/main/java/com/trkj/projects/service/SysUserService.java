@@ -51,8 +51,8 @@ public interface SysUserService {
      * @return
      */
     List<SysUser_roles> selectuserall();
-    
 
+    List<SysUser> findByuserAll();
     //修改用户状态为0
     void updateuserstatezero(int id);
     //修改用户状态为1

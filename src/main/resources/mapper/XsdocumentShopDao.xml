@@ -93,9 +93,11 @@
         <result property="customerid" column="customerid" jdbcType="INTEGER"/>
         <result property="wid" column="wid" jdbcType="INTEGER"/>
         <result property="spShopid" column="sp_shopid" jdbcType="INTEGER"/>
+        <result property="spShopId" column="sp_shopid" jdbcType="INTEGER"/>
         <result property="spName" column="sp_name" jdbcType="VARCHAR"/>
         <result property="spCompany" column="sp_Company" jdbcType="VARCHAR"/>
         <result property="spPresetPrice" column="sp_Preset_price" jdbcType="NUMERIC"/>
+        <result property="number" column="number" jdbcType="INTEGER"/>
         <result property="numbers" column="number" jdbcType="INTEGER"/>
         <result property="lossNumber" column="loss_number" jdbcType="INTEGER"/>
         <result property="zje" column="zje" jdbcType="NUMERIC"/>
@@ -144,7 +146,7 @@
         LEFT JOIN warehouse ws ON dsp.wid = ws.wid
         LEFT JOIN stock sk ON sk.sk_shopid = dsp.sp_shopid
         LEFT JOIN `branch` dm ON dm.branchid = ws.branchid
-        WHERE dsp.dl_number =  #{param1} and dsp.wid = #{param2} and sk.sp_Warehouse_id = #{param2}
+        WHERE dsp.dl_number =  #{param1} and dsp.wid = #{param2}
     </select>
     <!--查询单个-->
     <select id="queryById" resultMap="XsdocumentShopMap">

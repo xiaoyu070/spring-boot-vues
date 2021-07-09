@@ -20,7 +20,7 @@
     </resultMap>
 
     <update id="updatepdnumber">
-              UPDATE pd_shop SET pd_number =#{pdNumber}  WHERE pd_id=#{pdId}
+              UPDATE pd_shop SET pd_number =#{pdNumber}  WHERE sp_shopid=#{spShopid}
     </update>
 
     <delete id="delectshop">

@@ -141,16 +141,7 @@ public class XsdocumentListController {
         this.xsdocumentListService.insert(list);
         String ss = jsonObject.getString("list");
         List<XsdocumentShop> list2 = JSON.parseArray(ss,XsdocumentShop.class);
-        System.out.println(list2.toString());
-        if(i == 1){
-            Stock stock = new Stock();
-            for (int a=0;a<list2.size();a++){
-                stock.setSkShopid(list2.get(a).getSpShopid());
-                stock.setSkNumber(list2.get(a).getNumber());
-                stock.setSkLossnumber(list2.get(a).getLossNumber());
-                this.stockService.xsupdate(stock);
-            }
-        }
+        System.out.println("商品："+list2.toString());
         this.xsdocumentShopService.insertBatch(list2);
 
         return AjaxResponse.success("销售成功");

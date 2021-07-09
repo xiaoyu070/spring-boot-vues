@@ -169,6 +169,7 @@ public class XsdocumentShopController {
      */
     @GetMapping("selectnumber")
     public AjaxResponse selectnumber(Integer currenPage, Integer pageSize, String number, int wid, int branchid){
+        System.out.println(currenPage+"   "+pageSize+"   "+number+"   "+wid+"  "+branchid);
         Map<String,Object> map=new HashMap<>();
         Page<Object> pg= PageHelper.startPage(currenPage,pageSize);
         List<DocumentShopVo> list= this.xsdocumentShopService.selectnumber(number,wid,branchid);
@@ -176,6 +177,12 @@ public class XsdocumentShopController {
         map.put("total",pg.getTotal());
         map.put("rows",list);
         return AjaxResponse.success(map);
+    }
+    @GetMapping("findbydlnumber")
+    public AjaxResponse findbydlnumber(String number, int wid, int branchid){
+        List<DocumentShopVo> list= this.xsdocumentShopService.selectnumber(number,wid,branchid);
+        System.out.println("selectnumber:list:"+list);
+        return AjaxResponse.success(list);
     }
     /**
      *

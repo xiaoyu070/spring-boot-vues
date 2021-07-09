@@ -10,6 +10,7 @@ public class Shopandstock {
     private String spSpecifications;//商品规格
     private String spColor;//商品颜色
     private Double spJprice;//商品进价
+    private Double spPresetPrice;
     private Integer number;//商品库存
     private Integer wid;//所在仓库外键id
     private String spBarCode;//商品条码

@@ -109,5 +109,13 @@
             where menu_id = #{menuId}
         </set>
     </update>
+<!--  修改菜单状态为启用  -->
+    <update id="updatemenuszero">
+        update projects.sys_menu set visible = 0 where menu_id = #{menuId}
+    </update>
+<!--  修改菜单状态为禁用  -->
+    <update id="updatemenusone">
+        update projects.sys_menu set visible = 1 where menu_id = #{menuId}
+    </update>
 </mapper>
 

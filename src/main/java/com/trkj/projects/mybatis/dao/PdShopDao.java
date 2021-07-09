@@ -81,7 +81,7 @@ public interface PdShopDao {
      */
 //    int deleteById();
 
-    int updatepdnumber(@Param("pdNumber") Integer pdNumber,@Param("pdId")String pdId);
+    int updatepdnumber(@Param("pdNumber") Integer pdNumber,@Param("spShopid")String spShopid);
 
     int delectshop(int id);
 

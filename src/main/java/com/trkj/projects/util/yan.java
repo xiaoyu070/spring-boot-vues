@@ -23,9 +23,9 @@ public class yan {
 
 	Map<String,String> map=new HashMap<>();
 	public String yanzheng(String phone,int i) {
-			//LTAI4Fgzwq2Q6LfhWhpRJQL8
+			
 			String accessKeyId=null;
-			//kw2ekRkeTrncBBq8ZVplflZq19QTls
+			
 			String accessSecret=null;
 			String SignName="星际进销存";
 			DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou",accessKeyId,accessSecret);
