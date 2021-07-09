@@ -124,11 +124,8 @@ public class LogAspect {
 //      request =((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         journal.setAddressip(ip);
         //调用service保存SysLog实体类到数据库
-<<<<<<< HEAD
         //journalService.insert(journal);
-=======
         System.out.println("userid"+userId);
         journalService.insert(journal);
->>>>>>> 4811c2d955fb87a430cf8db856338bf027844797
     }
 }

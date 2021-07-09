@@ -621,12 +621,12 @@
     </select>
     <select id="ssdj" resultMap="SpxsmxVo">
         SELECT sp.dl_number,l.dl_date,a.agent_name,w.wname,lt.dl_type_name,l.dl_ysje,l.dl_ssje,u.user_name,c.c_contacts,l.dl_beizhu,
-  sp.zje-dsp.zje AS xslr,(sp.sp_Preset_price-dsp.sp_jprice)/sp.sp_Preset_price AS mll
+        sp.zje-dsp.zje AS xslr,(sp.sp_Preset_price-dsp.sp_jprice)/sp.sp_Preset_price AS mll
         FROM xsdocument_shop sp
         INNER JOIN xsdocument_list l ON l.dl_number=sp.dl_number
         INNER JOIN agent a ON l.agent_id=a.id
         INNER JOIN warehouse w ON l.wid=w.wid
-        INNER JOIN document_list_type lt ON l.dl_type_id=lt.dl_type_id
+        INNER JOIN xsdocument_list_type lt ON l.dl_type_id=lt.dl_type_id
         INNER JOIN sys_user u ON l.admin=u.user_id
         INNER JOIN customer c ON l.customerid=c.c_id
         INNER JOIN xsdocument_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
@@ -676,16 +676,21 @@
     </select>
     <select id="djlx" resultMap="SpxsmxVo">
          SELECT dl_type_name
-            FROM document_list_type
+            FROM xsdocument_list_type
     </select>
 
     <select id="ssdjcx" resultMap="SpxsmxVo">
-        SELECT l.dl_number,l.dl_date,a.agent_name,w.wname,lt.dl_type_name,l.dl_ysje,l.dl_ssje,u.user_name,c.c_contacts,l.dl_beizhu  FROM xsdocument_list l
-        LEFT JOIN agent a ON l.agent_id=a.id
-        LEFT JOIN warehouse w ON l.wid=w.wid
-        LEFT JOIN document_list_type lt ON l.dl_type_id=lt.dl_type_id
-        LEFT JOIN sys_user u ON l.admin=u.user_id
-        LEFT JOIN customer c ON l.customerid=c.c_id
+        SELECT sp.dl_number,l.dl_date,a.agent_name,w.wname,lt.dl_type_name,l.dl_ysje,l.dl_ssje,u.user_name,c.c_contacts,l.dl_beizhu,
+        sp.zje-dsp.zje AS xslr,(sp.sp_Preset_price-dsp.sp_jprice)/sp.sp_Preset_price AS mll
+        FROM xsdocument_shop sp
+        INNER JOIN xsdocument_list l ON l.dl_number=sp.dl_number
+        INNER JOIN agent a ON l.agent_id=a.id
+        INNER JOIN warehouse w ON l.wid=w.wid
+        INNER JOIN xsdocument_list_type lt ON l.dl_type_id=lt.dl_type_id
+        INNER JOIN sys_user u ON l.admin=u.user_id
+        INNER JOIN customer c ON l.customerid=c.c_id
+        INNER JOIN xsdocument_list_static dls ON  dls.dl_statie_id=l.dl_statie_id
+        INNER JOIN `document_shop` dsp ON  dsp.sp_shopid=sp.sp_shopid
         <where>
             <if test="agentName != null">
                 and agent_name = #{agentName}
@@ -696,6 +701,7 @@
             <if test="dlTypeName != null">
                 and dl_type_name = #{dlTypeName}
             </if>
+           and dls.dl_statie_id =2
         </where>
     </select>
     <select id="cghz" resultMap="CghzVo">
